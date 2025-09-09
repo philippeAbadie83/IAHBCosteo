@@ -1,0 +1,46 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# ---- Entornos virtuales ----
+.venv/
+env/
+venv/
+ENV/
+
+# ---- Archivos de entorno ----
+.env
+*.env
+
+# ---- Logs ----
+*.log
+logs/
+debug.log
+
+# ---- Compilados / cachés ----
+*.sqlite3
+*.db
+*.bak
+.DS_Store
+
+# ---- VSCode ----
+.vscode/
+.history/
+
+# ---- Python packaging ----
+*.egg-info/
+dist/
+build/
+
+# ---- Coverage / testing ----
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+
+# ---- Otros ----
+*.swp
+*.swo
