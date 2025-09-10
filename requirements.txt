@@ -2,3 +2,4 @@ nicegui
 sqlalchemy
 redis
 python-dotenv
+pymysql

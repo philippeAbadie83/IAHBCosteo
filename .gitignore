@@ -44,3 +44,8 @@ htmlcov/
 # ---- Otros ----
 *.swp
 *.swo
+
+
+#Code
+
+#  ssh -i "C:\Users\phili\Downloads\Azure PROD\hidroAdm20250909.pem" VMHBSuiteUser@52.156.25.150
