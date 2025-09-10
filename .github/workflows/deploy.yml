@@ -1,0 +1,23 @@
+name: Deploy to VM
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.8.0
+      with:
+        ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+
+    - name: Deploy to VM
+      run: |
+        ssh -o StrictHostKeyChecking=no VMHBSuiteUser@52.156.25.150 "cd ~/IAHBCosteo && git pull origin main"
