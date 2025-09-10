@@ -1,23 +1,23 @@
-name: Deploy to VM
+name: Test Connection to VM
 
 on:
   push:
     branches:
-      - main
+      - main # o la rama que estés usando
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Conectar a VM y desplegar
+      - name: Test SSH connection
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /home/admphilippe/IAHBCosteo
-            git pull origin main
-            source /home/admphilippe/venv-mysql/bin/activate
-            pip install -r requirements.txt
+            echo "✅ Hola Philippe, la conexión desde GitHub Actions funcionó!"
+            hostname
+            whoami
+            pwd
