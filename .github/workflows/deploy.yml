@@ -20,4 +20,11 @@ jobs:
 
     - name: Deploy to VM
       run: |
-        ssh -o StrictHostKeyChecking=no VMHBSuiteUser@52.156.25.150 "cd ~/IAHBCosteo && git pull origin main"
+        ssh -o StrictHostKeyChecking=no VMHBSuiteUser@52.156.25.150 "
+          cd ~/IAHBCosteo && \
+          git pull origin main && \
+          source venv/bin/activate && \
+          pip install -r requirements.txt
+        "
+
+   
