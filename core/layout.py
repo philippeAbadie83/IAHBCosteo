@@ -12,4 +12,4 @@ def render(content: str):
     with ui.column():
         ui.label(content)
     with ui.footer():
-        ui.label("© Hidrobart 2025 | v.1.0.101.0")
+        ui.label("© Hidrobart 2025 | v.{__version__} (Build {__build__})")

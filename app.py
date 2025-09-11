@@ -7,8 +7,8 @@ print(f"Versión: {__version__}, Build: {__build__}")
 from nicegui import ui
 from core import layout
 
-# 👇 importa tu página de prueba para que NiceGUI la registre
-import frontend.pages.test_table
+# 👇 basta con importar el paquete, __init__.py hace el resto
+import frontend.pages
 
 @ui.page('/')
 def index_page():

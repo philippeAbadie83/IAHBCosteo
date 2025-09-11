@@ -6,6 +6,27 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 ---
 
+## [1.0.104.1] - 2025-09-10
+
+### Added
+
+- Archivo `core/__version__.py` para centralizar la información de la aplicación:
+  - `__app__`: nombre de la app.
+  - `__version__`: versión semántica.
+  - `__build__`: número de build incremental.
+
+### Changed
+
+- `core/layout.py` ahora utiliza `__version__` y `__build__` en el footer:
+  - Muestra dinámicamente: `© Hidrobart 2025 | AIHB-Costeo v.1.0.104.1 (Build 104)`.
+- Eliminada la versión fija (`1.0.101.0`) en el footer.
+
+### Notes
+
+- A partir de ahora, solo es necesario actualizar `core/__version__.py` para reflejar cambios de versión en toda la aplicación.
+
+---
+
 ## [1.0.103.4] - 2025-09-10
 
 ### Added
