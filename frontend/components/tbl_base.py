@@ -1,15 +1,12 @@
+# Hidrobart Costeo
 # frontend/components/tbl_base.py
 
 from typing import Optional
 from nicegui import ui
 import pandas as pd
-
-from core.__version__ import __version__, __build__
-print(f"Versión: {__version__}, Build: {__build__}")
+from typing import cast, Any
 
 
-
-#   Tabla Base Universal (tbl_base.py)
 def crear_tabla(
     nombre: str,
     columnas: list,
@@ -89,7 +86,8 @@ def crear_tabla(
         rows = get_filtered_data().to_dict(orient="records")
         if acciones:
             for r in rows:
-                r["acciones"] = r
+                # solo guardamos el id, no todo el objeto
+                r["acciones"] = r["id"]
         table.rows = rows
 
     if filtros:
@@ -122,10 +120,19 @@ def crear_tabla(
                 for accion in acciones:
                     ui.button(
                         icon=accion["icon"],
-                        on_click=lambda e, r=row: accion["func"](r),
+                        on_click=lambda e, r_id=row["acciones"]: accion["func"](
+                            next(
+                                x for x in get_filtered_data().to_dict("records")
+                                if x["id"] == r_id
+                            )
+                        ),
                     ).props("flat fab-mini")
 
-        table.add_slot("body-cell-acciones", render_acciones)  # type: ignore[arg-type]
+
+
+        table.add_slot(name="body-cell-acciones", template=cast(Any, render_acciones))
+
+
 
     # ======== Congelar columnas ========
     if congelar:
