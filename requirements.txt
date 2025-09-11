@@ -2,4 +2,11 @@ nicegui
 sqlalchemy
 redis
 python-dotenv
+pandas
+openpyxl
 pymysql
+mysql-connector-python
+numpy
+python-dateutil
+pytz
+tzdata

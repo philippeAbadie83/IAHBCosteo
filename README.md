@@ -54,4 +54,10 @@ pip install -r requirements.txt
 python app.py
 Abrir en el navegador: http://localhost:8080
 
+
+DATABASE_URL=mysql+mysqlconnector://hidroAdm:TuPassword@hidrobart-mysqlsrv.mysql.database.azure.com:3306/hidrobart_costeo
+
+REDIS_URL=redis://localhost:6379/0
+
+
 ```

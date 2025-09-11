@@ -1,7 +1,9 @@
-# Hidrobart Costeo
-# Build : 101
-# Version 1.0.101.0
+
 # core/db.py
+
+from core.__version__ import __version__, __build__
+print(f"Versión: {__version__}, Build: {__build__}")
+
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker

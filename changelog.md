@@ -6,6 +6,33 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 ---
 
+## [1.0.103.0] - 2025-09-10
+
+### Added
+
+- Nuevo componente `tbl_base.py` en `frontend/components/`:
+
+  - Soporte universal de tablas con filtros (proveedor, familia, código).
+  - Exportación a Excel de datos filtrados.
+  - Acciones por fila con íconos (`edit`, `delete`).
+  - Congelación de columnas clave (`proveedor`, `familia`, `code_sys`).
+
+- Nueva página de prueba `test_tabla.py` en `frontend/pages/`:
+  - Demo con 10 productos mock en DataFrame de pandas.
+  - Validación de filtros, exportación y acciones.
+  - Integración de versión y build (`__version__`, `__build__`).
+
+### Changed
+
+- Se eliminó duplicidad en definición de slots (`render_acciones`).
+- Corrección de warnings de Pylance con `# type: ignore[arg-type]`.
+
+### Notes
+
+- `app.py` sigue siendo el entrypoint. Acceso de prueba vía:
+
+---
+
 ## [Unreleased]
 
 ### Added
