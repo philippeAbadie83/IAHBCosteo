@@ -20,7 +20,7 @@ jobs:
             echo "🚀 Hola Philippe, iniciando despliegue en la VM..."
             cd /home/admphilippe/IAHBCosteo
             git pull origin main
-            source /home/admphilippe/venv-mysql/bin/activate
+            source /home/admphilippe/IAHBCosteo/venv/bin/activate
             pip install -r requirements.txt
             echo "✅ Despliegue completado con éxito en hidroSuiteVM"
             sudo systemctl restart iahbcosteo.service   # << este reinicia la app
