@@ -7,8 +7,8 @@ from frontend.components.tbl_base import crear_tabla
 from core.__version__ import __version__, __build__
 print(f"Versión: {__version__}, Build: {__build__}")
 
-@ui.page("/test-tabla")
-def test_tabla():
+@ui.page("/test-table")
+def test_table():
     # ======== Datos de prueba ========
     data = pd.DataFrame({
         "id": range(1, 11),
