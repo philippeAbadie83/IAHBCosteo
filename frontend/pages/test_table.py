@@ -5,10 +5,13 @@ from nicegui import ui
 import pandas as pd
 from frontend.components.tbl_base import crear_tabla
 from core.__version__ import __version__, __build__
-print(f"Versión: {__version__}, Build: {__build__}")
 
-@ui.page("/test-table")
+print(f"[test_table] Versión: {__version__}, Build: {__build__}")
+
+@ui.page("/test_table")
 def test_table():
+    """Página de prueba con tabla de productos"""
+
     # ======== Datos de prueba ========
     data = pd.DataFrame({
         "id": range(1, 11),
