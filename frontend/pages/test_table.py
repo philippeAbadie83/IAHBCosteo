@@ -8,10 +8,8 @@ from core.__version__ import __version__, __build__
 
 print(f"[test_table] Versión: {__version__}, Build: {__build__}")
 
-@ui.page("/test_table")
+@ui.page("/test-table")
 def test_table():
-    """Página de prueba con tabla de productos"""
-
     # ======== Datos de prueba ========
     data = pd.DataFrame({
         "id": range(1, 11),

@@ -6,6 +6,17 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 ---
 
+# Changelog
+
+## [1.0.104.4] - 2025-09-11
+
+### Fixed
+
+- Corrigida la ruta de `test_table.py` para usar `/test-table` (guion medio en la URL).
+- Se agregó log más claro al cargar `test_table` con versión y build.
+
+---
+
 ## [1.0.104.1] - 2025-09-10
 
 ### Added
