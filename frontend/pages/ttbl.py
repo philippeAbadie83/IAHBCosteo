@@ -1,6 +1,5 @@
 # Hidrobart Costeo
 # frontend/pages/ttbl.py
-
 from nicegui import ui
 import pandas as pd
 from frontend.components.tbl_base import crear_tabla
@@ -8,7 +7,7 @@ from core.__version__ import __version__, __build__
 
 
 @ui.page("/ttbl")
-def ttbl_page():
+def ttbl():
     print(f"[ttbl] Versión: {__version__}, Build: {__build__}")
 
     # ======== Datos de prueba ========
@@ -20,6 +19,13 @@ def ttbl_page():
         "nombre": [f"Producto {i}" for i in range(1, 11)],
         "precio_lista": [100, 200, 150, 120, 300, 110, 220, 330, 440, 550],
     })
+
+    # ======== Acciones definidas aparte ========
+    def editar(row):
+        ui.notify(f"Editar {row['nombre']}")
+
+    def eliminar(row):
+        ui.notify(f"Eliminar {row['nombre']}")
 
     columnas = [
         {"name": "proveedor", "label": "Proveedor", "field": "proveedor", "sortable": True},
@@ -38,7 +44,7 @@ def ttbl_page():
         exportar=True,
         congelar=["proveedor", "familia", "code_sys"],
         acciones=[
-            {"icon": "edit", "func": lambda r: ui.notify(f"Editar {r['nombre']}")},
-            {"icon": "delete", "func": lambda r: ui.notify(f"Eliminar {r['nombre']}")},
+            {"icon": "edit", "func": editar},
+            {"icon": "delete", "func": eliminar},
         ],
     )
