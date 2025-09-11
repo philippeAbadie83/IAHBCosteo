@@ -1,5 +1,5 @@
 # Hidrobart Costeo
-# frontend/pages/test_tabla.py
+# frontend/pages/test_table.py
 
 from nicegui import ui
 import pandas as pd

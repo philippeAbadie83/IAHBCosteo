@@ -6,6 +6,26 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 ---
 
+## [1.0.103.4] - 2025-09-10
+
+### Added
+
+- Página de prueba `test_table.py` registrada correctamente en `app.py`.
+  - Ruta accesible en `http://<IP_PUBLICA>:8080/test-table`.
+  - Incluye tabla demo con 10 productos mock, filtros, exportación y acciones (`edit`, `delete`).
+
+### Changed
+
+- `app.py` actualizado para importar explícitamente `frontend/pages/test_table`.
+- Ahora NiceGUI reconoce y carga la página `/test-table`.
+
+### Notes
+
+- `index_page` sigue siendo la raíz `/` mostrando el mensaje de bienvenida.
+- Próximas páginas deben importarse en `app.py` o configurarse para carga automática.
+
+---
+
 ## [1.0.103.0] - 2025-09-10
 
 ### Added
