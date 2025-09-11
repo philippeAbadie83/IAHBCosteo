@@ -13,7 +13,8 @@ def index():
     ui.label("📑 Páginas disponibles").classes("text-lg mb-4")
 
     with ui.column().classes("gap-2"):
-        # Aquí registramos manualmente las páginas conocidas
-        ui.link("➡️ Test Tabla", "/test-tabla")
+        # Links a las páginas registradas
+        ui.link("➡️ Tabla Demo (ttbl)", "/ttbl")
+
         # conforme agregues más, las listamos aquí:
         # ui.link("➡️ Otra página", "/otra-pagina")
