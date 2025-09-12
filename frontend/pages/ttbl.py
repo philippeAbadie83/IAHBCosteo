@@ -4,8 +4,8 @@
 from nicegui import ui
 import pandas as pd
 from frontend.components.tbl_base import crear_tabla
-from core.__version__ import __version__, __build__
 
+from core.__version__ import __version__, __build__
 
 @ui.page("/ttbl")
 def ttbl():

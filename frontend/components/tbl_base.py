@@ -7,6 +7,7 @@ import pandas as pd
 from typing import cast, Any
 
 
+
 def crear_tabla(
     nombre: str,
     columnas: list,

@@ -5,7 +5,14 @@ from nicegui import ui
 from core import layout
 
 # 🔹 Importar manualmente las páginas que quieras exponer
+
+import frontend.pages.test_table
 import frontend.pages.ttbl
+import frontend.pages.ttbl2
+import frontend.pages.ttbl3
+import frontend.pages.ttbl4
+
+
 
 # Configurar estilos globales
 def setup_global_styles():
@@ -48,6 +55,7 @@ def setup_global_styles():
     </style>
     ''')
 
+
 @ui.page('/')
 def index_page():
     def home_content():
@@ -57,12 +65,32 @@ def index_page():
             ui.label('Sistema de Gestión de Costos para Hidrobart').classes('text-lg text-gray-600 mb-6')
 
             with ui.row().classes('gap-4'):
-                ui.button('Ver Proyectos', icon='assignment',
-                          on_click=lambda: ui.navigate.to('/proyectos')) \
+                # Botón de prueba ttbl
+                ui.button('Tabla TTBL', icon='table_chart',
+                          on_click=lambda: ui.navigate.to('/ttbl')) \
                     .props('unelevated color=primary')
+
+                # Botón de prueba ttbl2
+                ui.button('Tabla TTBL2', icon='table_chart',
+                          on_click=lambda: ui.navigate.to('/ttbl2')) \
+                    .props('unelevated color=secondary')
+
+                ui.button('Tabla TTBL3', icon='table_chart',
+                    on_click=lambda: ui.navigate.to('/ttbl3')).props('unelevated color=secondary')
+
+
+                ui.button('Tabla TTBL4', icon='table_chart',
+                    on_click=lambda: ui.navigate.to('/ttbl4')).props('unelevated color=secondary')
+
+                # Botón ya existente
                 ui.button('Tabla de Prueba', icon='table_chart',
                           on_click=lambda: ui.navigate.to('/tabla-prueba')) \
                     .props('outlined color=secondary')
+
+
+                ui.button('Ver Proyectos', icon='assignment',
+                          on_click=lambda: ui.navigate.to('/proyectos')) \
+                    .props('unelevated color=primary')
 
     layout.render(home_content)
 
