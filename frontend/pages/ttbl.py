@@ -1,5 +1,6 @@
 # Hidrobart Costeo
 # frontend/pages/ttbl.py
+
 from nicegui import ui
 import pandas as pd
 from frontend.components.tbl_base import crear_tabla
@@ -20,13 +21,6 @@ def ttbl():
         "precio_lista": [100, 200, 150, 120, 300, 110, 220, 330, 440, 550],
     })
 
-    # ======== Acciones definidas aparte ========
-    def editar(row):
-        ui.notify(f"Editar {row['nombre']}")
-
-    def eliminar(row):
-        ui.notify(f"Eliminar {row['nombre']}")
-
     columnas = [
         {"name": "proveedor", "label": "Proveedor", "field": "proveedor", "sortable": True},
         {"name": "familia", "label": "Familia", "field": "familia", "sortable": True},
@@ -35,7 +29,7 @@ def ttbl():
         {"name": "precio_lista", "label": "Precio Lista", "field": "precio_lista", "sortable": True},
     ]
 
-    # ======== Crear tabla con acciones de ejemplo ========
+    # ======== Crear tabla sin acciones (para evitar error de serialización) ========
     crear_tabla(
         nombre="Demo Productos",
         columnas=columnas,
@@ -43,8 +37,5 @@ def ttbl():
         filtros=True,
         exportar=True,
         congelar=["proveedor", "familia", "code_sys"],
-        acciones=[
-            {"icon": "edit", "func": editar},
-            {"icon": "delete", "func": eliminar},
-        ],
+        # acciones=[]  # 🔹 Si lo dejas vacío, tbl_base no dibuja columna de acciones
     )
