@@ -10,11 +10,9 @@ from data.sample_data import generate_sample_users, get_sample_columns
 def ttbl4_page():
     def content():
         with ui.column().classes('w-full p-6'):
-            ui.label('Usuarios Demo con Sample Data').classes(
-                'text-2xl font-bold text-gray-800 mb-6'
-            )
+            ui.label('Usuarios Demo con Sample Data').classes('text-2xl font-bold text-gray-800 mb-6')
 
-            # 🔹 Generar 20 usuarios de ejemplo
+            # 🔹 Generar datos y columnas desde sample_data
             data = generate_sample_users(20)
             columnas = get_sample_columns()
 
