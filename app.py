@@ -111,4 +111,4 @@ def tabla_prueba_page():
 
 if __name__ in ["__main__", "__mp_main__"]:
     setup_global_styles()
-    ui.run(title="AIHB-Costeo", reload=False, port=8080, host="0.0.0.0")
+    ui.run(title="AIHB-Costeo", reload=False, port=5858, host="0.0.0.0")
