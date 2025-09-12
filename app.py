@@ -11,6 +11,7 @@ import frontend.pages.ttbl
 import frontend.pages.ttbl2
 import frontend.pages.ttbl3
 import frontend.pages.ttbl4
+import frontend.pages.ttbl_pipeline
 
 
 
@@ -81,6 +82,9 @@ def index_page():
 
                 ui.button('Tabla TTBL4', icon='table_chart',
                     on_click=lambda: ui.navigate.to('/ttbl4')).props('unelevated color=secondary')
+
+                ui.button('Tabla Pipeline', icon='table_chart',
+                    on_click=lambda: ui.navigate.to('/ttbl_pipeline')).props('unelevated color=secondary')
 
                 # Botón ya existente
                 ui.button('Tabla de Prueba', icon='table_chart',
