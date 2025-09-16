@@ -1,0 +1,21 @@
+# .gitattributes
+
+# === Archivos de código: siempre usar LF (Linux style) ===
+*.py     text eol=lf
+*.sh     text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.md     text eol=lf
+
+# === Certificados y llaves: mantener como están (binarios) ===
+*.pem    text eol=lf
+*.crt    text eol=lf
+*.key    text eol=lf
+
+# === Archivos de datos (no tocar saltos de línea) ===
+*.csv    text eol=lf
+*.sql    text eol=lf
+
+# === Windows-only (si algún día tienes scripts .bat o .cmd) ===
+*.bat    text eol=crlf
+*.cmd    text eol=crlf

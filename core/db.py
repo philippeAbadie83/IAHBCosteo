@@ -1,23 +1,29 @@
 # core/db.py
-
 from core.__version__ import __version__, __build__
 print(f"Versión: {__version__}, Build: {__build__}")
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-# 🔹 Cadena de conexión directa (sin depender de .env)
-DATABASE_URL = "mysql+pymysql://hidroAdm@hidrobart-mysqlsrv:$Orozc4$olav%7867@hidrobart-mysqlsrv.mysql.database.azure.com:3306/hidrobart_costeo"
+# 🔹 Credenciales directas (hardcodeadas)
+username = "hidroAdm"
+password = "$Orozc4$olav%7867"   # la contraseña tal cual
+host = "hidrobart-mysqlsrv.mysql.database.azure.com"
+database = "hidrobart_costeo"
 
-# Crear el engine con parámetros de conexión
+# 🔹 URL directa sin quote_plus ni nada
+DATABASE_URL = f"mysql+pymysql://{username}:{password}@{host}:3306/{database}"
+
+# Crear engine
 engine = create_engine(
     DATABASE_URL,
     pool_pre_ping=True,
     pool_size=5,
-    max_overflow=10
+    max_overflow=10,
+    future=True
 )
 
-# Configurar la sesión
+# Configurar sesión
 SessionLocal = sessionmaker(
     autocommit=False,
     autoflush=False,
