@@ -4,14 +4,16 @@ print(f"Versión: {__version__}, Build: {__build__}")
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+import urllib.parse
 
-# 🔹 Credenciales directas (hardcodeadas)
+# 🔹 Credenciales directas
 username = "hidroAdm"
-password = "$Orozc4$olav%7867"   # la contraseña tal cual
+# importante: escapar caracteres especiales
+password = urllib.parse.quote_plus("$Orozc4$olav%7867")
 host = "hidrobart-mysqlsrv.mysql.database.azure.com"
 database = "hidrobart_costeo"
 
-# 🔹 URL directa sin quote_plus ni nada
+# 🔹 URL con password escapada
 DATABASE_URL = f"mysql+pymysql://{username}:{password}@{host}:3306/{database}"
 
 # Crear engine
@@ -20,7 +22,8 @@ engine = create_engine(
     pool_pre_ping=True,
     pool_size=5,
     max_overflow=10,
-    future=True
+    future=True,
+    connect_args={"ssl": {"ssl": True}},  # TLS
 )
 
 # Configurar sesión
