@@ -5,6 +5,8 @@ from nicegui import ui
 import pandas as pd
 from frontend.components.tbl_base import crear_tabla
 from services.db_services import get_proveedores_activos  # función que hicimos antes
+from utils.helpers import sanitize_dataframe   # ✅ importar utilidad
+
 from core.__version__ import __version__, __build__
 
 
@@ -12,8 +14,9 @@ from core.__version__ import __version__, __build__
 def v_tblprov_data():
     print(f"[v_tblprov_data] Versión: {__version__}, Build: {__build__}")
 
-    # ======== Obtener datos de la BD ========
+    # ======== Obtener y sanitizar datos de la BD ========
     df: pd.DataFrame = get_proveedores_activos()
+    df = sanitize_dataframe(df)   # ✅ convierte datetime → str y Decimal → float
 
     # ======== Definir columnas ========
     columnas = [
@@ -36,7 +39,7 @@ def v_tblprov_data():
         nombre="Proveedores Activos",
         columnas=columnas,
         data=df,
-        filtros=True,      # se filtra por proveedor y familia
-        exportar=True,     # habilita exportación a Excel
+        filtros=True,       # se filtra por proveedor y familia
+        exportar=True,      # habilita exportación a Excel
         congelar=["proveedor", "familia"],  # fijar columnas clave
     )

@@ -8,6 +8,27 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # Changelog
 
+## [1.0.123.0] - 2025-09-17
+
+### Added
+
+- Nueva utilidad `sanitize_dataframe` en `utils/helpers.py` para convertir:
+  - `Timestamp` → string `YYYY-MM-DD HH:MM:SS`.
+  - `Decimal` → float.
+- Integración de `sanitize_dataframe` en `v_tblprov_data.py` antes de renderizar tablas.
+- Soporte para serialización segura en NiceGUI evitando errores `TypeError: not JSON serializable`.
+
+### Changed
+
+- `v_tblprov_data.py`: ahora importa `sanitize_dataframe` y lo aplica después de `get_proveedores_activos`.
+- Estructura de imports reorganizada en `frontend/pages/v_tblprov_data.py`.
+
+### Fixed
+
+- Error `500 Server error` al mostrar columnas con `Timestamp` y `Decimal`.
+
+---
+
 ## [1.0.104.4] - 2025-09-11
 
 ### Fixed
