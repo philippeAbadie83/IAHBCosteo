@@ -8,6 +8,33 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # Changelog
 
+## [1.0.124.0] - 2025-09-17
+
+### Added
+
+- Integración de layout unificado con sidebar, header reducido y footer.
+- Nueva sección en menú lateral: **Proveedores**
+  - Página `/v_tblprov_data`: muestra tabla de Proveedores Activos integrada al layout.
+  - Página `/importar_proveedores`: permite carga de archivo Excel/CSV y alta masiva en BD.
+- Organización del menú lateral:
+  - Dashboard
+  - Proveedores (Tabla + Importación)
+  - Costos de Productos
+  - Cálculos de Costo
+  - Lista de Precios
+  - Lista de Precios Simulados
+  - Análisis (Reportes, Gráficos)
+  - Sistema (Configuración, Ayuda, Documentación)
+
+### Changed
+
+- `core/layout.py`: ahora controla header + sidebar + footer + render de contenido.
+- `app.py`: eliminado `home_content` embebido, las páginas usan `layout.render(content)`.
+
+### Fixed
+
+- Consistencia en navegación: ahora todas las rutas cargan dentro del layout y no fuera de él.
+
 ## [1.0.123.0] - 2025-09-17
 
 ### Added

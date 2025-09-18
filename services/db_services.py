@@ -3,6 +3,86 @@
 import pandas as pd
 from sqlalchemy import text
 from core.db import engine
+from datetime import datetime
+from core.db import get_session
+
+
+def safe_percent(value):
+    try:
+        val = float(value)
+        if 0 <= val <= 100:
+            return round(val, 2)
+        else:
+            return 0.0
+    except (ValueError, TypeError):
+        return 0.0
+
+def insertar_proveedor(row: dict):
+    query = text("""
+        INSERT INTO tbl_prov_data
+            (prov_name, prov_famil, prov_multip,
+             prov_pct_fleteorig, prov_pct_arancel, prov_pct_gtoaduana, prov_pct_fletedest,
+             prov_coment, prov_createby, prov_auditlog)
+        VALUES (:prov_name, :prov_famil, :prov_multip,
+                :prov_pct_fleteorig, :prov_pct_arancel, :prov_pct_gtoaduana, :prov_pct_fletedest,
+                :prov_coment, :prov_createby, :prov_auditlog)
+    """)
+    session = get_session()
+    try:
+        session.execute(query, {
+            "prov_name": row["prov_name"],
+            "prov_famil": row["prov_famil"],
+            "prov_multip": float(row["prov_multip"] or 0),
+            "prov_pct_fleteorig": safe_percent(row["prov_pct_fleteorig"]),
+            "prov_pct_arancel": safe_percent(row["prov_pct_arancel"]),
+            "prov_pct_gtoaduana": safe_percent(row["prov_pct_gtoaduana"]),
+            "prov_pct_fletedest": safe_percent(row["prov_pct_fletedest"]),
+            "prov_coment": row.get("prov_coment", ""),
+            "prov_createby": "Philippe",  # luego se cambia a usuario real
+            "prov_auditlog": f"Insertado por importación masiva {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        })
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        raise e
+    finally:
+        session.close()
+
+
+def update_proveedor(prov_id: int, multip: float, flete: float, arancel: float,
+                     gto_aduana: float, flete_dest: float, comentario: str, usuario: str):
+    query = text("""
+        UPDATE tbl_prov_data
+        SET prov_multip = :prov_multip,
+            prov_pct_fleteorig = :prov_pct_fleteorig,
+            prov_pct_arancel = :prov_pct_arancel,
+            prov_pct_gtoaduana = :prov_pct_gtoaduana,
+            prov_pct_fletedest = :prov_pct_fletedest,
+            prov_coment = :prov_coment,
+            prov_updateby = :prov_updateby,
+            prov_updatedate = NOW()
+        WHERE prov_id = :prov_id
+    """)
+    session = get_session()
+    try:
+        session.execute(query, {
+            "prov_id": prov_id,
+            "prov_multip": float(multip or 0),
+            "prov_pct_fleteorig": safe_percent(flete),
+            "prov_pct_arancel": safe_percent(arancel),
+            "prov_pct_gtoaduana": safe_percent(gto_aduana),
+            "prov_pct_fletedest": safe_percent(flete_dest),
+            "prov_coment": comentario or "",
+            "prov_updateby": usuario,
+        })
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        raise e
+    finally:
+        session.close()
+
+
 
 def get_proveedores_activos():
     query = """

@@ -20,8 +20,8 @@ DATABASE_URL = f"mysql+pymysql://{username}:{password}@{host}:3306/{database}"
 engine = create_engine(
     DATABASE_URL,
     pool_pre_ping=True,
-    pool_size=5,
-    max_overflow=10,
+    pool_size=20,
+    max_overflow=30,
     future=True,
     connect_args={"ssl": {"ssl": True}},  # TLS
 )
