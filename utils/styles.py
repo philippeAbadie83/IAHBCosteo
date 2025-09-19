@@ -107,6 +107,53 @@ def setup_global_styles():
         justify-content: center !important;
     }
 
+
+    /* Elementos que se ocultan en modo mini */
+    .mini-hidden {
+        transition: opacity 0.3s ease;
+    }
+
+    .q-drawer--mini .mini-hidden {
+        opacity: 0;
+        height: 0;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+    }
+
+    /* Asegurar que los íconos siempre sean visibles */
+    .q-drawer--mini .q-icon {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    /* Expansions en modo mini */
+    .q-drawer--mini .q-expansion-item {
+        min-height: 48px;
+    }
+
+    .q-drawer--mini .q-expansion-item__content {
+        display: none !important;
+    }
+
+    /* Botones en modo mini */
+    .q-drawer--mini .q-btn {
+        min-width: 48px !important;
+        justify-content: center !important;
+        padding: 0 !important;
+    }
+
+    /* Ajustes para el header del sidebar en modo mini */
+    .q-drawer--mini .sidebar-header {
+        min-height: 48px;
+        padding: 8px 4px !important;
+        justify-content: center !important;
+    }
+
+    .q-drawer--mini .sidebar-header .q-btn {
+        margin: 0 auto;
+    }
+
     /* --- ESTILOS PARA TABLAS --- */
     .sticky-header .q-table__top {
         position: sticky;

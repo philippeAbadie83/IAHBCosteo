@@ -1,6 +1,5 @@
+# DeepSeek Development operative
 # core/layout.py
-# DeepSeek solucion
-
 
 from nicegui import ui
 from core.__version__ import __version__, __build__, __app__
@@ -25,13 +24,13 @@ def create_header() -> None:
 # ---------------- SIDEBAR ----------------
 
 def create_sidebar() -> None:
-    # 👇 drawer debajo del header
+    # 👇 drawer normal, el modo mini se controla con CSS
     with ui.left_drawer(top_corner=True).classes('bg-gray-50 w-60 border-r border-gray-200 pt-16') as drawer:
         drawer.props('mini-to-overlay')
 
         # 👇 Header del sidebar con toggle
         with ui.row().classes('w-full items-center justify-between px-3 py-2 sidebar-header border-b border-gray-200'):
-            ui.label('Navegación').classes('text-sm font-semibold text-gray-700')
+            ui.label('Navegación').classes('text-sm font-semibold text-gray-700 mini-hidden')
             ui.button(icon='chevron_left', on_click=lambda: drawer.toggle()) \
                 .props('flat dense round size=sm') \
                 .classes('sidebar-toggle-btn text-gray-500')
@@ -39,7 +38,7 @@ def create_sidebar() -> None:
         def nav_btn(label: str, icon: str, route: str):
             return ui.button(label, icon=icon, on_click=lambda: ui.navigate.to(route)) \
                 .props('flat full-width align=left dense') \
-                .classes('justify-start text-sm text-gray-700 hover:text-blue-700')
+                .classes('justify-start text-sm text-gray-700 hover:text-blue-700 mini-hidden')
 
         # ---------------- Proveedor ----------------
         with ui.expansion('Proveedores', icon='inventory_2', value=True).classes('w-full text-sm mt-2'):
@@ -48,7 +47,7 @@ def create_sidebar() -> None:
             nav_btn('Importar Datos', 'upload_file', '/importar_proveedores')
 
         # ---------------- Productos ----------------
-        ui.label('Productos').classes('section-label px-3 pt-3 pb-1')
+        ui.label('Productos').classes('section-label px-3 pt-3 pb-1 mini-hidden')
         with ui.expansion('Productos', icon='inventory', value=False).classes('w-full text-sm'):
             nav_btn('Listado de Productos', 'list', '/productos/listado')
             nav_btn('Importar Productos', 'file_upload', '/productos/importar')
@@ -58,14 +57,14 @@ def create_sidebar() -> None:
             nav_btn('Lista de Precios', 'request_quote', '/productos/lista-precios')
 
         # ---------------- Kit Productos ----------------
-        ui.label('Kit Productos').classes('section-label px-3 pt-3 pb-1')
+        ui.label('Kit Productos').classes('section-label px-3 pt-3 pb-1 mini-hidden')
         with ui.expansion('Kit Productos', icon='widgets', value=False).classes('w-full text-sm'):
             nav_btn('Listado de Productos', 'view_list', '/kit/listado')
             nav_btn('Armado de Kit', 'extension', '/kit/armado')
             nav_btn('Costeo', 'calculate', '/kit/costeo')
 
         # ---------------- Simulación ----------------
-        ui.label('Simulación').classes('section-label px-3 pt-3 pb-1')
+        ui.label('Simulación').classes('section-label px-3 pt-3 pb-1 mini-hidden')
         with ui.expansion('Simulación', icon='science', value=False).classes('w-full text-sm'):
             nav_btn('Clientes Especiales', 'star', '/sim/clientes-especiales')
             nav_btn('Campaña', 'campaign', '/sim/campana')
@@ -73,20 +72,20 @@ def create_sidebar() -> None:
             nav_btn('Mejores Márgenes', 'savings', '/sim/mejores-margenes')
 
         # ---------------- Análisis ----------------
-        ui.label('Análisis').classes('section-label px-3 pt-3 pb-1')
+        ui.label('Análisis').classes('section-label px-3 pt-3 pb-1 mini-hidden')
         with ui.column().classes('w-full p-1 gap-1'):
             nav_btn('Reportes', 'analytics', '/reportes')
             nav_btn('Gráficos', 'bar_chart', '/graficos')
 
         # ---------------- Ejemplos ----------------
-        ui.label('Ejemplos').classes('section-label px-3 pt-3 pb-1')
+        ui.label('Ejemplos').classes('section-label px-3 pt-3 pb-1 mini-hidden')
         with ui.column().classes('w-full p-1 gap-1'):
             nav_btn('Tabla TTBL', 'table_chart', '/ttbl')
             nav_btn('Tabla TTBL2', 'table_chart', '/ttbl2')
             nav_btn('Tabla Pipeline', 'table_chart', '/pipeline')
 
         # ---------------- Sistema ----------------
-        ui.label('Sistema').classes('section-label px-3 pt-3 pb-1')
+        ui.label('Sistema').classes('section-label px-3 pt-3 pb-1 mini-hidden')
         with ui.column().classes('w-full p-1 gap-1 border-t'):
             nav_btn('Configuración', 'settings', '/configuracion')
             nav_btn('Ayuda', 'help', '/ayuda')
