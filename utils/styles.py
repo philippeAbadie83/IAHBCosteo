@@ -48,6 +48,67 @@ def setup_global_styles():
         transition: background-color 0.2s ease;
     }
 
+     /* Sidebar para ampliar o minimizar 20250919 */
+    .q-drawer--mini .q-btn__content .q-btn__label { display: none; }
+    .q-drawer--mini .q-btn { justify-content: center; }
+
+    .q-header {
+        background: linear-gradient(90deg, #0056b3 0%, #0072CE 100%);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .q-drawer .section-label {
+        font-size: 11px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #6b7280;
+        padding-left: 12px;   /* 👉 añade consistencia */
+        margin-top: 6px;
+        margin-bottom: 2px;
+    }
+
+    .q-drawer .section-label {
+        font-size: 11px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #6b7280;
+        padding-left: 12px;
+        margin-top: 6px;
+        margin-bottom: 2px;
+        background-color: #f9fafb;
+        border-right: 1px solid #e5e7eb;
+
+    }
+
+    .q-drawer .q-btn {
+        transition: background-color 0.2s ease;
+    }
+    .q-drawer .q-btn:hover {
+        background-color: #e3f2fd;
+    }
+
+    .q-btn .q-icon {
+        color: #0072CE !important;
+    }
+
+    .q-drawer .section-label {
+        font-size: 11px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #6b7280; /* gris medio */
+    }
+
+    .q-table tr:hover td {
+        background-color: #e3f2fd !important;
+        cursor: pointer;
+    }
+    .q-table tr:active {
+        background-color: #bbdefb !important;
+    }
+
+
+
+
     .action-btn {
         margin: 0 2px;
         transition: transform 0.2s ease;
@@ -70,6 +131,25 @@ def setup_global_styles():
         box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
 
+    /* Costeo Card? */
+
+    .bg-gradient-hydro {
+        background: linear-gradient(135deg, #0072CE 0%, #00A0E3 100%);
+    }
+
+    .cost-card {
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 114, 206, 0.15);
+        transition: all 0.3s ease;
+    }
+
+    .cost-card:hover {
+        transform: translateY(-2px);
+    }
+
+
+
+
     /* Responsive */
     @media (max-width: 768px) {
         .q-table {
@@ -80,6 +160,11 @@ def setup_global_styles():
         .q-table td {
             padding: 8px 12px;
         }
+
+        .q-drawer--mini {
+            width: 56px !important;
+        }
+
     }
     </style>
     ''')

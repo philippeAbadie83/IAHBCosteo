@@ -8,6 +8,26 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # CHANGELOG
 
+## [1.0.124.3] - Build 124 - 2025-09-19
+
+### Added
+
+- Placeholders iniciales para todas las rutas nuevas:
+  - `/v_tblprov_all` (Proveedores Todos)
+  - `/productos/listado`, `/productos/importar`, `/productos/precios-proveedor`, `/productos/carga-precios`, `/productos/costo-destino`, `/productos/lista-precios`
+  - `/kit/listado`, `/kit/armado`, `/kit/costeo`
+  - `/sim/clientes-especiales`, `/sim/campana`, `/sim/mejores-productos`, `/sim/mejores-margenes`
+  - `/reportes`, `/graficos`, `/configuracion`, `/ayuda`, `/docs`
+
+### Changed
+
+- `layout.py`: Sidebar actualizado para que cada botón apunte a rutas con placeholders definidos.
+- Integración de `frontend/pages/placeholders.py` en `app.py` para evitar errores 404 en navegación.
+
+### Fixed
+
+- Alineación de rutas en botones con páginas registradas (evita fallos de navegación).
+
 ## [1.0.124.1] - 2025-09-18
 
 ### Fix & Mejoras
