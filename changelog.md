@@ -8,6 +8,15 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # CHANGELOG
 
+## [v1.0.124.5] - Build 124 - 2025-09-19
+
+### Fixes
+
+- Ajuste de **layout**: el header ahora se mantiene fijo de lado a lado.
+- El **sidebar** inicia correctamente debajo del header.
+- Corrección de superposición: las tablas y placeholders ya no quedan cubiertos por el header.
+- Mantiene consistencia visual en toda la aplicación (header, sidebar, contenido y footer).
+
 ## [v1.0.124.4] - Build 124 - 2025-09-19
 
 ### Fixed
