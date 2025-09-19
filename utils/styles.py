@@ -51,6 +51,25 @@ def setup_global_styles():
         box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
 
+    /* Botón de toggle del sidebar */
+    .sidebar-toggle-btn {
+        transition: transform 0.3s ease;
+    }
+    .sidebar-toggle-btn:hover {
+        transform: scale(1.1);
+        background-color: #e3f2fd !important;
+    }
+
+    /* Cuando el sidebar está mini, gira el ícono */
+    .q-drawer--mini .sidebar-toggle-btn .q-icon {
+        transform: rotate(180deg);
+    }
+
+    /* Mejora visual para el header del sidebar */
+    .sidebar-header {
+        background-color: #f8f9fa;
+    }
+
 
     /* Estilos para tablas */
     .sticky-header .q-table__top {

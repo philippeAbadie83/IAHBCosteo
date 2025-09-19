@@ -20,16 +20,13 @@ def create_header() -> None:
 # ---------------- SIDEBAR ----------------
 
 def create_sidebar() -> None:
-    # 👇 drawer debajo del header
-    with ui.left_drawer(top_corner=True).classes('bg-gray-50 w-60 border-r border-gray-200 pt-16') as drawer:
+    # 👇 drawer debajo del header con clase específica
+    with ui.left_drawer().classes('bg-gray-50 w-60 border-r border-gray-200') as drawer:
         drawer.props('mini-to-overlay')
+    # 👇 agregado pt-16 para que el sidebar arranque debajo del header
 
-        # 👇 Header del sidebar con toggle
-        with ui.row().classes('w-full items-center justify-between px-3 py-2 sidebar-header border-b border-gray-200'):
-            ui.label('Navegación').classes('text-sm font-semibold text-gray-700')
-            ui.button(icon='chevron_left', on_click=lambda: drawer.toggle()) \
-                .props('flat dense round size=sm') \
-                .classes('sidebar-toggle-btn text-gray-500')
+        # Logo eliminado (era el cuadro azul con casa ❌)
+        # 👉 Aquí ya no va nada de logo
 
         def nav_btn(label: str, icon: str, route: str):
             return ui.button(label, icon=icon, on_click=lambda: ui.navigate.to(route)) \
@@ -37,8 +34,8 @@ def create_sidebar() -> None:
                 .classes('justify-start text-sm text-gray-700 hover:text-blue-700')
 
         # ---------------- Proveedor ----------------
-        # 👇 SOLO el expansion, SIN el label duplicado "Proveedor"
-        with ui.expansion('Proveedores', icon='inventory_2', value=True).classes('w-full text-sm mt-2'):
+        ui.label('Proveedor').classes('section-label px-3 pt-3 pb-1')
+        with ui.expansion('Proveedores', icon='inventory_2', value=True).classes('w-full text-sm'):
             nav_btn('Proveedores Activos', 'table_chart', '/v_tblprov_data')      # real
             nav_btn('Proveedores (Todos)', 'fact_check', '/v_tblprov_all')        # placeholder
             nav_btn('Importar Datos', 'upload_file', '/importar_proveedores')     # real
