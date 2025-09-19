@@ -6,7 +6,17 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 ---
 
-# Changelog
+# CHANGELOG
+
+## [1.0.124.1] - 2025-09-18
+
+### Fix & Mejoras
+
+- Se corrigió error en la importación desde Excel/CSV causado por valores `NaN`.
+- Se implementó `fillna` para asegurar inserción segura de datos numéricos y comentarios.
+- Se estableció valor fijo de auditoría `prov_createby = "Philippe Abadie"`.
+- Se añadieron comentarios explicativos al código (`p_imp_provData.py`) para facilitar mantenimiento.
+- Mejora de UX en el flujo de importación con notificaciones más claras.
 
 ## [1.0.124.0] - 2025-09-17
 

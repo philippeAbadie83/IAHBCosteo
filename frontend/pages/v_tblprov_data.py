@@ -4,8 +4,8 @@
 from nicegui import ui
 import pandas as pd
 from frontend.components.tbl_base import crear_tabla
-from services.db_services import get_proveedores_activos  # función que hicimos antes
-from utils.helpers import sanitize_dataframe   # ✅ importar utilidad
+from services.db_services import get_proveedores_activos
+from utils.helpers import sanitize_dataframe
 from core import layout
 from core.__version__ import __version__, __build__
 
@@ -35,15 +35,22 @@ def v_tblprov_data():
             {"name": "usuario_update", "label": "Actualizado por", "field": "usuario_update"},
         ]
 
+        # ======== Encabezado con botón de exportar ========
+        with ui.row().classes("w-full items-center justify-between mb-2"):
+            ui.label("Proveedores Activos").classes("text-xl font-bold text-gray-800")
+            ui.button("Exportar", icon="download", on_click=lambda: df.to_excel("Proveedores.xlsx", index=False)) \
+                .props("outlined dense color=primary") \
+                .classes("text-xs px-3 py-1 rounded-md shadow-sm hover:bg-blue-50")
+
         # ======== Crear tabla ========
         crear_tabla(
-            nombre="Proveedores Activos",
+            nombre="",
             columnas=columnas,
             data=df,
             filtros=True,
-            exportar=True,
+            exportar=False,   # 🔹 ya lo controlamos arriba
             congelar=["proveedor", "familia"],
         )
 
-    # 👉 Aquí se integra al layout general
+    # 👉 Integración al layout
     layout.render(content)
