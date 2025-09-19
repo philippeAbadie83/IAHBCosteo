@@ -4,24 +4,26 @@ from nicegui import ui
 from core.__version__ import __version__, __build__, __app__
 
 # ---------------- HEADER ----------------
+
 def create_header() -> None:
     """Header fijo superior de lado a lado"""
     with ui.header().classes(
-        'bg-blue-800 text-white shadow-lg h-14 fixed top-0 left-0 right-0 z-50'  # 👈 header fijo
+        'header-custom flex items-center justify-between px-4'  # 👈 Usa clase personalizada
     ):
-        with ui.row().classes('w-full items-center justify-between px-4'):
-            ui.button(icon='menu', on_click=lambda: ui.left_drawer().toggle()) \
-                .props('flat round color=white dense')
-            ui.label('HIDROBART COSTEO').classes('text-base font-bold tracking-wide')
-            ui.button('Perfil', icon='account_circle') \
-                .props('flat color=white dense no-caps')  # 👈 Perfil restaurado
+        ui.button(icon='menu', on_click=lambda: ui.left_drawer().toggle()) \
+            .props('flat round color=white dense')
+        ui.label('HIDROBART COSTEO').classes('text-base font-bold tracking-wide')
+        ui.button('Perfil', icon='account_circle') \
+            .props('flat color=white dense no-caps')
 
 
 # ---------------- SIDEBAR ----------------
+
 def create_sidebar() -> None:
-    # 👇 agregado pt-16 para que el sidebar arranque debajo del header
-    with ui.left_drawer(top_corner=True).classes('bg-gray-50 w-60 border-r border-gray-200 pt-16') as drawer:
+    # 👇 drawer debajo del header con clase específica
+    with ui.left_drawer().classes('bg-gray-50 w-60 border-r border-gray-200') as drawer:
         drawer.props('mini-to-overlay')
+    # 👇 agregado pt-16 para que el sidebar arranque debajo del header
 
         # Logo eliminado (era el cuadro azul con casa ❌)
         # 👉 Aquí ya no va nada de logo
@@ -95,7 +97,8 @@ def render(content=None) -> None:
     create_header()
     create_sidebar()
     create_footer()
-    # 👇 agregado pt-16 para que el contenido no quede debajo del header
-    with ui.column().classes('w-full min-h-screen bg-gray-50 pt-16'):
+
+    # 👇 Contenedor principal con padding superior
+    with ui.column().classes('w-full min-h-screen bg-gray-50 pt-16 pl-64'):
         if content:
             content()
