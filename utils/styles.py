@@ -5,51 +5,53 @@ def setup_global_styles():
     """Configura estilos CSS globales para la aplicación"""
     ui.add_head_html('''
     <style>
+    /* --- ESTILOS PRINCIPALES --- */
 
-
-    /* --- HEADER FIJADO CORRECTAMENTE --- */
-    .q-header {
-        background: linear-gradient(90deg, #0056b3 0%, #0072CE 100%);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 56px;
-        z-index: 2000; /* Mayor que el sidebar */
+    /* HEADER FIJADO */
+    .q-header, .header-custom {
+        background: linear-gradient(90deg, #0056b3 0%, #0072CE 100%) !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        height: 56px !important;
+        z-index: 3000 !important; /* Alto z-index para estar siempre arriba */
     }
 
-    /* --- SIDEBAR DEBAJO DEL HEADER --- */
+    /* SIDEBAR DEBAJO DEL HEADER */
     .q-drawer {
         top: 56px !important;
         height: calc(100% - 56px) !important;
-        z-index: 1000;
+        z-index: 2000 !important;
+        background-color: #f8f9fa !important;
     }
 
-    /* --- CONTENIDO PRINCIPAL AJUSTADO --- */
+    /* SIDEBAR MINI */
+    .q-drawer--mini {
+        width: 64px !important;
+    }
+
+    /* CONTENIDO PRINCIPAL */
     .q-page-container {
         padding-top: 56px !important;
         margin-left: 240px;
         transition: margin-left 0.3s ease;
         min-height: calc(100vh - 56px);
+        padding: 16px;
     }
 
+    /* CONTENIDO CON SIDEBAR MINI */
     .q-drawer--mini ~ .q-page-container {
         margin-left: 64px;
     }
 
-    /* --- HEADER ESPECÍFICO DE TU APP --- */
-    .header-custom {
-        background: linear-gradient(90deg, #0056b3 0%, #0072CE 100%);
-        color: white;
-        height: 56px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 2000;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    /* BOTONES DEL HEADER */
+    .q-header .q-btn {
+        z-index: 4000 !important;
     }
+
+    /* --- ESTILOS ESPECÍFICOS DE LA APP --- */
 
     /* Botón de toggle del sidebar */
     .sidebar-toggle-btn {
@@ -65,13 +67,47 @@ def setup_global_styles():
         transform: rotate(180deg);
     }
 
-    /* Mejora visual para el header del sidebar */
+    /* Header del sidebar */
     .sidebar-header {
         background-color: #f8f9fa;
+        border-bottom: 1px solid #e5e7eb !important;
     }
 
+    /* Labels de sección en sidebar */
+    .section-label {
+        font-size: 11px !important;
+        letter-spacing: 0.05em !important;
+        text-transform: uppercase !important;
+        color: #6b7280 !important;
+        padding-left: 12px !important;
+        margin-top: 6px !important;
+        margin-bottom: 2px !important;
+        background-color: #f9fafb !important;
+    }
 
-    /* Estilos para tablas */
+    /* Botones en sidebar */
+    .q-drawer .q-btn {
+        transition: background-color 0.2s ease;
+        justify-content: flex-start !important;
+    }
+    .q-drawer .q-btn:hover {
+        background-color: #e3f2fd !important;
+    }
+
+    /* Iconos en botones */
+    .q-btn .q-icon {
+        color: #0072CE !important;
+    }
+
+    /* Sidebar mini - ocultar labels */
+    .q-drawer--mini .q-btn__content .q-btn__label {
+        display: none !important;
+    }
+    .q-drawer--mini .q-btn {
+        justify-content: center !important;
+    }
+
+    /* --- ESTILOS PARA TABLAS --- */
     .sticky-header .q-table__top {
         position: sticky;
         top: 0;
@@ -112,46 +148,16 @@ def setup_global_styles():
         transition: background-color 0.2s ease;
     }
 
-    /* Sidebar para ampliar o minimizar */
-    .q-drawer--mini .q-btn__content .q-btn__label { display: none; }
-    .q-drawer--mini .q-btn { justify-content: center; }
-
-    .q-header {
-        background: linear-gradient(90deg, #0056b3 0%, #0072CE 100%);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-
-    .q-drawer .section-label {
-        font-size: 11px;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        color: #6b7280;
-        padding-left: 12px;
-        margin-top: 6px;
-        margin-bottom: 2px;
-        background-color: #f9fafb;
-        border-right: 1px solid #e5e7eb;
-    }
-
-    .q-drawer .q-btn {
-        transition: background-color 0.2s ease;
-    }
-    .q-drawer .q-btn:hover {
-        background-color: #e3f2fd;
-    }
-
-    .q-btn .q-icon {
-        color: #0072CE !important;
-    }
-
     .q-table tr:hover td {
         background-color: #e3f2fd !important;
         cursor: pointer;
     }
+
     .q-table tr:active {
         background-color: #bbdefb !important;
     }
 
+    /* Botones de acción */
     .action-btn {
         margin: 0 2px;
         transition: transform 0.2s ease;
@@ -160,13 +166,15 @@ def setup_global_styles():
         transform: scale(1.1);
     }
 
-    /* Mejoras generales de UI */
+    /* --- ESTILOS GENERALES DE UI --- */
     .bg-gradient-to-r {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
+
     .rounded-lg {
         border-radius: 12px;
     }
+
     .shadow-lg {
         box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
@@ -174,46 +182,62 @@ def setup_global_styles():
     .bg-gradient-hydro {
         background: linear-gradient(135deg, #0072CE 0%, #00A0E3 100%);
     }
+
     .cost-card {
         border-radius: 12px;
         box-shadow: 0 4px 15px rgba(0, 114, 206, 0.15);
         transition: all 0.3s ease;
     }
+
     .cost-card:hover {
         transform: translateY(-2px);
     }
 
-    /* --- FIX: Sidebar debajo del header --- */
-    .q-drawer {
-        top: 56px !important;   /* altura del header */
-        height: calc(100% - 56px) !important;
-    }
-
-    /* --- FIX: Ajustar contenido cuando sidebar está abierto --- */
-    .q-page-container {
-        margin-left: 240px;   /* ancho drawer normal */
-        transition: margin-left 0.3s ease;
-        padding: 16px;
-    }
-    .q-drawer--mini ~ .q-page-container {
-        margin-left: 64px;    /* ancho drawer mini */
-    }
-
-    /* Responsive */
+    /* --- RESPONSIVE --- */
     @media (max-width: 768px) {
         .q-table {
             font-size: 12px;
         }
+
         .q-table th,
         .q-table td {
             padding: 8px 12px;
         }
+
         .q-drawer--mini {
             width: 56px !important;
         }
+
         .q-page-container {
-            margin-left: 0 !important;  /* en móvil el drawer es overlay */
+            margin-left: 0 !important;
+            padding: 16px 8px;
+        }
+
+        .q-drawer--mini ~ .q-page-container {
+            margin-left: 0 !important;
+        }
+
+        /* En móvil, el drawer se convierte en overlay */
+        .q-drawer {
+            width: 280px !important;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .q-drawer--on-top {
+            transform: translateX(0);
         }
     }
+
+    /* --- MEJORAS DE VISUALIZACIÓN --- */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Smooth transitions */
+    * {
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
     </style>
     ''')

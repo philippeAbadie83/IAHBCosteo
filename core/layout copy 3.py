@@ -1,6 +1,4 @@
 # core/layout.py
-# DeepSeek solucion
-
 
 from nicegui import ui
 from core.__version__ import __version__, __build__, __app__
@@ -10,14 +8,11 @@ from core.__version__ import __version__, __build__, __app__
 def create_header() -> None:
     """Header fijo superior de lado a lado"""
     with ui.header().classes(
-        'header-custom flex items-center justify-between px-4'
+        'header-custom flex items-center justify-between px-4'  # 👈 Usa clase personalizada
     ):
-        # Botón de menú que siempre funciona
         ui.button(icon='menu', on_click=lambda: ui.left_drawer().toggle()) \
             .props('flat round color=white dense')
-
         ui.label('HIDROBART COSTEO').classes('text-base font-bold tracking-wide')
-
         ui.button('Perfil', icon='account_circle') \
             .props('flat color=white dense no-caps')
 
@@ -42,10 +37,11 @@ def create_sidebar() -> None:
                 .classes('justify-start text-sm text-gray-700 hover:text-blue-700')
 
         # ---------------- Proveedor ----------------
+        # 👇 SOLO el expansion, SIN el label duplicado "Proveedor"
         with ui.expansion('Proveedores', icon='inventory_2', value=True).classes('w-full text-sm mt-2'):
-            nav_btn('Proveedores Activos', 'table_chart', '/v_tblprov_data')
-            nav_btn('Proveedores (Todos)', 'fact_check', '/v_tblprov_all')
-            nav_btn('Importar Datos', 'upload_file', '/importar_proveedores')
+            nav_btn('Proveedores Activos', 'table_chart', '/v_tblprov_data')      # real
+            nav_btn('Proveedores (Todos)', 'fact_check', '/v_tblprov_all')        # placeholder
+            nav_btn('Importar Datos', 'upload_file', '/importar_proveedores')     # real
 
         # ---------------- Productos ----------------
         ui.label('Productos').classes('section-label px-3 pt-3 pb-1')
@@ -106,6 +102,6 @@ def render(content=None) -> None:
     create_footer()
 
     # 👇 Contenedor principal con padding superior
-    with ui.column().classes('w-full min-h-screen bg-gray-50 pt-16 pl-64 transition-all duration-300'):
+    with ui.column().classes('w-full min-h-screen bg-gray-50 pt-16 pl-64'):
         if content:
             content()
