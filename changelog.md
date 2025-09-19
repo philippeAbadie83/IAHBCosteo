@@ -8,6 +8,16 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # CHANGELOG
 
+## [1.0.124.6] - 2025-09-19
+
+### Fixes
+
+- Se corrigió el solapamiento del **sidebar** sobre el header.
+- Se eliminó el recuadro azul con icono de casa en el sidebar (ya no aparece).
+- Se restauró el botón **Perfil** en el header.
+- Se aplicó `pt-16` en el sidebar y en el contenido principal para asegurar que queden **debajo del header fijo**.
+- Ajuste general de layout para mantener consistencia entre header, sidebar y contenido.
+
 ## [v1.0.124.5] - Build 124 - 2025-09-19
 
 ### Fixes
