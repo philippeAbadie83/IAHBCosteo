@@ -3,7 +3,7 @@ from nicegui import ui
 from core import layout
 
 # ---------- Proveedores ----------
-@ui.page('/proveedores/todos')
+@ui.page('/v_tblprov_all')
 def proveedores_todos():
     layout.render(lambda: ui.label('📦 Placeholder: Proveedores (activos y no activos)'))
 
@@ -16,15 +16,15 @@ def productos_listado():
 def productos_importar():
     layout.render(lambda: ui.label('📦 Placeholder: Importar Productos'))
 
-@ui.page('/productos/precios-proveedores')
-def precios_proveedores():
+@ui.page('/productos/precios-proveedor')
+def precios_proveedor():
     layout.render(lambda: ui.label('📦 Placeholder: Precios de Proveedores'))
 
 @ui.page('/productos/carga-precios')
 def carga_precios():
     layout.render(lambda: ui.label('📦 Placeholder: Carga de Precios Nuevos'))
 
-@ui.page('/productos/costeo')
+@ui.page('/productos/costo-destino')
 def productos_costeo():
     layout.render(lambda: ui.label('📦 Placeholder: Cálculo de Costeo'))
 

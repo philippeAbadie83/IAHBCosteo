@@ -8,6 +8,16 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # CHANGELOG
 
+## [v1.0.124.4] - Build 124 - 2025-09-19
+
+### Fixed
+
+- El logo de Hidrobart en el sidebar ya no invade el header (se agregó `pt-14` al drawer).
+- Header fijado con `fixed top-0 z-50` para mantenerlo siempre visible.
+- Se restauró la visualización de versión y perfil en el header (lado derecho).
+- Se corrigió alineación general del layout y consistencia visual.
+- Los títulos de secciones en el sidebar ahora se muestran en Proper Case (`.capitalize`).
+
 ## [1.0.124.3] - Build 124 - 2025-09-19
 
 ### Added

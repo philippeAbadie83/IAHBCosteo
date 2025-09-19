@@ -3,23 +3,27 @@
 from nicegui import ui
 from core.__version__ import __version__, __build__, __app__
 
+
 # ---------------- HEADER ----------------
 def create_header() -> None:
-    with ui.header().classes('bg-blue-800 text-white shadow-lg h-14'):
+    with ui.header().classes('bg-blue-800 text-white shadow-lg h-14 fixed top-0 z-50'):
         with ui.row().classes('w-full items-center justify-between px-4'):
             ui.button(icon='menu', on_click=lambda: ui.left_drawer().toggle()) \
                 .props('flat round color=white dense')
             ui.label('HIDROBART COSTEO').classes('text-base font-bold tracking-wide')
-            ui.label(f'v{__version__} (Build {__build__})').classes('text-xs opacity-70')
+            with ui.row().classes('items-center gap-4'):
+                ui.label(f'v{__version__} (Build {__build__})').classes('text-xs opacity-70')
+                ui.button('Perfil', icon='account_circle').props('flat color=white dense no-caps')
+
 
 # ---------------- SIDEBAR ----------------
 def create_sidebar() -> None:
-    with ui.left_drawer(top_corner=True).classes('bg-gray-50 w-60 border-r border-gray-200') as drawer:
+    with ui.left_drawer(top_corner=True).classes('bg-gray-50 w-60 border-r border-gray-200 pt-14') as drawer:
         drawer.props('mini-to-overlay')
 
         # Logo
         with ui.column().classes('w-full items-center p-3 border-b bg-blue-700 text-white'):
-            ui.icon('water_damage', size='2rem', color='white')
+            ui.icon('home', size='2rem', color='white')
             ui.label('Hidrobart').classes('text-base font-bold')
             ui.label('Sistema de Costeo').classes('text-xs opacity-80')
 
@@ -29,14 +33,14 @@ def create_sidebar() -> None:
                 .classes('justify-start text-sm text-gray-700 hover:text-blue-700')
 
         # ---------------- Proveedor ----------------
-        ui.label('Proveedor').classes('section-label px-3 pt-3 pb-1')
+        ui.label('Proveedor').classes('section-label px-3 pt-3 pb-1 capitalize')
         with ui.expansion('Proveedores', icon='inventory_2', value=True).classes('w-full text-sm'):
-            nav_btn('Proveedores Activos', 'table_chart', '/v_tblprov_data')      # real
-            nav_btn('Proveedores (Todos)', 'fact_check', '/v_tblprov_all')        # placeholder
-            nav_btn('Importar Datos', 'upload_file', '/importar_proveedores')     # real
+            nav_btn('Proveedores Activos', 'table_chart', '/v_tblprov_data')
+            nav_btn('Proveedores (Todos)', 'fact_check', '/v_tblprov_all')
+            nav_btn('Importar Datos', 'upload_file', '/importar_proveedores')
 
         # ---------------- Productos ----------------
-        ui.label('Productos').classes('section-label px-3 pt-3 pb-1')
+        ui.label('Productos').classes('section-label px-3 pt-3 pb-1 capitalize')
         with ui.expansion('Productos', icon='inventory', value=False).classes('w-full text-sm'):
             nav_btn('Listado de Productos', 'list', '/productos/listado')
             nav_btn('Importar Productos', 'file_upload', '/productos/importar')
@@ -46,14 +50,14 @@ def create_sidebar() -> None:
             nav_btn('Lista de Precios', 'request_quote', '/productos/lista-precios')
 
         # ---------------- Kit Productos ----------------
-        ui.label('Kit Productos').classes('section-label px-3 pt-3 pb-1')
+        ui.label('Kit Productos').classes('section-label px-3 pt-3 pb-1 capitalize')
         with ui.expansion('Kit Productos', icon='widgets', value=False).classes('w-full text-sm'):
             nav_btn('Listado de Productos', 'view_list', '/kit/listado')
             nav_btn('Armado de Kit', 'extension', '/kit/armado')
             nav_btn('Costeo', 'calculate', '/kit/costeo')
 
         # ---------------- Simulación ----------------
-        ui.label('Simulación').classes('section-label px-3 pt-3 pb-1')
+        ui.label('Simulación').classes('section-label px-3 pt-3 pb-1 capitalize')
         with ui.expansion('Simulación', icon='science', value=False).classes('w-full text-sm'):
             nav_btn('Clientes Especiales', 'star', '/sim/clientes-especiales')
             nav_btn('Campaña', 'campaign', '/sim/campana')
@@ -61,20 +65,20 @@ def create_sidebar() -> None:
             nav_btn('Mejores Márgenes', 'savings', '/sim/mejores-margenes')
 
         # ---------------- Análisis ----------------
-        ui.label('Análisis').classes('section-label px-3 pt-3 pb-1')
+        ui.label('Análisis').classes('section-label px-3 pt-3 pb-1 capitalize')
         with ui.column().classes('w-full p-1 gap-1'):
             nav_btn('Reportes', 'analytics', '/reportes')
             nav_btn('Gráficos', 'bar_chart', '/graficos')
 
         # ---------------- Ejemplos ----------------
-        ui.label('Ejemplos').classes('section-label px-3 pt-3 pb-1')
+        ui.label('Ejemplos').classes('section-label px-3 pt-3 pb-1 capitalize')
         with ui.column().classes('w-full p-1 gap-1'):
             nav_btn('Tabla TTBL', 'table_chart', '/ttbl')
             nav_btn('Tabla TTBL2', 'table_chart', '/ttbl2')
             nav_btn('Tabla Pipeline', 'table_chart', '/pipeline')
 
         # ---------------- Sistema ----------------
-        ui.label('Sistema').classes('section-label px-3 pt-3 pb-1')
+        ui.label('Sistema').classes('section-label px-3 pt-3 pb-1 capitalize')
         with ui.column().classes('w-full p-1 gap-1 border-t'):
             nav_btn('Configuración', 'settings', '/configuracion')
             nav_btn('Ayuda', 'help', '/ayuda')
