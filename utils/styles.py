@@ -1,4 +1,3 @@
-# utils/styles.py
 from nicegui import ui
 
 def setup_global_styles():
@@ -6,8 +5,6 @@ def setup_global_styles():
     ui.add_head_html('''
     <style>
     /* --- ESTILOS PRINCIPALES --- */
-
-    /* HEADER FIJADO */
     .q-header, .header-custom {
         background: linear-gradient(90deg, #0056b3 0%, #0072CE 100%) !important;
         box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
@@ -16,23 +13,42 @@ def setup_global_styles():
         left: 0 !important;
         right: 0 !important;
         height: 56px !important;
-        z-index: 3000 !important; /* Alto z-index para estar siempre arriba */
+        z-index: 3000 !important;
     }
 
-    /* SIDEBAR DEBAJO DEL HEADER */
+    /* --- COMPORTAMIENTO DEL DRAWER --- */
     .q-drawer {
+        position: fixed !important;
+        transform: none !important;
         top: 56px !important;
         height: calc(100% - 56px) !important;
         z-index: 2000 !important;
         background-color: #f8f9fa !important;
+        box-shadow: 2px 0 8px rgba(0,0,0,0.1) !important;
+        left: 0 !important;
     }
 
-    /* SIDEBAR MINI */
+    /* Drawer normal (expandido) */
+    .q-drawer:not(.q-drawer--mini) {
+        width: 240px !important;
+    }
+
+    /* Drawer mini */
     .q-drawer--mini {
         width: 64px !important;
     }
 
-    /* CONTENIDO PRINCIPAL */
+    /* Eliminar cualquier transformación que pueda ocultar el drawer */
+    .q-drawer--mini, .q-drawer:not(.q-drawer--mini) {
+        transform: translateX(0) !important;
+    }
+
+    /* Asegurar que el backdrop no interfiera */
+    .q-drawer__backdrop {
+        display: none !important;
+    }
+
+    /* Contenido principal se ajusta al drawer */
     .q-page-container {
         padding-top: 56px !important;
         margin-left: 240px;
@@ -41,7 +57,6 @@ def setup_global_styles():
         padding: 16px;
     }
 
-    /* CONTENIDO CON SIDEBAR MINI */
     .q-drawer--mini ~ .q-page-container {
         margin-left: 64px;
     }
@@ -52,8 +67,6 @@ def setup_global_styles():
     }
 
     /* --- ESTILOS ESPECÍFICOS DE LA APP --- */
-
-    /* Botón de toggle del sidebar */
     .sidebar-toggle-btn {
         transition: transform 0.3s ease;
     }
@@ -62,18 +75,15 @@ def setup_global_styles():
         background-color: #e3f2fd !important;
     }
 
-    /* Cuando el sidebar está mini, gira el ícono */
     .q-drawer--mini .sidebar-toggle-btn .q-icon {
         transform: rotate(180deg);
     }
 
-    /* Header del sidebar */
     .sidebar-header {
         background-color: #f8f9fa;
         border-bottom: 1px solid #e5e7eb !important;
     }
 
-    /* Labels de sección en sidebar */
     .section-label {
         font-size: 11px !important;
         letter-spacing: 0.05em !important;
@@ -85,7 +95,6 @@ def setup_global_styles():
         background-color: #f9fafb !important;
     }
 
-    /* Botones en sidebar */
     .q-drawer .q-btn {
         transition: background-color 0.2s ease;
         justify-content: flex-start !important;
@@ -94,7 +103,6 @@ def setup_global_styles():
         background-color: #e3f2fd !important;
     }
 
-    /* Iconos en botones */
     .q-btn .q-icon {
         color: #0072CE !important;
     }
@@ -106,7 +114,6 @@ def setup_global_styles():
     .q-drawer--mini .q-btn {
         justify-content: center !important;
     }
-
 
     /* Elementos que se ocultan en modo mini */
     .mini-hidden {
@@ -121,13 +128,11 @@ def setup_global_styles():
         overflow: hidden;
     }
 
-    /* Asegurar que los íconos siempre sean visibles */
     .q-drawer--mini .q-icon {
         opacity: 1 !important;
         visibility: visible !important;
     }
 
-    /* Expansions en modo mini */
     .q-drawer--mini .q-expansion-item {
         min-height: 48px;
     }
@@ -136,14 +141,12 @@ def setup_global_styles():
         display: none !important;
     }
 
-    /* Botones en modo mini */
     .q-drawer--mini .q-btn {
         min-width: 48px !important;
         justify-content: center !important;
         padding: 0 !important;
     }
 
-    /* Ajustes para el header del sidebar en modo mini */
     .q-drawer--mini .sidebar-header {
         min-height: 48px;
         padding: 8px 4px !important;
@@ -204,7 +207,6 @@ def setup_global_styles():
         background-color: #bbdefb !important;
     }
 
-    /* Botones de acción */
     .action-btn {
         margin: 0 2px;
         transition: transform 0.2s ease;
@@ -264,7 +266,6 @@ def setup_global_styles():
             margin-left: 0 !important;
         }
 
-        /* En móvil, el drawer se convierte en overlay */
         .q-drawer {
             width: 280px !important;
             transform: translateX(-100%);
@@ -281,10 +282,8 @@ def setup_global_styles():
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    /* Smooth transitions */
     * {
         transition: background-color 0.2s ease, transform 0.2s ease;
     }
-
     </style>
     ''')
