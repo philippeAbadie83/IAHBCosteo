@@ -1,6 +1,5 @@
+# DeepSeek Development operative
 # core/layout.py
-# DeepSeek construccion
-
 
 from nicegui import ui
 from core.__version__ import __version__, __build__, __app__
@@ -13,7 +12,7 @@ def create_header() -> None:
         'header-custom flex items-center justify-between px-4'
     ):
         # Botón que SIEMPRE funciona para toggle
-        ui.button(icon='menu', on_click=lambda: ui.left_drawer().toggle()) \
+        menu_btn = ui.button(icon='menu', on_click=lambda: ui.left_drawer().toggle()) \
             .props('flat round color=white dense')
 
         ui.label('HIDROBART COSTEO').classes('text-base font-bold tracking-wide')
@@ -25,14 +24,13 @@ def create_header() -> None:
 # ---------------- SIDEBAR ----------------
 
 def create_sidebar() -> None:
-    # 👇 drawer con configuración que evita que se cierre completamente
-    with ui.left_drawer(fixed=False, value=True).classes('bg-gray-50 border-r border-gray-200') as drawer:
-        drawer.props('behavior=desktop no-swipe-backdrop')  # 👈 Comportamiento desktop
+    # 👇 drawer normal, el modo mini se controla con CSS
+    with ui.left_drawer(top_corner=True).classes('bg-gray-50 w-60 border-r border-gray-200 pt-16') as drawer:
+        drawer.props('mini-to-overlay')
 
         # 👇 Header del sidebar con toggle
         with ui.row().classes('w-full items-center justify-between px-3 py-2 sidebar-header border-b border-gray-200'):
             ui.label('Navegación').classes('text-sm font-semibold text-gray-700 mini-hidden')
-            # Botón que alterna entre mini y normal
             ui.button(icon='chevron_left', on_click=lambda: drawer.toggle()) \
                 .props('flat dense round size=sm') \
                 .classes('sidebar-toggle-btn text-gray-500')

@@ -162,11 +162,10 @@ def crear_tabla(
             .props("outlined color=primary") \
             .classes("mb-4")
 
-    # ======== Acciones por fila - SOLUCIÓN COMPATIBLE ========
-    # SOLUCIÓN DE EMERGENCIA - Si nada más funciona
+    # ======== Acciones por fila - CORRECCIÓN ========
     if acciones:
-        # Regresar a la sintaxis más básica y compatible
-        def render_acciones(row):
+        # SOLUCIÓN: Usar la sintaxis original de NiceGUI para slots
+        def render_acciones(row: Dict[str, Any]) -> None:
             with ui.row().classes("gap-1"):
                 for accion in acciones:
                     ui.button(
@@ -174,9 +173,8 @@ def crear_tabla(
                         on_click=lambda e, r=row: accion["func"](r),
                     ).props("flat dense")
 
-        # Usar cast para evitar errores de tipo
-        table.add_slot("body-cell-acciones", cast(Any, render_acciones))
-
+        # Usar la sintaxis correcta para add_slot
+        table.add_slot("body-cell-acciones", render_acciones)
 
     # ======== Congelar columnas ========
     if congelar:
