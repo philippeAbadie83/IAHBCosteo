@@ -15,7 +15,7 @@ def crear_tabla(
     congelar: Optional[list] = None,
 ):
     """
-    Crear tabla universal en NiceGUI con mejoras de UX/UI
+    Crear tabla universal en NiceGUI
 
     Parámetros:
     - nombre: título visible arriba de la tabla
@@ -35,40 +35,32 @@ def crear_tabla(
 
     df = data.copy()
 
-    # ======== Filtros Mejorados ========
+    # ======== Filtros ========
     filtro_proveedor = None
     filtro_familia = None
     filtro_codigo = None
 
     if filtros and not df.empty:
-        with ui.row().classes("gap-4 mb-4 items-end"):
-            with ui.column().classes("w-48"):
-                ui.label("Proveedor").classes("text-sm font-medium text-gray-700 mb-1")
-                filtro_proveedor = ui.select(
-                    options=["Todos"] + sorted(df["proveedor"].dropna().unique().tolist()),
-                    value="Todos",
-                ).props("dense outlined").classes("w-full")
+        with ui.row().classes("gap-4 mb-4"):
+            filtro_proveedor = ui.select(
+                options=["Todos"] + sorted(df["proveedor"].unique().tolist()),
+                value="Todos",
+                label="Proveedor",
+            )
+            filtro_familia = ui.select(
+                options=["Todos"] + sorted(df["familia"].unique().tolist()),
+                value="Todos",
+                label="Familia",
+            )
+            filtro_codigo = ui.input(label="Buscar Código Sys.")
 
-            with ui.column().classes("w-48"):
-                ui.label("Familia").classes("text-sm font-medium text-gray-700 mb-1")
-                filtro_familia = ui.select(
-                    options=["Todos"] + sorted(df["familia"].dropna().unique().tolist()),
-                    value="Todos",
-                ).props("dense outlined").classes("w-full")
-
-            with ui.column().classes("w-48"):
-                ui.label("Buscar Código Sys.").classes("text-sm font-medium text-gray-700 mb-1")
-                filtro_codigo = ui.input() \
-                    .props("dense outlined clearable") \
-                    .classes("w-full")
-
-    # ======== Tabla Mejorada ========
+    # ======== Tabla ========
     if acciones:
         columnas.append(
-            {"name": "acciones", "label": "Acciones", "field": "acciones", "sortable": False}
+            {"name": "acciones", "label": "Acciones", "field": "acciones"}
         )
 
-    # Añadir sortable a todas las columnas que no lo tengan definido
+    # Hacer todas las columnas sortable si no está definido
     for col in columnas:
         if 'sortable' not in col:
             col['sortable'] = True
@@ -76,9 +68,7 @@ def crear_tabla(
     table = ui.table(
         columns=columnas,
         rows=[],
-        row_key="id",
-    ).props("pagination rows-per-page-options='[10,20,50,100]' dense flat bordered") \
-     .classes("sticky-header full-width")
+    ).props("pagination rows-per-page=20 dense flat bordered").classes("sticky-header")
 
     # ======== Función de filtrado ========
     def get_filtered_data():
@@ -89,16 +79,19 @@ def crear_tabla(
             if filtro_familia and filtro_familia.value != "Todos":
                 df_f = df_f[df_f["familia"] == filtro_familia.value]
             if filtro_codigo and filtro_codigo.value:
-                # Buscar en múltiples columnas posibles de código
-                code_columns = ['code_sys', 'codigo', 'id', 'sku']
-                for code_col in code_columns:
-                    if code_col in df_f.columns:
-                        df_f = df_f[
-                            df_f[code_col].astype(str).str.contains(
-                                filtro_codigo.value, case=False, na=False
-                            )
-                        ]
-                        break
+                # Buscar en code_sys o en la primera columna disponible
+                if 'code_sys' in df_f.columns:
+                    df_f = df_f[
+                        df_f["code_sys"].astype(str).str.contains(
+                            filtro_codigo.value, case=False, na=False
+                        )
+                    ]
+                elif 'proveedor' in df_f.columns:
+                    df_f = df_f[
+                        df_f["proveedor"].astype(str).str.contains(
+                            filtro_codigo.value, case=False, na=False
+                        )
+                    ]
         return df_f
 
     # ======== Actualización ========
@@ -106,7 +99,8 @@ def crear_tabla(
         rows = get_filtered_data().to_dict(orient="records")
         if acciones:
             for r in rows:
-                r["acciones"] = r["id"]
+                # Usar el proveedor como identificador en lugar de id
+                r["acciones"] = r["proveedor"]
         table.rows = rows
 
         # Mostrar contador de resultados
@@ -124,48 +118,24 @@ def crear_tabla(
         if filtro_familia:
             filtro_familia.on("update:model-value", update_table)
         if filtro_codigo:
-            filtro_codigo.on("keydown.enter", update_table) \
-                        .on("blur", update_table)
+            filtro_codigo.on("update:model-value", update_table)
 
     update_table()
 
-    # ======== Exportar Excel Mejorado ========
+    # ======== Exportar Excel ========
     if exportar:
         def exportar_excel():
             df_f = get_filtered_data()
             output = io.BytesIO()
-
-            # Usar ExcelWriter para mejor formato
-            with pd.ExcelWriter(output, engine='openpyxl') as writer:
-                df_f.to_excel(writer, index=False, sheet_name='Datos')
-
-                # Autoajustar el ancho de las columnas
-                worksheet = writer.sheets['Datos']
-                for column in worksheet.columns:
-                    max_length = 0
-                    column_letter = column[0].column_letter
-                    for cell in column:
-                        try:
-                            if len(str(cell.value)) > max_length:
-                                max_length = len(str(cell.value))
-                        except:
-                            pass
-                    adjusted_width = min(max_length + 2, 50)
-                    worksheet.column_dimensions[column_letter].width = adjusted_width
-
-            output.seek(0)
+            df_f.to_excel(output, index=False)
             from datetime import datetime
             filename = f"{nombre}_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx"
             ui.download(output.getvalue(), filename=filename)
 
-        ui.button("Exportar a Excel", icon="download", on_click=exportar_excel) \
-            .props("outlined color=primary") \
-            .classes("mb-4")
+        ui.button("Exportar a Excel", on_click=exportar_excel).classes("mb-2")
 
-    # ======== Acciones por fila - SOLUCIÓN COMPATIBLE ========
-    # SOLUCIÓN DE EMERGENCIA - Si nada más funciona
+    # ======== Acciones por fila ========
     if acciones:
-        # Regresar a la sintaxis más básica y compatible
         def render_acciones(row):
             with ui.row().classes("gap-1"):
                 for accion in acciones:
@@ -174,9 +144,7 @@ def crear_tabla(
                         on_click=lambda e, r=row: accion["func"](r),
                     ).props("flat dense")
 
-        # Usar cast para evitar errores de tipo
         table.add_slot("body-cell-acciones", cast(Any, render_acciones))
-
 
     # ======== Congelar columnas ========
     if congelar:
