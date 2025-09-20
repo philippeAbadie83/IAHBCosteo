@@ -16,10 +16,6 @@ def v_tblprov_data():
         df: pd.DataFrame = get_proveedores_activos()
         df = sanitize_dataframe(df)
 
-        # Asegurar que tenemos columna id
-        if 'id' not in df.columns:
-            df['id'] = df.index + 1
-
         # ======== Definir columnas ========
         columnas = [
             {"name": "proveedor", "label": "Proveedor", "field": "proveedor", "sortable": True},
