@@ -26,7 +26,6 @@ def crear_tabla(
         if nombre:
             ui.label(nombre).classes("text-2xl font-bold text-gray-800")
 
-        # BOTÓN DE EXPORTAR EN LA PARTE SUPERIOR DERECHA (como estaba antes)
         if exportar:
             def exportar_excel():
                 df_f = get_filtered_data()
@@ -80,12 +79,12 @@ def crear_tabla(
         if 'align' not in col:
             col['align'] = 'left'
 
-    # Crear contenedor para la tabla con diseño profesional
-    with ui.card().classes("pro-table-container w-full no-shadow no-border"):
+    # Crear contenedor para la tabla
+    with ui.card().classes("w-full no-shadow no-border"):
         table = ui.table(
             columns=columnas,
             rows=[],
-        ).props("pagination rows-per-page=20 flat").classes("pro-table sticky-header")
+        ).props("pagination rows-per-page=20 flat")
 
     # ======== Función de filtrado ========
     def get_filtered_data():
@@ -108,40 +107,37 @@ def crear_tabla(
 
         return df_f
 
-    # ======== Función para formatos especiales CORREGIDA ========
+    # APPROACH ALTERNATIVO - Modificar los datos para usar tuplas
     def aplicar_formatos_especiales(row):
         if formatos_especiales:
             for col_name, formato_config in formatos_especiales.items():
                 if col_name in row and row[col_name] is not None:
                     if formato_config.get('tipo') == 'porcentaje':
                         try:
-                            # Verificar si el valor es numérico
                             value = row[col_name]
                             if isinstance(value, (int, float)) or (isinstance(value, str) and value.replace('.', '').replace('%', '').isdigit()):
                                 num_value = float(str(value).replace('%', ''))
 
-                                # Aplicar formato según el valor
+                                # ✅ NiceGUI acepta tuplas (contenido, clase)
                                 if num_value > 15:
-                                    row[col_name] = f'<span class="alert-badge">{num_value}%</span>'
+                                    row[col_name] = (f'{num_value}%', 'alert-badge')
                                 elif num_value > 5:
-                                    row[col_name] = f'<span class="value-badge">{num_value}%</span>'
+                                    row[col_name] = (f'{num_value}%', 'value-badge')
                                 else:
                                     row[col_name] = f'{num_value}%'
-                            else:
-                                # Mantener el valor original si no es numérico
-                                row[col_name] = str(value)
                         except (ValueError, TypeError):
-                            # En caso de error, mantener el valor original
                             row[col_name] = str(row[col_name])
         return row
+
+
 
     # ======== Actualización ========
     def update_table():
         df_filtrado = get_filtered_data()
         rows = df_filtrado.to_dict(orient="records")
 
-        # Aplicar formatos especiales
-        rows = [aplicar_formatos_especiales(row) for row in rows]
+        # ✅ ELIMINAR la llamada a aplicar_formatos_especiales()
+        # Los formatos ahora se manejan via slots
 
         if acciones:
             for row in rows:
