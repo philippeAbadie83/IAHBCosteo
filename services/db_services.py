@@ -141,5 +141,10 @@ def get_proveedores_por_fecha(fecha: str) -> pd.DataFrame:
     """)
     with engine.connect() as conn:
         df = pd.read_sql(query, conn, params={"fecha": fecha})
-    return df
 
+    # 🔑 Convertir fechas a string para evitar error JSON serializable
+    for col in ["prov_createdate", "prov_updatedate"]:
+        if col in df.columns:
+            df[col] = df[col].astype(str)
+
+    return df

@@ -8,6 +8,14 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # Changelog
 
+## [1.0.126.3] - 2025-09-21
+
+### Fixed
+
+- Corregido error `500 - TypeError: Type is not JSON serializable: Timestamp` en la página `/importar_proveedores`.
+- En `get_proveedores_por_fecha`, las columnas `prov_createdate` y `prov_updatedate` ahora se convierten explícitamente a `str` para ser serializables en JSON.
+- Esto asegura que la tabla de proveedores importados/actualizados se renderice correctamente sin romper la UI.
+
 ## [1.0.126.2] - 2025-09-21
 
 ### Changed
