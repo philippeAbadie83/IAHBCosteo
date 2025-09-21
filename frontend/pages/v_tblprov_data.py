@@ -1,3 +1,4 @@
+
 # frontend/pages/v_tblprov_data.py
 from nicegui import ui
 import pandas as pd
@@ -16,7 +17,7 @@ def v_tblprov_data():
         df: pd.DataFrame = get_proveedores_activos()
         df = sanitize_dataframe(df)
 
-        # ======== Definir columnas ========
+        # ======== Definir columnas ESPECÍFICAS ========
         columnas = [
             {"name": "proveedor", "label": "Proveedor", "field": "proveedor", "sortable": True, "align": "left"},
             {"name": "familia", "label": "Familia", "field": "familia", "sortable": True, "align": "left"},
@@ -32,20 +33,31 @@ def v_tblprov_data():
             {"name": "usuario_update", "label": "Actualizado por", "field": "usuario_update", "align": "left"},
         ]
 
-        # ======== Encabezado con botón de exportar ========
-        with ui.row().classes("w-full items-center justify-between mb-4"):
-            ui.label("Proveedores Activos").classes("text-2xl font-bold text-gray-800")
-            ui.button("Exportar Excel", icon="download", on_click=lambda: df.to_excel("Proveedores.xlsx", index=False)) \
-                .classes("export-btn-pro")
+        # ======== Definir filtros ESPECÍFICOS ========
+        filtros = [
+            {'type': 'select', 'column': 'proveedor', 'label': 'Proveedor'},
+            {'type': 'select', 'column': 'familia', 'label': 'Familia'},
+            {'type': 'input', 'column': 'code_sys', 'label': 'Buscar Código Sys.', 'placeholder': 'Ingrese código...'}
+        ]
 
-        # ======== Crear tabla SIN ACCIONES ========
+        # ======== Definir formatos especiales ESPECÍFICOS ========
+        formatos_especiales = {
+            'flete_origen': {'tipo': 'porcentaje'},
+            'arancel': {'tipo': 'porcentaje'},
+            'gtos_aduana': {'tipo': 'porcentaje'},
+            'flete_mex': {'tipo': 'porcentaje'},
+            'total_gastos': {'tipo': 'porcentaje'}
+        }
+
+        # ======== Usar tabla genérica ========
         crear_tabla(
-            nombre="",
+            nombre="Proveedores Activos",
             columnas=columnas,
             data=df,
-            filtros=True,
-            exportar=False,   # 🔹 ya lo controlamos arriba
+            filtros=filtros,
+            exportar=True,
             congelar=["proveedor", "familia"],
+            formatos_especiales=formatos_especiales
         )
 
     # 👉 Integración al layout
