@@ -18,26 +18,25 @@ def v_tblprov_data():
 
         # ======== Definir columnas ========
         columnas = [
-            {"name": "proveedor", "label": "Proveedor", "field": "proveedor", "sortable": True},
-            {"name": "familia", "label": "Familia", "field": "familia", "sortable": True},
-            {"name": "valor", "label": "Valor", "field": "valor"},
-            {"name": "flete_origen", "label": "Flete Origen %", "field": "flete_origen"},
-            {"name": "arancel", "label": "Arancel %", "field": "arancel"},
-            {"name": "gtos_aduana", "label": "Gtos Aduana %", "field": "gtos_aduana"},
-            {"name": "flete_mex", "label": "Flete Mex %", "field": "flete_mex"},
-            {"name": "total_gastos", "label": "Total Gastos %", "field": "total_gastos"},
-            {"name": "comentarios", "label": "Comentarios", "field": "comentarios"},
-            {"name": "version", "label": "Versión", "field": "version"},
-            {"name": "fecha_update", "label": "Última Actualización", "field": "fecha_update"},
-            {"name": "usuario_update", "label": "Actualizado por", "field": "usuario_update"},
+            {"name": "proveedor", "label": "Proveedor", "field": "proveedor", "sortable": True, "align": "left"},
+            {"name": "familia", "label": "Familia", "field": "familia", "sortable": True, "align": "left"},
+            {"name": "valor", "label": "Valor", "field": "valor", "align": "right"},
+            {"name": "flete_origen", "label": "Flete Origen %", "field": "flete_origen", "align": "right"},
+            {"name": "arancel", "label": "Arancel %", "field": "arancel", "align": "right"},
+            {"name": "gtos_aduana", "label": "Gtos Aduana %", "field": "gtos_aduana", "align": "right"},
+            {"name": "flete_mex", "label": "Flete Mex %", "field": "flete_mex", "align": "right"},
+            {"name": "total_gastos", "label": "Total Gastos %", "field": "total_gastos", "align": "right"},
+            {"name": "comentarios", "label": "Comentarios", "field": "comentarios", "align": "left"},
+            {"name": "version", "label": "Versión", "field": "version", "align": "center"},
+            {"name": "fecha_update", "label": "Última Actualización", "field": "fecha_update", "align": "center"},
+            {"name": "usuario_update", "label": "Actualizado por", "field": "usuario_update", "align": "left"},
         ]
 
         # ======== Encabezado con botón de exportar ========
-        with ui.row().classes("w-full items-center justify-between mb-2"):
-            ui.label("Proveedores Activos").classes("text-xl font-bold text-gray-800")
-            ui.button("Exportar", icon="download", on_click=lambda: df.to_excel("Proveedores.xlsx", index=False)) \
-                .props("outlined dense color=primary") \
-                .classes("text-xs px-3 py-1 rounded-md shadow-sm hover:bg-blue-50")
+        with ui.row().classes("w-full items-center justify-between mb-4"):
+            ui.label("Proveedores Activos").classes("text-2xl font-bold text-gray-800")
+            ui.button("Exportar Excel", icon="download", on_click=lambda: df.to_excel("Proveedores.xlsx", index=False)) \
+                .classes("export-btn-pro")
 
         # ======== Crear tabla SIN ACCIONES ========
         crear_tabla(

@@ -15,7 +15,7 @@ def crear_tabla(
     congelar: Optional[list] = None,
 ):
     """
-    Crear tabla universal en NiceGUI con diseño profesional corporativo
+    Crear tabla universal en NiceGUI
 
     Parámetros:
     - nombre: título visible arriba de la tabla
@@ -31,34 +31,28 @@ def crear_tabla(
     apply_table_styles()
 
     # ======== Título ========
-    if nombre:
-        ui.label(nombre).classes("text-xl font-bold mb-4 text-gray-800")
+    ui.label(nombre).classes("text-xl font-bold mb-4")
 
     df = data.copy()
 
-    # ======== Filtros con diseño mejorado ========
+    # ======== Filtros ========
     filtro_proveedor = None
     filtro_familia = None
     filtro_codigo = None
 
     if filtros and not df.empty:
-        with ui.row().classes("pro-filter w-full mb-4 gap-4"):
+        with ui.row().classes("gap-4 mb-4"):
             filtro_proveedor = ui.select(
                 options=["Todos"] + sorted(df["proveedor"].unique().tolist()),
                 value="Todos",
                 label="Proveedor",
-            ).classes("w-full md:w-48")
-
+            )
             filtro_familia = ui.select(
                 options=["Todos"] + sorted(df["familia"].unique().tolist()),
                 value="Todos",
                 label="Familia",
-            ).classes("w-full md:w-48")
-
-            filtro_codigo = ui.input(
-                label="Buscar Código Sys.",
-                placeholder="Ingrese código..."
-            ).classes("w-full md:w-64")
+            )
+            filtro_codigo = ui.input(label="Buscar Código Sys.")
 
     # ======== Tabla ========
     if acciones:
@@ -71,12 +65,10 @@ def crear_tabla(
         if 'sortable' not in col:
             col['sortable'] = True
 
-    # Crear contenedor para la tabla con diseño profesional
-    with ui.card().classes("pro-table-container w-full no-shadow no-border"):
-        table = ui.table(
-            columns=columnas,
-            rows=[],
-        ).props("pagination rows-per-page=20 flat").classes("pro-table")
+    table = ui.table(
+        columns=columnas,
+        rows=[],
+    ).props("pagination rows-per-page=20 dense flat bordered").classes("sticky-header")
 
     # ======== Función de filtrado ========
     def get_filtered_data():
@@ -102,32 +94,12 @@ def crear_tabla(
                     ]
         return df_f
 
-    def format_percentage_value(value):
-        """Formatea valores porcentuales con colores y badges según su valor"""
-        try:
-            num_value = float(value)
-            if num_value > 15:
-                return f'<span class="alert-badge">{value}%</span>'
-            elif num_value > 5:
-                return f'<span class="value-badge">{value}%</span>'
-            else:
-                return f'{value}%'
-        except (ValueError, TypeError):
-            return str(value)
-
     # ======== Actualización ========
     def update_table():
         rows = get_filtered_data().to_dict(orient="records")
-
-        # Aplicar formato a los valores porcentuales
-        percentage_columns = ['flete_origen', 'arancel', 'gtos_aduana', 'flete_mex', 'total_gastos']
-        for row in rows:
-            for col in percentage_columns:
-                if col in row:
-                    row[col] = format_percentage_value(row[col])
-
         if acciones:
             for r in rows:
+                # Usar el proveedor como identificador en lugar de id
                 r["acciones"] = r["proveedor"]
         table.rows = rows
 
@@ -137,15 +109,7 @@ def crear_tabla(
         else:
             with ui.row().classes("w-full justify-end mt-2"):
                 update_table.result_count = ui.label(f"Mostrando {len(rows)} de {len(df)} registros") \
-                    .classes("result-counter-pro")
-
-        # Mostrar contador de resultados con estilo mejorado
-        if hasattr(update_table, 'result_count'):
-            update_table.result_count.text = f"Mostrando {len(rows)} de {len(df)} registros"
-        else:
-            with ui.row().classes("w-full justify-end mt-2"):
-                update_table.result_count = ui.label(f"Mostrando {len(rows)} de {len(df)} registros") \
-                    .classes("result-counter-pro")
+                    .classes("text-sm text-gray-500")
 
     # Configurar eventos de filtrado
     if filtros:
@@ -168,18 +132,17 @@ def crear_tabla(
             filename = f"{nombre}_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx"
             ui.download(output.getvalue(), filename=filename)
 
-        ui.button("Exportar a Excel", icon="download", on_click=exportar_excel) \
-            .classes("export-btn-pro mb-4")
+        ui.button("Exportar a Excel", on_click=exportar_excel).classes("mb-2")
 
     # ======== Acciones por fila ========
     if acciones:
         def render_acciones(row):
-            with ui.row().classes("gap-1 justify-center"):
+            with ui.row().classes("gap-1"):
                 for accion in acciones:
                     ui.button(
                         icon=accion["icon"],
                         on_click=lambda e, r=row: accion["func"](r),
-                    ).props("flat dense").classes("action-btn")
+                    ).props("flat dense")
 
         table.add_slot("body-cell-acciones", cast(Any, render_acciones))
 
