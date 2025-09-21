@@ -8,6 +8,17 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # Changelog
 
+## [1.0.126.1] - 2025-09-21
+
+### Fixed
+
+- Se corrigió `insertar_proveedor` en `db_services.py` para usar UPSERT (`ON DUPLICATE KEY UPDATE`) con `session`.
+- Ahora si `(prov_name, prov_famil)` ya existe se actualiza en lugar de fallar con error de duplicado.
+- El trigger `trg_tbl_prov_data_before_update` sigue manejando histórico, versionado y vigencias automáticamente.
+- Eliminadas definiciones duplicadas de `insertar_proveedor` y limpieza de imports innecesarios.
+
+---
+
 ## [1.0.126.0] - 2025-09-21
 
 ### Added

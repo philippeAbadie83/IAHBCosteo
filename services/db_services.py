@@ -2,9 +2,9 @@
 
 import pandas as pd
 from sqlalchemy import text
-from core.db import engine
 from datetime import datetime
-from core.db import get_session
+
+from core.db import engine, get_session  # usa solo los del core
 
 
 def safe_percent(value):
@@ -12,41 +12,62 @@ def safe_percent(value):
         val = float(value)
         if 0 <= val <= 100:
             return round(val, 2)
-        else:
-            return 0.0
+        return 0.0
     except (ValueError, TypeError):
         return 0.0
 
 def insertar_proveedor(row: dict):
-    query = text("""
-        INSERT INTO tbl_prov_data
-            (prov_name, prov_famil, prov_multip,
-             prov_pct_fleteorig, prov_pct_arancel, prov_pct_gtoaduana, prov_pct_fletedest,
-             prov_coment, prov_createby, prov_auditlog)
-        VALUES (:prov_name, :prov_famil, :prov_multip,
-                :prov_pct_fleteorig, :prov_pct_arancel, :prov_pct_gtoaduana, :prov_pct_fletedest,
-                :prov_coment, :prov_createby, :prov_auditlog)
+    """
+    UPSERT por (prov_name, prov_famil).
+    Si no existe -> INSERT.
+    Si existe    -> UPDATE (dispara el trigger BEFORE UPDATE para versionado e historial).
+    """
+    q = text("""
+        INSERT INTO tbl_prov_data (
+            prov_name, prov_famil, prov_multip,
+            prov_pct_fleteorig, prov_pct_arancel, prov_pct_gtoaduana, prov_pct_fletedest,
+            prov_coment, prov_createby
+        )
+        VALUES (
+            :prov_name, :prov_famil, :prov_multip,
+            :prov_pct_fleteorig, :prov_pct_arancel, :prov_pct_gtoaduana, :prov_pct_fletedest,
+            :prov_coment, :prov_createby
+        )
+        ON DUPLICATE KEY UPDATE
+            prov_multip        = VALUES(prov_multip),
+            prov_pct_fleteorig = VALUES(prov_pct_fleteorig),
+            prov_pct_arancel   = VALUES(prov_pct_arancel),
+            prov_pct_gtoaduana = VALUES(prov_pct_gtoaduana),
+            prov_pct_fletedest = VALUES(prov_pct_fletedest),
+            prov_coment        = VALUES(prov_coment),
+            prov_updateby      = VALUES(prov_createby),
+            prov_updatedate    = NOW();
     """)
+
+    params = {
+        "prov_name": row["prov_name"],
+        "prov_famil": row["prov_famil"],
+        "prov_multip": float(row.get("prov_multip", 0) or 0),
+        "prov_pct_fleteorig": safe_percent(row.get("prov_pct_fleteorig")),
+        "prov_pct_arancel":   safe_percent(row.get("prov_pct_arancel")),
+        "prov_pct_gtoaduana": safe_percent(row.get("prov_pct_gtoaduana")),
+        "prov_pct_fletedest": safe_percent(row.get("prov_pct_fletedest")),
+        "prov_coment": row.get("prov_coment", ""),
+        "prov_createby": row.get("prov_createby", "Philippe"),
+    }
+
     session = get_session()
     try:
-        session.execute(query, {
-            "prov_name": row["prov_name"],
-            "prov_famil": row["prov_famil"],
-            "prov_multip": float(row["prov_multip"] or 0),
-            "prov_pct_fleteorig": safe_percent(row["prov_pct_fleteorig"]),
-            "prov_pct_arancel": safe_percent(row["prov_pct_arancel"]),
-            "prov_pct_gtoaduana": safe_percent(row["prov_pct_gtoaduana"]),
-            "prov_pct_fletedest": safe_percent(row["prov_pct_fletedest"]),
-            "prov_coment": row.get("prov_coment", ""),
-            "prov_createby": "Philippe",  # luego se cambia a usuario real
-            "prov_auditlog": f"Insertado por importación masiva {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-        })
+        session.execute(q, params)
         session.commit()
-    except Exception as e:
+    except Exception:
         session.rollback()
-        raise e
+        raise
     finally:
         session.close()
+
+
+
 
 def get_proveedores_por_fecha(fecha: str) -> pd.DataFrame:
     """
