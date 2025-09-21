@@ -67,25 +67,6 @@ def insertar_proveedor(row: dict):
         session.close()
 
 
-
-
-def get_proveedores_por_fecha(fecha: str) -> pd.DataFrame:
-    """
-    Devuelve proveedores creados en una fecha específica (YYYY-MM-DD).
-    """
-    query = text("""
-        SELECT prov_id, prov_name, prov_famil, prov_multip,
-               prov_pct_fleteorig, prov_pct_arancel,
-               prov_pct_gtoaduana, prov_pct_fletedest,
-               prov_coment, prov_createdate
-        FROM tbl_prov_data
-        WHERE DATE(prov_createdate) = :fecha
-        ORDER BY prov_id DESC
-    """)
-    with engine.connect() as conn:
-        df = pd.read_sql(query, conn, params={"fecha": fecha})
-    return df
-
 def update_proveedor(prov_id: int, multip: float, flete: float, arancel: float,
                      gto_aduana: float, flete_dest: float, comentario: str, usuario: str):
     query = text("""
@@ -142,3 +123,23 @@ def get_proveedores_activos():
     with engine.connect() as conn:
         df = pd.read_sql(text(query), conn)
     return df
+
+def get_proveedores_por_fecha(fecha: str) -> pd.DataFrame:
+    """
+    Devuelve proveedores creados o actualizados en una fecha específica (YYYY-MM-DD).
+    """
+    query = text("""
+        SELECT prov_id, prov_name, prov_famil, prov_multip,
+               prov_pct_fleteorig, prov_pct_arancel,
+               prov_pct_gtoaduana, prov_pct_fletedest,
+               prov_coment, prov_version,
+               prov_createdate, prov_updatedate
+        FROM tbl_prov_data
+        WHERE DATE(prov_createdate) = :fecha
+           OR DATE(prov_updatedate) = :fecha
+        ORDER BY prov_id DESC
+    """)
+    with engine.connect() as conn:
+        df = pd.read_sql(query, conn, params={"fecha": fecha})
+    return df
+

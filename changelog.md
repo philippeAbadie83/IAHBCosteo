@@ -8,6 +8,17 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # Changelog
 
+## [1.0.126.2] - 2025-09-21
+
+### Changed
+
+- Limpieza en `db_services.py`:
+  - Eliminados imports duplicados (`engine` desde `services.database`).
+  - Eliminadas definiciones duplicadas de `insertar_proveedor`.
+  - Consolidada en una única versión con `session` y soporte de UPSERT (`ON DUPLICATE KEY UPDATE`).
+- Código reducido de ~146 a ~126 líneas sin pérdida de funcionalidad.
+- Mejora en mantenibilidad y legibilidad del módulo de servicios de proveedores.
+
 ## [1.0.126.1] - 2025-09-21
 
 ### Fixed
