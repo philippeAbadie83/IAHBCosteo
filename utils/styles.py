@@ -440,6 +440,60 @@ TABLE_STYLES = """
 }
 
 
+/* ENCABEZADO AZUL CON LETRAS BLANCAS */
+.pro-table thead tr {
+    background: linear-gradient(135deg, #0072CE 0%, #0056b3 100%) !important;
+}
+
+.pro-table th {
+    color: white !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+}
+
+.pro-table th .q-table__sort-icon {
+    color: white !important;
+}
+
+/* Badges corregidos */
+.value-badge, .alert-badge {
+    padding: 4px 8px !important;
+    border-radius: 12px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    display: inline-block !important;
+}
+
+.value-badge {
+    background-color: #e8f5e9 !important;
+    color: #2e7d32 !important;
+}
+
+.alert-badge {
+    background-color: #ffebee !important;
+    color: #c62828 !important;
+}
+
+/* Botón de exportar */
+.export-btn-pro {
+    background: linear-gradient(135deg, #0072CE 0%, #0056b3 100%) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 10px 20px !important;
+    font-weight: 600 !important;
+}
+
+/* Zebra striping */
+.pro-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa !important;
+}
+
+.pro-table tbody tr:hover {
+    background-color: #e3f2fd !important;
+}
+
+
 """
 
 def setup_global_styles():

@@ -10,34 +10,31 @@ def crear_tabla(
     columnas: list,
     data: pd.DataFrame,
     acciones: Optional[list] = None,
-    filtros: Optional[List[Dict]] = None,
+    filtros: Optional[List[Dict]] = None,  # Lista de configuraciones de filtros
     exportar: bool = False,
     congelar: Optional[list] = None,
-    formatos_especiales: Optional[Dict] = None,
+    formatos_especiales: Optional[Dict] = None,  # Formatos especiales como porcentajes
 ):
     """
     Crear tabla universal en NiceGUI completamente GENÉRICA
+
+    Parámetros:
+    - nombre: título de la tabla
+    - columnas: definición de columnas [{name, label, field, sortable, align}]
+    - data: DataFrame con los datos
+    - acciones: lista de acciones por fila [{'icon': 'edit', 'func': funcion}]
+    - filtros: lista de filtros [{'type': 'select', 'column': 'columna', 'label': 'Nombre', ...}]
+    - exportar: si muestra botón de exportar
+    - congelar: columnas a congelar
+    - formatos_especiales: configuraciones de formato especial
     """
+
     # Aplicar estilos de tabla mejorados
     apply_table_styles()
 
-    # ======== Título y Botón de Exportar ========
-    with ui.row().classes("w-full items-center justify-between mb-4"):
-        if nombre:
-            ui.label(nombre).classes("text-2xl font-bold text-gray-800")
-
-        # BOTÓN DE EXPORTAR EN LA PARTE SUPERIOR DERECHA (como estaba antes)
-        if exportar:
-            def exportar_excel():
-                df_f = get_filtered_data()
-                output = io.BytesIO()
-                df_f.to_excel(output, index=False)
-                from datetime import datetime
-                filename = f"{nombre}_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx"
-                ui.download(output.getvalue(), filename=filename)
-
-            ui.button("Exportar a Excel", icon="download", on_click=exportar_excel) \
-                .classes("export-btn-pro")
+    # ======== Título ========
+    if nombre:
+        ui.label(nombre).classes("text-2xl font-bold text-gray-800 mb-4")
 
     df = data.copy()
 
@@ -85,9 +82,9 @@ def crear_tabla(
         table = ui.table(
             columns=columnas,
             rows=[],
-        ).props("pagination rows-per-page=20 flat").classes("pro-table sticky-header")
+        ).props("pagination rows-per-page=20 flat").classes("pro-table")
 
-    # ======== Función de filtrado ========
+    # ======== Función de filtrado GENÉRICA ========
     def get_filtered_data():
         df_f = df.copy()
 
@@ -108,31 +105,23 @@ def crear_tabla(
 
         return df_f
 
-    # ======== Función para formatos especiales CORREGIDA ========
+    # ======== Función para formatos especiales ========
     def aplicar_formatos_especiales(row):
         if formatos_especiales:
             for col_name, formato_config in formatos_especiales.items():
-                if col_name in row and row[col_name] is not None:
+                if col_name in row:
                     if formato_config.get('tipo') == 'porcentaje':
+                        value = row[col_name]
                         try:
-                            # Verificar si el valor es numérico
-                            value = row[col_name]
-                            if isinstance(value, (int, float)) or (isinstance(value, str) and value.replace('.', '').replace('%', '').isdigit()):
-                                num_value = float(str(value).replace('%', ''))
-
-                                # Aplicar formato según el valor
-                                if num_value > 15:
-                                    row[col_name] = f'<span class="alert-badge">{num_value}%</span>'
-                                elif num_value > 5:
-                                    row[col_name] = f'<span class="value-badge">{num_value}%</span>'
-                                else:
-                                    row[col_name] = f'{num_value}%'
+                            num_value = float(value)
+                            if num_value > 15:
+                                row[col_name] = f'<span class="alert-badge">{num_value}%</span>'
+                            elif num_value > 5:
+                                row[col_name] = f'<span class="value-badge">{num_value}%</span>'
                             else:
-                                # Mantener el valor original si no es numérico
-                                row[col_name] = str(value)
+                                row[col_name] = f'{num_value}%'
                         except (ValueError, TypeError):
-                            # En caso de error, mantener el valor original
-                            row[col_name] = str(row[col_name])
+                            pass
         return row
 
     # ======== Actualización ========
@@ -145,7 +134,7 @@ def crear_tabla(
 
         if acciones:
             for row in rows:
-                row["acciones"] = "acciones"
+                row["acciones"] = "acciones"  # Marcador para slot de acciones
 
         table.rows = rows
 
@@ -163,6 +152,19 @@ def crear_tabla(
             filter_element.on("update:model-value", lambda: update_table())
 
     update_table()
+
+    # ======== Exportar Excel ========
+    if exportar:
+        def exportar_excel():
+            df_f = get_filtered_data()
+            output = io.BytesIO()
+            df_f.to_excel(output, index=False)
+            from datetime import datetime
+            filename = f"{nombre}_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx"
+            ui.download(output.getvalue(), filename=filename)
+
+        ui.button("Exportar a Excel", icon="download", on_click=exportar_excel) \
+            .classes("export-btn-pro mb-4")
 
     # ======== Acciones por fila ========
     if acciones:
