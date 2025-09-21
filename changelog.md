@@ -6,7 +6,26 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 ---
 
-# CHANGELOG
+# Changelog
+
+## [1.0.126.0] - 2025-09-21
+
+### Added
+
+- Integración de vista en `p_imp_provData.py` para mostrar registros importados en el mismo flujo.
+- Se agregó tabla debajo de la importación usando `crear_tabla` de `tbl_base`.
+- Visualización automática de registros importados en la fecha actual (`prov_createdate = hoy`).
+
+### Changed
+
+- Se ajustó flujo de importación: después de insertar los proveedores en BD, la interfaz refresca y muestra lo subido en el día.
+- Se eliminó el uso de filtros y acciones en esta tabla; solo visualización simple de los datos.
+
+### Fixed
+
+- Manejo de columnas extra en Excel (ejemplo: `Total gastos`) para que no interrumpa la importación.
+
+---
 
 ## [1.0.124.6] - 2025-09-19
 
@@ -18,6 +37,8 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Se aplicó `pt-16` en el sidebar y en el contenido principal para asegurar que queden **debajo del header fijo**.
 - Ajuste general de layout para mantener consistencia entre header, sidebar y contenido.
 
+---
+
 ## [v1.0.124.5] - Build 124 - 2025-09-19
 
 ### Fixes
@@ -26,6 +47,8 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - El **sidebar** inicia correctamente debajo del header.
 - Corrección de superposición: las tablas y placeholders ya no quedan cubiertos por el header.
 - Mantiene consistencia visual en toda la aplicación (header, sidebar, contenido y footer).
+
+---
 
 ## [v1.0.124.4] - Build 124 - 2025-09-19
 
@@ -36,6 +59,8 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Se restauró la visualización de versión y perfil en el header (lado derecho).
 - Se corrigió alineación general del layout y consistencia visual.
 - Los títulos de secciones en el sidebar ahora se muestran en Proper Case (`.capitalize`).
+
+---
 
 ## [1.0.124.3] - Build 124 - 2025-09-19
 
@@ -57,6 +82,8 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 - Alineación de rutas en botones con páginas registradas (evita fallos de navegación).
 
+---
+
 ## [1.0.124.1] - 2025-09-18
 
 ### Fix & Mejoras
@@ -66,6 +93,8 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Se estableció valor fijo de auditoría `prov_createby = "Philippe Abadie"`.
 - Se añadieron comentarios explicativos al código (`p_imp_provData.py`) para facilitar mantenimiento.
 - Mejora de UX en el flujo de importación con notificaciones más claras.
+
+---
 
 ## [1.0.124.0] - 2025-09-17
 
@@ -93,6 +122,8 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 ### Fixed
 
 - Consistencia en navegación: ahora todas las rutas cargan dentro del layout y no fuera de él.
+
+---
 
 ## [1.0.123.0] - 2025-09-17
 

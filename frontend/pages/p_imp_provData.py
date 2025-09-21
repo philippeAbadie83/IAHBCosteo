@@ -12,7 +12,10 @@
 from nicegui import ui
 import pandas as pd
 import io
-from services.db_services import insertar_proveedor
+from datetime import date
+from services.db_services import insertar_proveedor, get_proveedores_por_fecha
+from utils.helpers import sanitize_dataframe
+from frontend.components.tbl_base import crear_tabla
 from core import layout
 
 
@@ -21,56 +24,93 @@ def importar_proveedores():
     """Página para importar proveedores desde archivo CSV o Excel."""
 
     def content():
-        # ----------------- Título -----------------
         ui.label("Importar Proveedores desde CSV/Excel") \
             .classes("text-2xl font-bold mb-6")
 
-        # ----------------- Handler de Upload -----------------
+        tabla_container = ui.column().classes("w-full mt-6")
+
+        def mostrar_importados():
+            """Dibuja tabla con registros importados hoy"""
+            hoy = date.today().strftime("%Y-%m-%d")
+            df: pd.DataFrame = get_proveedores_por_fecha(hoy)
+            df = sanitize_dataframe(df)
+
+            tabla_container.clear()
+
+            if df.empty:
+                with tabla_container:
+                    ui.label(f"No hay registros importados el {hoy}")
+                return
+
+            columnas = [
+                {"name": "proveedor", "label": "Proveedor", "field": "proveedor", "sortable": True, "align": "left"},
+                {"name": "familia", "label": "Familia", "field": "familia", "sortable": True, "align": "left"},
+                {"name": "valor", "label": "Valor", "field": "valor", "align": "right"},
+                {"name": "flete_origen", "label": "Flete Origen %", "field": "flete_origen", "align": "right"},
+                {"name": "arancel", "label": "Arancel %", "field": "arancel", "align": "right"},
+                {"name": "gtos_aduana", "label": "Gtos Aduana %", "field": "gtos_aduana", "align": "right"},
+                {"name": "flete_mex", "label": "Flete Mex %", "field": "flete_mex", "align": "right"},
+                {"name": "total_gastos", "label": "Total Gastos %", "field": "total_gastos", "align": "right"},
+                {"name": "comentarios", "label": "Comentarios", "field": "comentarios", "align": "left"},
+                {"name": "version", "label": "Versión", "field": "version", "align": "center"},
+                {"name": "fecha_update", "label": "Última Actualización", "field": "fecha_update", "align": "center"},
+                {"name": "usuario_update", "label": "Actualizado por", "field": "usuario_update", "align": "left"},
+            ]
+
+            formatos_especiales = {
+                'flete_origen': {'tipo': 'porcentaje'},
+                'arancel': {'tipo': 'porcentaje'},
+                'gtos_aduana': {'tipo': 'porcentaje'},
+                'flete_mex': {'tipo': 'porcentaje'},
+                'total_gastos': {'tipo': 'porcentaje'}
+            }
+
+            with tabla_container:
+                crear_tabla(
+                    nombre=f"Proveedores importados el {hoy}",
+                    columnas=columnas,
+                    data=df,
+                    exportar=True,
+                    congelar=["proveedor", "familia"],
+                    formatos_especiales=formatos_especiales
+                )
+
         def handle_upload(e):
             try:
-                # 1. Leer archivo subido en memoria
                 file_bytes = e.content.read()
 
-                # 2. Detectar tipo: CSV o Excel
                 if e.name.endswith(".csv"):
                     df = pd.read_csv(io.BytesIO(file_bytes))
                 else:
                     df = pd.read_excel(io.BytesIO(file_bytes))
 
-                # 3. Definir columnas requeridas (según el Excel base)
                 required_cols = [
                     "Proveedor",
-                    "Familia",
+                    "Multiplicador",
                     "Valor",
-                    "Flete de origen",
+                    "Flete de orígen",
                     "Arancel",
                     "Gtos aduana",
                     "Flete Mex",
                     "Comentarios",
                 ]
 
-                # 4. Validar columnas → notificar si falta alguna
                 missing = [c for c in required_cols if c not in df.columns]
                 if missing:
-                    ui.notify(
-                        f"Error: faltan columnas en el archivo → {', '.join(missing)}",
-                        color="negative",
-                    )
+                    ui.notify(f"Error: faltan columnas → {', '.join(missing)}", color="negative")
                     return
 
-                # 5. Renombrar columnas Excel → campos BD
                 df = df.rename(columns={
                     "Proveedor": "prov_name",
-                    "Familia": "prov_famil",
+                    "Multiplicador": "prov_famil",
                     "Valor": "prov_multip",
-                    "Flete de origen": "prov_pct_fleteorig",
+                    "Flete de orígen": "prov_pct_fleteorig",
                     "Arancel": "prov_pct_arancel",
                     "Gtos aduana": "prov_pct_gtoaduana",
                     "Flete Mex": "prov_pct_fletedest",
                     "Comentarios": "prov_coment",
                 })
 
-                # 6. Reemplazar NaN por valores válidos ('' o 0)
                 df = df.fillna({
                     "prov_coment": "",
                     "prov_multip": 0,
@@ -80,19 +120,17 @@ def importar_proveedores():
                     "prov_pct_fletedest": 0,
                 })
 
-                # 7. Insertar cada fila en la BD con autor fijo
                 for _, row in df.iterrows():
                     data = row.to_dict()
                     data["prov_createby"] = "Philippe Abadie"
                     insertar_proveedor(data)
 
                 ui.notify(f"{len(df)} proveedores importados correctamente ✅")
+                mostrar_importados()
 
             except Exception as ex:
-                # Mostrar error en la UI si ocurre
                 ui.notify(f"Error al importar: {ex}", color="negative")
 
-        # ----------------- Botón Upload -----------------
         ui.upload(
             on_upload=handle_upload,
             auto_upload=True,
@@ -100,5 +138,8 @@ def importar_proveedores():
             label="Subir archivo"
         ).classes("mb-4")
 
-    # Integrar en el layout general
+        # Mostrar registros de hoy al abrir
+        mostrar_importados()
+
     layout.render(content)
+
