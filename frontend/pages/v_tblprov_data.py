@@ -33,7 +33,7 @@ def v_tblprov_data():
             {"name": "gtos_aduana", "label": "Gtos Aduana %", "field": "gtos_aduana", "align": "right"},
             {"name": "flete_mex", "label": "Flete Mex %", "field": "flete_mex", "align": "right"},
             {"name": "total_gastos", "label": "Total Gastos %", "field": "total_gastos", "align": "right"},
-            {"name": "comentarios", "label": "Comentarios", "field": "comentarios", "align": "left"},
+        #    {"name": "comentarios", "label": "Comentarios", "field": "comentarios", "align": "left"},
         ]
 
         # ======== Definir filtros ========
@@ -86,7 +86,7 @@ def v_tblprov_data():
             exportar=True,
        #     congelar=["proveedor", "familia"],
             formatos_especiales=formatos_especiales,
-       #     acciones=acciones,
+            acciones=acciones,
         )
 
     # 👉 Integración al layout
