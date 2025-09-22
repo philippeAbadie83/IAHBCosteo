@@ -8,6 +8,17 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # Changelog
 
+## [1.0.126.11] - 2025-09-21
+
+### Cambios
+
+- Habilitada la integración de acciones en `frontend/pages/v_tblprov_data.py`.
+  - Activadas las acciones estándar: **Info (ℹ️)** y **Editar (✏️)**.
+  - `Info`: despliega un diálogo con todos los campos del registro.
+  - `Editar`: muestra un `notify` con el proveedor seleccionado (placeholder para lógica futura).
+- Comentarios previos en la tabla siguen activos (truncado con tooltip).
+- Ajustes para que `crear_tabla` reciba correctamente la lista de acciones definidas en la página.
+
 ## [1.0.126.10] - 2025-09-21
 
 ### Fixed

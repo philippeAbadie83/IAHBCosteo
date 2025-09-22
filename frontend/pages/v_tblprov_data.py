@@ -77,7 +77,7 @@ def v_tblprov_data():
             exportar=True,
             congelar=["proveedor", "familia"],
             formatos_especiales=formatos_especiales,
-           # acciones=acciones
+            acciones=acciones
         )
 
     # 👉 Integración al layout
