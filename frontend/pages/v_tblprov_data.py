@@ -29,37 +29,6 @@ def v_tblprov_data():
             {"name": "comentarios", "label": "Comentarios", "field": "comentarios", "align": "left"},
         ]
 
-        # ======== Crear filtros dinámicos ========
-        proveedores = ["Todos"] + sorted(df["proveedor"].dropna().unique().tolist())
-        familias = ["Todos"] + sorted(df["familia"].dropna().unique().tolist())
-
-        filter_elements = {}
-        with ui.row():
-            filter_elements["proveedor"] = ui.select(
-                proveedores,
-                value="Todos",
-                label="Proveedor",
-            )
-            filter_elements["familia"] = ui.select(
-                familias,
-                value="Todos",
-                label="Familia",
-            )
-
-        # Relación padre-hijo: cuando cambia proveedor, actualizar familias
-        def update_familias(e):
-            prov = e.value
-            if prov == "Todos":
-                new_familias = ["Todos"] + sorted(df["familia"].dropna().unique().tolist())
-            else:
-                new_familias = ["Todos"] + sorted(
-                    df[df["proveedor"] == prov]["familia"].dropna().unique().tolist()
-                )
-            filter_elements["familia"].options = new_familias
-            filter_elements["familia"].value = "Todos"
-
-        filter_elements["proveedor"].on_value_change(update_familias)
-
         # ======== Definir formatos especiales ========
         formatos_especiales = {
             "flete_origen": {"tipo": "porcentaje"},
@@ -93,20 +62,15 @@ def v_tblprov_data():
             {"icon": "edit", "name": "edit", "func": editar_registro},
         ]
 
-        # ======== Crear tabla genérica ========
+        # ======== Crear tabla genérica SIN FILTROS ========
         crear_tabla(
             nombre="Proveedores Activos",
             columnas=columnas,
             data=df,
-        #    filtros=[
-        #        {"type": "select", "column": "proveedor", "label": "Proveedor"},
-        #        {"type": "select", "column": "familia", "label": "Familia"},
-        #    ],
             exportar=True,
             congelar=["proveedor", "familia"],
             formatos_especiales=formatos_especiales,
             acciones=acciones,
-        #    relacion_filtros={"familia": "proveedor"},  # 👈 Jerarquía padre-hijo
         )
 
     # 👉 Integración al layout
