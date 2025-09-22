@@ -91,7 +91,7 @@ def crear_tabla(
             col['align'] = 'left'
 
     # ======== Crear la tabla ========
-    with ui.card().classes("w-full no-shadow no-border"):
+    with ui.card().classes("w-full shadow-md border border-gray-200 rounded-lg"):
         table = ui.table(
             columns=columnas,
             rows=[],
@@ -102,17 +102,16 @@ def crear_tabla(
     # ======== Función de filtrado ========
     def get_filtered_data():
         df_f = df.copy()
-        if filtros and filter_elements:
-            for filter_config in filtros:
-                filter_column = filter_config.get('column', '')
-                filter_type = filter_config.get('type', 'select')
-                if filter_column in filter_elements:
-                    filter_element = filter_elements[filter_column]
-                    if filter_type == 'select' and filter_element.value != "Todos":
-                        df_f = df_f[df_f[filter_column].astype(str) == filter_element.value]
-                    elif filter_type == 'input' and filter_element.value:
-                        s = filter_element.value.lower()
-                        df_f = df_f[df_f[filter_column].astype(str).str.lower().str.contains(s, na=False)]
+        for filter_config in filtros:
+            filter_column = filter_config.get('column', '')
+            filter_type = filter_config.get('type', 'select')
+            if filter_column in filter_elements:
+                filter_element = filter_elements[filter_column]
+                if filter_type == 'select' and filter_element.value != "Todos":
+                    df_f = df_f[df_f[filter_column].astype(str) == filter_element.value]
+                elif filter_type == 'input' and filter_element.value:
+                    s = filter_element.value.lower()
+                    df_f = df_f[df_f[filter_column].astype(str).str.lower().str.contains(s, na=False)]
         return df_f
 
     # ======== Helpers de formato ========
@@ -161,13 +160,14 @@ def crear_tabla(
 
     # ======== Slot para truncar 'comentarios' ========
     if any(col.get('name') == 'comentarios' for col in columnas):
-        def render_comentarios(row):
-            val = str(row.get('comentarios', '') or '')
-            ui.html(
-                f"<div style=\"max-width:320px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;\" "
-                f"title=\"{val}\">{val}</div>"
-            )
-      #  table.add_slot("body-cell-comentarios", cast(Any, render_comentarios))
+        comentarios_slot = """
+        <q-td key="comentarios" :props="props">
+            <div class="truncate max-w-[300px]" :title="props.row.comentarios || ''">
+                {{ props.row.comentarios || '' }}
+            </div>
+        </q-td>
+        """
+        table.add_slot('body-cell-comentarios', comentarios_slot)
 
         table.add_slot("body-cell-comentarios", cast(Any, lambda row: render_comentarios(row)))
 

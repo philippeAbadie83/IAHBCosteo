@@ -16,7 +16,7 @@ def v_tblprov_data():
         df: pd.DataFrame = get_proveedores_activos()
         df = sanitize_dataframe(df)
 
-        # ======== Definir columnas ESPECÍFICAS ========
+        # ======== Definir columnas ========
         columnas = [
             {"name": "proveedor", "label": "Proveedor", "field": "proveedor", "sortable": True, "align": "left"},
             {"name": "familia", "label": "Familia", "field": "familia", "sortable": True, "align": "left"},
@@ -29,22 +29,44 @@ def v_tblprov_data():
             {"name": "comentarios", "label": "Comentarios", "field": "comentarios", "align": "left"},
         ]
 
-        # ======== Definir filtros ESPECÍFICOS ========
-        filtros = [
-            {'type': 'select', 'column': 'proveedor', 'label': 'Proveedor'},
-            {'type': 'select', 'column': 'familia', 'label': 'Familia'},
-        ]
+        # ======== Crear filtros dinámicos ========
+        proveedores = ["Todos"] + sorted(df["proveedor"].dropna().unique().tolist())
+        familias = ["Todos"] + sorted(df["familia"].dropna().unique().tolist())
 
-        # Relación padre-hijo
-        relacion_filtros = {"familia": "proveedor"}
+        filter_elements = {}
+        with ui.row():
+            filter_elements["proveedor"] = ui.select(
+                proveedores,
+                value="Todos",
+                label="Proveedor",
+            )
+            filter_elements["familia"] = ui.select(
+                familias,
+                value="Todos",
+                label="Familia",
+            )
 
-        # ======== Definir formatos especiales ESPECÍFICOS ========
+        # Relación padre-hijo: cuando cambia proveedor, actualizar familias
+        def update_familias(e):
+            prov = e.value
+            if prov == "Todos":
+                new_familias = ["Todos"] + sorted(df["familia"].dropna().unique().tolist())
+            else:
+                new_familias = ["Todos"] + sorted(
+                    df[df["proveedor"] == prov]["familia"].dropna().unique().tolist()
+                )
+            filter_elements["familia"].options = new_familias
+            filter_elements["familia"].value = "Todos"
+
+        filter_elements["proveedor"].on_value_change(update_familias)
+
+        # ======== Definir formatos especiales ========
         formatos_especiales = {
-            'flete_origen': {'tipo': 'porcentaje'},
-            'arancel': {'tipo': 'porcentaje'},
-            'gtos_aduana': {'tipo': 'porcentaje'},
-            'flete_mex': {'tipo': 'porcentaje'},
-            'total_gastos': {'tipo': 'porcentaje'}
+            "flete_origen": {"tipo": "porcentaje"},
+            "arancel": {"tipo": "porcentaje"},
+            "gtos_aduana": {"tipo": "porcentaje"},
+            "flete_mex": {"tipo": "porcentaje"},
+            "total_gastos": {"tipo": "porcentaje"},
         }
 
         # ======== Funciones de acciones ========
@@ -55,9 +77,9 @@ def v_tblprov_data():
                     pass
                 with ui.grid(columns=2).classes("gap-2 my-2"):
                     for k, v in row.items():
-                        if k == 'acciones':
+                        if k == "acciones":
                             continue
-                        ui.label(str(k).replace('_', ' ').title()).classes("text-sm text-gray-600")
+                        ui.label(str(k).replace("_", " ").title()).classes("text-sm text-gray-600")
                         ui.label("" if v is None else str(v)).classes("text-sm")
                 with ui.row().classes("justify-end mt-2"):
                     ui.button("Cerrar", on_click=dialog.close)
@@ -76,12 +98,15 @@ def v_tblprov_data():
             nombre="Proveedores Activos",
             columnas=columnas,
             data=df,
-            filtros=filtros,
+            filtros=[
+                {"type": "select", "column": "proveedor", "label": "Proveedor"},
+                {"type": "select", "column": "familia", "label": "Familia"},
+            ],
             exportar=True,
             congelar=["proveedor", "familia"],
             formatos_especiales=formatos_especiales,
             acciones=acciones,
-            relacion_filtros=relacion_filtros,   # 👈 Aquí se define la dependencia
+            relacion_filtros={"familia": "proveedor"},  # 👈 Jerarquía padre-hijo
         )
 
     # 👉 Integración al layout

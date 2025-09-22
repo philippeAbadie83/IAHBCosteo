@@ -8,6 +8,23 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # Changelog
 
+## [1.0.127.1] - 2025-09-22
+
+### Added
+
+- Implementación de filtros dinámicos jerárquicos en `v_tblprov_data`:
+  - El filtro **Proveedor** ahora actualiza automáticamente las opciones disponibles en el filtro **Familia**.
+  - Se mantiene la opción **Todos** para mostrar registros completos.
+
+### Changed
+
+- Refactor de la lógica de filtros para mejorar la relación padre-hijo (`relacion_filtros`).
+- Integración de `filter_elements` y función `update_familias` para regenerar las familias en tiempo real.
+
+### Fixed
+
+- Corrección del comportamiento inicial: cuando se selecciona **Todos** en ambos filtros, se muestran todos los registros sin aplicar restricciones.
+
 # v1.0.127.0 (2025-09-22)
 
 ## 🚀 Mejoras
