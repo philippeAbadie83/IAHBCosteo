@@ -1,8 +1,11 @@
+# frontend/components/tbl_base.py
 from typing import Optional, Any, cast, List, Dict
 from nicegui import ui
 import pandas as pd
 import io
 from utils.styles import apply_table_styles
+from typing import Any
+
 
 def crear_tabla(
     nombre: str,
@@ -109,7 +112,7 @@ def crear_tabla(
                         df_f = df_f[df_f[filter_column].astype(str) == filter_element.value]
                     elif filter_type == 'input' and filter_element.value:
                         s = filter_element.value.lower()
-                        df_f = df_f[df_f[filter_column].ast(str).str.lower().str.contains(s, na=False)]
+                        df_f = df_f[df_f[filter_column].astype(str).str.lower().str.contains(s, na=False)]
         return df_f
 
     # ======== Helpers de formato ========
@@ -158,63 +161,51 @@ def crear_tabla(
 
     # ======== Slot para truncar 'comentarios' ========
     if any(col.get('name') == 'comentarios' for col in columnas):
-        # Definir el slot como string template
-        comentarios_slot = """
-        <q-td key="comentarios" :props="props">
-            <div style="max-width:320px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"
-                 :title="props.row.comentarios || ''">
-                {{ props.row.comentarios || '' }}
-            </div>
-        </q-td>
-        """
-        table.add_slot('body-cell-comentarios', comentarios_slot)
+        def render_comentarios(row):
+            val = str(row.get('comentarios', '') or '')
+            ui.html(
+                f"<div style=\"max-width:320px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;\" "
+                f"title=\"{val}\">{val}</div>"
+            )
+      #  table.add_slot("body-cell-comentarios", cast(Any, render_comentarios))
+
+        table.add_slot("body-cell-comentarios", cast(Any, lambda row: render_comentarios(row)))
+
 
     # ======== Acciones por fila ========
     if acciones:
-        # Guardar las funciones de acciones en variables locales
-        info_func = next((accion["func"] for accion in acciones if accion["name"] == "info"), None)
-        edit_func = next((accion["func"] for accion in acciones if accion["name"] == "edit"), None)
-        info_icon = next((accion["icon"] for accion in acciones if accion["name"] == "info"), "info")
-        edit_icon = next((accion["icon"] for accion in acciones if accion["name"] == "edit"), "edit")
 
-        # Definir el slot de acciones como string template con JavaScript
-        acciones_slot = """
-        <q-td key="acciones" :props="props">
-            <div class="row justify-center gap-1">
-                <q-btn
-                    icon="{{ info_icon }}"
-                    @click="() => $root.infoAction(props.row)"
-                    flat dense
-                    class="action-btn"
-                />
-                <q-btn
-                    icon="{{ edit_icon }}"
-                    @click="() => $root.editAction(props.row)"
-                    flat dense
-                    class="action-btn"
-                />
-            </div>
-        </q-td>
-        """
+        def _open_info_dialog(r: dict):
+            with ui.dialog() as dialog, ui.card().classes("w-[680px]"):
+                ui.label("Detalle del registro").classes("text-lg font-bold mb-2")
+                with ui.separator():
+                    pass
+                with ui.grid(columns=2).classes("gap-2 my-2"):
+                    for k, v in r.items():
+                        if k == 'acciones':
+                            continue
+                        ui.label(str(k).replace('_', ' ').title()).classes("text-sm text-gray-600")
+                        ui.label("" if v is None else str(v)).classes("text-sm")
+                with ui.row().classes("justify-end mt-2"):
+                    ui.button("Cerrar", on_click=dialog.close)
+            dialog.open()
 
-        # Agregar el slot
-        table.add_slot('body-cell-acciones', acciones_slot)
+        def render_acciones(row):
+            with ui.row().classes("gap-1 justify-center"):
+                for accion in acciones:
+                    if accion["name"] == "info":
+                        ui.button(
+                            icon=accion["icon"],
+                            on_click=lambda e, r=row, f=accion["func"]: f(r),
+                        ).props("flat dense").classes("action-btn")
+                    elif accion["name"] == "edit":
+                        ui.button(
+                            icon=accion["icon"],
+                            on_click=lambda e, r=row, f=accion["func"]: f(r),
+                        ).props("flat dense").classes("action-btn")
 
-        # Agregar métodos globales para las acciones
+        table.add_slot("body-cell-acciones", cast(Any, lambda row: render_acciones(row)))
 
-        def add_global_methods():
-            def info_action(row):
-                if info_func:
-                    info_func(row)
-
-            def edit_action(row):
-                if edit_func:
-                    edit_func(row)
-
-            return {
-                'infoAction': info_action,
-                'editAction': edit_action
-            }
 
     if congelar:
         for col in congelar:

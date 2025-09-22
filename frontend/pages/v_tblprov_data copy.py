@@ -1,3 +1,4 @@
+# frontend/pages/v_tblprov_data.py
 from nicegui import ui
 import pandas as pd
 from frontend.components.tbl_base import crear_tabla
