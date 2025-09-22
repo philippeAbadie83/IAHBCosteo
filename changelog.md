@@ -8,6 +8,27 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # Changelog
 
+# Changelog
+
+## [1.0.127.2] - 2025-09-22
+
+### Changed
+
+- Deshabilitados filtros (`filtros`, `relacion_filtros`) en `v_tblprov_data` para validación inicial.
+- La tabla ahora carga **todos los registros completos** sin aplicar filtros automáticos.
+- Eliminada duplicación de controles de selección (filtros arriba y dentro de la tabla).
+- Flujo base validado: render de tabla + acciones sin interferencias.
+
+### Fixed
+
+- Problema donde la opción **"Todos"** no mostraba registros completos.
+- Evitada confusión por doble set de filtros en pantalla.
+
+### Notes
+
+- Esta versión sirve como **prueba base**: siempre muestra todos los datos.
+- Próximo paso: reactivar filtros solo dentro de la tabla (`crear_tabla`), sin duplicación desde layout.
+
 ## [1.0.127.1] - 2025-09-22
 
 ### Added

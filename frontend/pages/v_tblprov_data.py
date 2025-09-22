@@ -98,15 +98,15 @@ def v_tblprov_data():
             nombre="Proveedores Activos",
             columnas=columnas,
             data=df,
-            filtros=[
-                {"type": "select", "column": "proveedor", "label": "Proveedor"},
-                {"type": "select", "column": "familia", "label": "Familia"},
-            ],
+        #    filtros=[
+        #        {"type": "select", "column": "proveedor", "label": "Proveedor"},
+        #        {"type": "select", "column": "familia", "label": "Familia"},
+        #    ],
             exportar=True,
             congelar=["proveedor", "familia"],
             formatos_especiales=formatos_especiales,
             acciones=acciones,
-            relacion_filtros={"familia": "proveedor"},  # 👈 Jerarquía padre-hijo
+        #    relacion_filtros={"familia": "proveedor"},  # 👈 Jerarquía padre-hijo
         )
 
     # 👉 Integración al layout
