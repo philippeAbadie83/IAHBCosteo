@@ -100,7 +100,7 @@ def crear_tabla(
             col['align'] = 'left'
 
     # ======== Crear la tabla ========
-    with ui.card().classes("w-full no-shadow no-border"):
+    with ui.card().classes("w-full shadow-md border border-gray-200 rounded-lg"):
         table = ui.table(
             columns=columnas,
             rows=[],
@@ -229,7 +229,9 @@ def crear_tabla(
                             df[df[_p].astype(str) == pv][_h].dropna().astype(str).unique().tolist()
                         )
                     filter_elements[_h].options = opts
-                    filter_elements[_h].value = "Todos"
+                    # 👇 aquí está el detalle: en vez de forzar siempre "Todos", conserva valor si sigue válido
+                    if filter_elements[_h].value not in opts:
+                        filter_elements[_h].value = "Todos"
                     update_table()
                 filter_elements[padre].on("update:model-value", _update_child)
 

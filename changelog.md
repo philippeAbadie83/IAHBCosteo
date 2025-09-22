@@ -8,6 +8,14 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # Changelog
 
+## [1.0.128.3] - 2025-09-22
+
+### Fix
+
+- Corrección en `tbl_base` para que al seleccionar **Todos + Todos** en filtros padre-hijo (ej. Proveedor/Familia) se muestren todos los registros correctamente.
+- Ajuste en `_update_child` para conservar el valor del hijo si sigue siendo válido; si no, se regresa a "Todos".
+- Ahora la tabla refleja el DataFrame completo sin limitarse a una sola fila cuando ambos filtros están en "Todos".
+
 ## [1.0.128.2] - 2025-09-22
 
 ### Fixed
