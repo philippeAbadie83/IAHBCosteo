@@ -8,6 +8,41 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # Changelog
 
+## [1.0.126.7] - 2025-09-21
+
+### Added
+
+- Acción Info (ℹ️): dialog con detalle completo del registro en `tbl_base.py`.
+- Slot para columna "comentarios" con truncado (ellipsis) y tooltip.
+
+### Changed
+
+- Formateo de columnas de porcentaje: se muestran como enteros con símbolo %, p.ej. 0.11 → 11%.
+
+### Fixed
+
+- Alineación de render de acciones y slots después de inicializar la tabla.
+
+## [1.0.126.5] - 2025-09-21
+
+### Added
+
+- Incorporación de columna de acciones (`acciones`) en la tabla genérica (`tbl_base.py`).
+- Botones estándar configurados:
+  - Info (ℹ️): despliega detalles (por ahora `ui.notify`).
+  - Update (✏️): acción de edición (por ahora `ui.notify`).
+- Declaración de acciones extra como comentarios de referencia en `tbl_base.py`.
+
+### Fixed
+
+- Error de serialización JSON en acciones de la tabla (causado por incluir funciones en `acciones`).
+- Reestructuración para que los botones se construyan en `render_acciones` después de crear la tabla.
+
+### Changed
+
+- Ajustes en `v_tblprov_data.py` para pasar `acciones` como lista de icon + name en lugar de funciones.
+- Tabla genérica soporta **paginación** con opciones `10, 25, 50, 75, 100` y valor por defecto en 25.
+
 ## [1.0.126.4] - 2025-09-21
 
 ### Added
