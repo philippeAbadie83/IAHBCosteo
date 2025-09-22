@@ -84,9 +84,9 @@ def v_tblprov_data():
        #     filtros=filtros,
        #     relacion_filtros=relacion_filtros,
             exportar=True,
-            congelar=["proveedor", "familia"],
+       #     congelar=["proveedor", "familia"],
             formatos_especiales=formatos_especiales,
-            acciones=acciones,
+       #     acciones=acciones,
         )
 
     # 👉 Integración al layout
