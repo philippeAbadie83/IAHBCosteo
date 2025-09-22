@@ -100,6 +100,18 @@ def update_proveedor(prov_id: int, multip: float, flete: float, arancel: float,
     finally:
         session.close()
 
+def get_catalogo_filtros_prov_famil():
+    """
+    Carga proveedor + familia desde la vista vw_cat_filtros (solo campos necesarios para filtros).
+    """
+    query = text("""
+        SELECT proveedor, familia
+        FROM vw_cat_filtros
+        ORDER BY proveedor, familia
+    """)
+    with engine.connect() as conn:
+        df = pd.read_sql(query, conn)
+    return df
 
 
 def get_proveedores_activos():

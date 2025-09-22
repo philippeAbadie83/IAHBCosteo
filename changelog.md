@@ -8,7 +8,22 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # Changelog
 
-# Changelog
+## [1.0.128.0] - 2025-09-22
+
+### Agregado
+
+- Filtros dinámicos habilitados en la vista `/v_tblprov_data` para `proveedor` y `familia`.
+- Se utiliza `vw_cat_filtros` como fuente limpia de datos para filtros.
+- Activada relación jerárquica (`proveedor` → `familia`) para dropdowns dependientes.
+
+### Modificado
+
+- Llamado a `crear_tabla()` actualizado con `filtros` y `relacion_filtros` definidos en el módulo de vista.
+- Separación lógica entre los datos mostrados (`vw_prov_data_latest`) y los filtros (`vw_cat_filtros`).
+
+### Conservado
+
+- Componente `tbl_base` sigue 100% genérico y reutilizable en otras vistas.
 
 ## [1.0.127.2] - 2025-09-22
 

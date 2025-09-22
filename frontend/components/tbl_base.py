@@ -1,3 +1,6 @@
+# frontend/components/tbl_base
+# se usa como framework para todas las tablas del sistemas
+
 from typing import Optional, List, Dict
 from nicegui import ui
 import pandas as pd

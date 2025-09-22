@@ -1,10 +1,7 @@
-#
 from nicegui import ui
 import pandas as pd
-
 from frontend.components.tbl_base import crear_tabla
-from services.db_services import get_proveedores_activos, get_catalogo_filtros_prov_famil
-
+from services.db_services import get_proveedores_activos
 from utils.helpers import sanitize_dataframe
 from core import layout
 from core.__version__ import __version__, __build__
@@ -31,18 +28,6 @@ def v_tblprov_data():
             {"name": "total_gastos", "label": "Total Gastos %", "field": "total_gastos", "align": "right"},
             {"name": "comentarios", "label": "Comentarios", "field": "comentarios", "align": "left"},
         ]
-
-        # ======== Crear filtros dinámicos ========
-        # ======== Definir filtros usando catálogo de proveedor-familia ========
-        df_filtros = get_catalogo_filtros_prov_famil()
-
-        filtros = [
-            {"type": "select", "column": "proveedor", "label": "Proveedor"},
-            {"type": "select", "column": "familia", "label": "Familia"},
-        ]
-        relacion_filtros = {"familia": "proveedor"}
-
-
 
         # ======== Definir formatos especiales ========
         formatos_especiales = {
@@ -77,13 +62,11 @@ def v_tblprov_data():
             {"icon": "edit", "name": "edit", "func": editar_registro},
         ]
 
-        # ======== Crear tabla genérica ========
+        # ======== Crear tabla genérica SIN FILTROS ========
         crear_tabla(
             nombre="Proveedores Activos",
             columnas=columnas,
             data=df,
-            filtros=filtros,
-            relacion_filtros=relacion_filtros,
             exportar=True,
             congelar=["proveedor", "familia"],
             formatos_especiales=formatos_especiales,
