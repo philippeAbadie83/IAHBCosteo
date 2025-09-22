@@ -5,6 +5,7 @@ import pandas as pd
 import io
 from utils.styles import apply_table_styles
 
+
 def crear_tabla(
     nombre: str,
     columnas: list,
@@ -66,25 +67,37 @@ def crear_tabla(
                             placeholder=placeholder
                         ).classes("min-w-[250px]")
 
-    # ======== Tabla ========
+    # ===============================================================
+    # ACCIONES ESTÁNDAR (en esta app):
+    #   - Info (ℹ️)   → ver detalles en dialog
+    #   - Update (✏️) → editar registro en dialog/formulario
+    #   - Delete (🗑️) → eliminar registro con confirmación
+    #
+    # ACCIONES EXTRA (opcional, no usadas en esta app):
+    #   - Navegar (🔗)
+    #   - Seleccionar/Exportar 📑
+    #   - Duplicar 📄
+    #   - Activar/Desactivar 🔄
+    # ===============================================================
     if acciones:
         columnas.append(
             {"name": "acciones", "label": "Acciones", "field": "acciones", "align": "center"}
         )
 
-    # Configurar propiedades de columnas
+    # ======== Configurar propiedades de columnas ========
     for col in columnas:
         if 'sortable' not in col:
             col['sortable'] = True
         if 'align' not in col:
             col['align'] = 'left'
 
-    # Crear contenedor para la tabla
+    # ======== Crear la tabla ========
     with ui.card().classes("w-full no-shadow no-border"):
         table = ui.table(
             columns=columnas,
             rows=[],
-        ).props("pagination rows-per-page=20 flat")
+        ).props("pagination rows-per-page-options='10,25,50,75,100' rows-per-page=25 virtual-scroll"
+        ).classes("h-[600px]")
 
     # ======== Función de filtrado ========
     def get_filtered_data():
@@ -107,7 +120,7 @@ def crear_tabla(
 
         return df_f
 
-    # APPROACH ALTERNATIVO - Modificar los datos para usar tuplas
+    # ======== Formatos especiales (ej. porcentajes) ========
     def aplicar_formatos_especiales(row):
         if formatos_especiales:
             for col_name, formato_config in formatos_especiales.items():
@@ -117,8 +130,6 @@ def crear_tabla(
                             value = row[col_name]
                             if isinstance(value, (int, float)) or (isinstance(value, str) and value.replace('.', '').replace('%', '').isdigit()):
                                 num_value = float(str(value).replace('%', ''))
-
-                                # ✅ NiceGUI acepta tuplas (contenido, clase)
                                 if num_value > 15:
                                     row[col_name] = (f'{num_value}%', 'alert-badge')
                                 elif num_value > 5:
@@ -129,15 +140,10 @@ def crear_tabla(
                             row[col_name] = str(row[col_name])
         return row
 
-
-
-    # ======== Actualización ========
+    # ======== Actualización de la tabla ========
     def update_table():
         df_filtrado = get_filtered_data()
         rows = df_filtrado.to_dict(orient="records")
-
-        # ✅ ELIMINAR la llamada a aplicar_formatos_especiales()
-        # Los formatos ahora se manejan via slots
 
         if acciones:
             for row in rows:
@@ -160,7 +166,7 @@ def crear_tabla(
 
     update_table()
 
-    # ======== Acciones por fila ========
+    # ======== Acciones por fila (se agregan después de crear la tabla) ========
     if acciones:
         def render_acciones(row):
             with ui.row().classes("gap-1 justify-center"):

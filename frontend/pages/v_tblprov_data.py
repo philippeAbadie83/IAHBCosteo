@@ -49,6 +49,19 @@ def v_tblprov_data():
             'total_gastos': {'tipo': 'porcentaje'}
         }
 
+        acciones = [
+            {
+                "icon": "info",
+                "func": lambda row: ui.notify(f"Info: {row}")
+            },
+            {
+                "icon": "edit",
+                "func": lambda row: ui.notify(f"Editar: {row}")
+            },
+            # {"icon": "delete", "func": lambda row: ui.notify(f"Eliminar: {row}")},  # ❌ por ahora no
+        ]
+
+
         # ======== Usar tabla genérica ========
         crear_tabla(
             nombre="Proveedores Activos",
@@ -57,7 +70,8 @@ def v_tblprov_data():
             filtros=filtros,
             exportar=True,
             congelar=["proveedor", "familia"],
-            formatos_especiales=formatos_especiales
+            formatos_especiales=formatos_especiales,
+            acciones=acciones  # 👈 aquí
         )
 
     # 👉 Integración al layout

@@ -8,6 +8,18 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # Changelog
 
+## [1.0.126.4] - 2025-09-21
+
+### Added
+
+- Integración de acciones estándar en la tabla genérica (`tbl_base.py`): Info (ℹ️) y Update (✏️).
+- Nueva estructura en `v_tblprov_data.py` que pasa explícitamente las acciones a la tabla.
+- Paginación configurable: 10, 25, 50, 75, 100 (default 25).
+
+### Fixed
+
+- Corrección de advertencia "table is unbound" en `tbl_base.py` reordenando la definición de `table` y los slots de acciones.
+
 ## [1.0.126.3] - 2025-09-21
 
 ### Fixed
