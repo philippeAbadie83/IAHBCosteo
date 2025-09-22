@@ -43,7 +43,6 @@ def crear_tabla(
 
     # ======== Filtros ========
     filter_elements = {}
-
     if filtros and not df.empty:
         with ui.card().classes("pro-filter w-full mb-4"):
             with ui.row().classes("w-full items-center gap-4"):
@@ -96,62 +95,61 @@ def crear_tabla(
         table = ui.table(
             columns=columnas,
             rows=[],
-        ).props("pagination rows-per-page-options='10,25,50,75,100' rows-per-page=25 virtual-scroll"
+        ).props(
+            "pagination rows-per-page-options='10,25,50,75,100' rows-per-page=25 virtual-scroll"
         ).classes("h-[600px]")
 
     # ======== Función de filtrado ========
     def get_filtered_data():
         df_f = df.copy()
-
         if filtros and filter_elements:
             for filter_config in filtros:
                 filter_column = filter_config.get('column', '')
                 filter_type = filter_config.get('type', 'select')
-
                 if filter_column in filter_elements:
                     filter_element = filter_elements[filter_column]
-
                     if filter_type == 'select' and filter_element.value != "Todos":
                         df_f = df_f[df_f[filter_column].astype(str) == filter_element.value]
-
                     elif filter_type == 'input' and filter_element.value:
-                        search_text = filter_element.value.lower()
-                        df_f = df_f[df_f[filter_column].astype(str).str.lower().str.contains(search_text, na=False)]
-
+                        s = filter_element.value.lower()
+                        df_f = df_f[df_f[filter_column].astype(str).str.lower().str.contains(s, na=False)]
         return df_f
 
-    # ======== Formatos especiales (ej. porcentajes) ========
-    def aplicar_formatos_especiales(row):
-        if formatos_especiales:
-            for col_name, formato_config in formatos_especiales.items():
-                if col_name in row and row[col_name] is not None:
-                    if formato_config.get('tipo') == 'porcentaje':
-                        try:
-                            value = row[col_name]
-                            if isinstance(value, (int, float)) or (isinstance(value, str) and value.replace('.', '').replace('%', '').isdigit()):
-                                num_value = float(str(value).replace('%', ''))
-                                if num_value > 15:
-                                    row[col_name] = (f'{num_value}%', 'alert-badge')
-                                elif num_value > 5:
-                                    row[col_name] = (f'{num_value}%', 'value-badge')
-                                else:
-                                    row[col_name] = f'{num_value}%'
-                        except (ValueError, TypeError):
-                            row[col_name] = str(row[col_name])
-        return row
+    # ======== Helpers de formato ========
+    def _fmt_percent(value) -> str:
+        try:
+            v = float(str(value).replace('%', '').strip())
+            # 0.11 => 11%
+            if 0 <= v <= 1:
+                v = v * 100
+            return f"{int(round(v))}%"
+        except Exception:
+            return str(value)
+
+    percent_cols = set()
+    if formatos_especiales:
+        percent_cols = {c for c, cfg in formatos_especiales.items() if cfg.get('tipo') == 'porcentaje'}
 
     # ======== Actualización de la tabla ========
     def update_table():
         df_filtrado = get_filtered_data()
         rows = df_filtrado.to_dict(orient="records")
 
+        # Formato de porcentajes como enteros con '%'
+        if percent_cols:
+            for r in rows:
+                for c in percent_cols:
+                    if c in r and r[c] is not None:
+                        r[c] = _fmt_percent(r[c])
+
+        # Inyectar columna auxiliar para acciones
         if acciones:
-            for row in rows:
-                row["acciones"] = "acciones"
+            for r in rows:
+                r["acciones"] = "acciones"
 
         table.rows = rows
 
-        # Mostrar contador de resultados
+        # Contador de resultados
         result_text = f"Mostrando {len(rows)} de {len(df)} registros"
         if hasattr(update_table, 'result_count'):
             update_table.result_count.text = result_text
@@ -159,24 +157,54 @@ def crear_tabla(
             with ui.row().classes("w-full justify-end mt-2"):
                 update_table.result_count = ui.label(result_text).classes("result-counter-pro")
 
-    # Configurar eventos de filtrado
+    # Eventos de filtrado
     if filtros:
         for filter_element in filter_elements.values():
             filter_element.on("update:model-value", lambda: update_table())
 
     update_table()
 
-    # ======== Acciones por fila (se agregan después de crear la tabla) ========
+    # ======== Slot para truncar 'comentarios' con tooltip ========
+    # Si existe columna 'comentarios', la renderizamos truncada con ellipsis y title
+    if any(col.get('name') == 'comentarios' for col in columnas):
+        def render_comentarios(row):
+            val = str(row.get('comentarios', '') or '')
+            ui.html(
+                f"<div style=\"max-width:320px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;\" "
+                f"title=\"{val}\">{val}</div>"
+            )
+        table.add_slot("body-cell-comentarios", cast(Any, render_comentarios))
+
+    # ======== Acciones por fila (después de crear la tabla) ========
     if acciones:
+
+        def _open_info_dialog(r: dict):
+            with ui.dialog() as dialog, ui.card().classes("w-[680px]"):
+                ui.label("Detalle del registro").classes("text-lg font-bold mb-2")
+                with ui.separator():
+                    pass
+                # Muestra pares clave/valor de forma limpia (dos columnas)
+                with ui.grid(columns=2).classes("gap-2 my-2"):
+                    for k, v in r.items():
+                        # No mostramos el campo auxiliar 'acciones'
+                        if k == 'acciones':
+                            continue
+                        # Etiqueta
+                        ui.label(str(k).replace('_', ' ').title()).classes("text-sm text-gray-600")
+                        # Valor (ya llega con % si aplica)
+                        ui.label("" if v is None else str(v)).classes("text-sm")
+                with ui.row().classes("justify-end mt-2"):
+                    ui.button("Cerrar", on_click=dialog.close)
+            dialog.open()
+
         def render_acciones(row):
             with ui.row().classes("gap-1 justify-center"):
                 for accion in acciones:
                     if accion["name"] == "info":
                         ui.button(
                             icon=accion["icon"],
-                            on_click=lambda e, r=row: ui.notify(f"Info: {r}"),
+                            on_click=lambda e, r=row: _open_info_dialog(r),
                         ).props("flat dense").classes("action-btn")
-
                     elif accion["name"] == "edit":
                         ui.button(
                             icon=accion["icon"],
