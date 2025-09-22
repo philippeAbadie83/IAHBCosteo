@@ -1,10 +1,11 @@
-#
+
+# frontend/pages/v_tblprov_data.py
+
 from nicegui import ui
 import pandas as pd
 
 from frontend.components.tbl_base import crear_tabla
 from services.db_services import get_proveedores_activos, get_catalogo_filtros_prov_famil
-
 from utils.helpers import sanitize_dataframe
 from core import layout
 from core.__version__ import __version__, __build__
@@ -15,9 +16,12 @@ def v_tblprov_data():
     print(f"[v_tblprov_data] Versión: {__version__}, Build: {__build__}")
 
     def content():
-        # ======== Obtener y sanitizar datos de la BD ========
+        # ======== Obtener y sanitizar datos ========
         df: pd.DataFrame = get_proveedores_activos()
         df = sanitize_dataframe(df)
+
+        # ======== Catálogo para filtros ========
+        df_filtros = get_catalogo_filtros_prov_famil()
 
         # ======== Definir columnas ========
         columnas = [
@@ -32,19 +36,14 @@ def v_tblprov_data():
             {"name": "comentarios", "label": "Comentarios", "field": "comentarios", "align": "left"},
         ]
 
-        # ======== Crear filtros dinámicos ========
-        # ======== Definir filtros usando catálogo de proveedor-familia ========
-        df_filtros = get_catalogo_filtros_prov_famil()
-
+        # ======== Definir filtros ========
         filtros = [
             {"type": "select", "column": "proveedor", "label": "Proveedor"},
             {"type": "select", "column": "familia", "label": "Familia"},
         ]
-        relacion_filtros = {"familia": "proveedor"}
+        relacion_filtros = {"familia": "proveedor"}  # 👈 relación padre-hijo
 
-
-
-        # ======== Definir formatos especiales ========
+        # ======== Formatos especiales ========
         formatos_especiales = {
             "flete_origen": {"tipo": "porcentaje"},
             "arancel": {"tipo": "porcentaje"},
@@ -53,7 +52,7 @@ def v_tblprov_data():
             "total_gastos": {"tipo": "porcentaje"},
         }
 
-        # ======== Funciones de acciones ========
+        # ======== Acciones ========
         def mostrar_info(row):
             with ui.dialog() as dialog, ui.card().classes("w-[680px]"):
                 ui.label("Detalle del registro").classes("text-lg font-bold mb-2")

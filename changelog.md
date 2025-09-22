@@ -8,6 +8,18 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # Changelog
 
+## [1.0.128.2] - 2025-09-22
+
+### Fixed
+
+- Se corrigió la definición de variables en `v_tblprov_data.py` para evitar errores de Pylance (variables no definidas).
+- Reordenadas funciones y acciones para asegurar que `mostrar_info` y `editar_registro` estén definidas antes de usarse.
+- `tbl_base` confirmado como componente 100% genérico, sin dependencias de `catalogo_df`.
+
+### Added
+
+- Integración estable con `get_catalogo_filtros_prov_famil()` para preparar uso de `vw_cat_filtros` en filtros dinámicos.
+
 ## [1.0.128.0] - 2025-09-22
 
 ### Agregado

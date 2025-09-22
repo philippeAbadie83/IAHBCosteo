@@ -113,6 +113,31 @@ def get_catalogo_filtros_prov_famil():
         df = pd.read_sql(query, conn)
     return df
 
+#hAY QUE HACER UNA PARA CUANDO IMPORTAS IGUAL A ESTA SOLO QUE BUSCA EN TBL LASTED
+def get_proveedores_latest():
+    query = """
+    SELECT
+        prov_id AS id,
+        prov_name AS proveedor,
+        prov_famil AS familia,
+        prov_multip AS valor,
+        prov_pct_fleteorig AS flete_origen,
+        prov_pct_arancel AS arancel,
+        prov_pct_gtoaduana AS gtos_aduana,
+        prov_pct_fletedest AS flete_mex,
+        prov_pct_totgto AS total_gastos,
+        prov_coment AS comentarios,
+        prov_version AS version,
+        prov_updatedate AS fecha_update,
+        prov_updateby AS usuario_update
+    FROM vw_prov_data_latest;
+    """
+    with engine.connect() as conn:
+        df = pd.read_sql(text(query), conn)
+    return df
+
+
+
 
 def get_proveedores_activos():
     query = """
@@ -130,7 +155,7 @@ def get_proveedores_activos():
         prov_version AS version,
         prov_updatedate AS fecha_update,
         prov_updateby AS usuario_update
-    FROM vw_prov_data_latest;
+    FROM vw_prov_data_activos;
     """
     with engine.connect() as conn:
         df = pd.read_sql(text(query), conn)
