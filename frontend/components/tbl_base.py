@@ -171,10 +171,17 @@ def crear_tabla(
         def render_acciones(row):
             with ui.row().classes("gap-1 justify-center"):
                 for accion in acciones:
-                    ui.button(
-                        icon=accion["icon"],
-                        on_click=lambda e, r=row: accion["func"](r),
-                    ).props("flat dense").classes("action-btn")
+                    if accion["name"] == "info":
+                        ui.button(
+                            icon=accion["icon"],
+                            on_click=lambda e, r=row: ui.notify(f"Info: {r}"),
+                        ).props("flat dense").classes("action-btn")
+
+                    elif accion["name"] == "edit":
+                        ui.button(
+                            icon=accion["icon"],
+                            on_click=lambda e, r=row: ui.notify(f"Editar: {r}"),
+                        ).props("flat dense").classes("action-btn")
 
         table.add_slot("body-cell-acciones", cast(Any, render_acciones))
 

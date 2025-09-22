@@ -50,15 +50,8 @@ def v_tblprov_data():
         }
 
         acciones = [
-            {
-                "icon": "info",
-                "func": lambda row: ui.notify(f"Info: {row}")
-            },
-            {
-                "icon": "edit",
-                "func": lambda row: ui.notify(f"Editar: {row}")
-            },
-            # {"icon": "delete", "func": lambda row: ui.notify(f"Eliminar: {row}")},  # ❌ por ahora no
+            {"icon": "info", "name": "info"},
+            {"icon": "edit", "name": "edit"},
         ]
 
 
