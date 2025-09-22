@@ -8,6 +8,14 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # Changelog
 
+## [1.0.126.10] - 2025-09-21
+
+### Fixed
+
+- Corregido `tbl_base.py` para compatibilidad con `add_slot` de NiceGUI.
+- Se aplicó `cast(Any, ...)` en los renderizados personalizados (`comentarios` y `acciones`).
+- Eliminados errores de tipado y `TypeError 500` al renderizar celdas con funciones.
+
 ## [1.0.126.8] - 2025-09-21
 
 ### Fixed

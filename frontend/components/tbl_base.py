@@ -4,6 +4,7 @@ from nicegui import ui
 import pandas as pd
 import io
 from utils.styles import apply_table_styles
+from typing import Any
 
 
 def crear_tabla(
@@ -166,7 +167,10 @@ def crear_tabla(
                 f"<div style=\"max-width:320px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;\" "
                 f"title=\"{val}\">{val}</div>"
             )
-        table.add_slot("body-cell-comentarios", cast(Any, render_comentarios))
+      #  table.add_slot("body-cell-comentarios", cast(Any, render_comentarios))
+
+        table.add_slot("body-cell-comentarios", cast(Any, lambda row: render_comentarios(row)))
+
 
     # ======== Acciones por fila ========
     if acciones:
@@ -200,7 +204,8 @@ def crear_tabla(
                             on_click=lambda e, r=row, f=accion["func"]: f(r),
                         ).props("flat dense").classes("action-btn")
 
-        table.add_slot("body-cell-acciones", cast(Any, render_acciones))
+        table.add_slot("body-cell-acciones", cast(Any, lambda row: render_acciones(row)))
+
 
     if congelar:
         for col in congelar:
