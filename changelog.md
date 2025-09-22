@@ -8,6 +8,14 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # Changelog
 
+## [1.0.128.4] - 2025-09-22
+
+### Cambios
+
+- Se deshabilitaron los filtros en `v_tblprov_data.py` (líneas comentadas).
+- Se mantiene la tabla genérica (`crear_tabla`) funcionando sin paso de parámetros de filtros.
+- Preparación para evaluar comportamiento de la tabla sin restricciones de select.
+
 ## [1.0.128.3] - 2025-09-22
 
 ### Fix

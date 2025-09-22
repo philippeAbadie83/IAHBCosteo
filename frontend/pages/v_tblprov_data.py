@@ -21,7 +21,7 @@ def v_tblprov_data():
         df = sanitize_dataframe(df)
 
         # ======== Catálogo para filtros ========
-        df_filtros = get_catalogo_filtros_prov_famil()
+      #  df_filtros = get_catalogo_filtros_prov_famil()
 
         # ======== Definir columnas ========
         columnas = [
@@ -37,11 +37,11 @@ def v_tblprov_data():
         ]
 
         # ======== Definir filtros ========
-        filtros = [
-            {"type": "select", "column": "proveedor", "label": "Proveedor"},
-            {"type": "select", "column": "familia", "label": "Familia"},
-        ]
-        relacion_filtros = {"familia": "proveedor"}  # 👈 relación padre-hijo
+     #   filtros = [
+     #       {"type": "select", "column": "proveedor", "label": "Proveedor"},
+     #       {"type": "select", "column": "familia", "label": "Familia"},
+     #   ]
+     #   relacion_filtros = {"familia": "proveedor"}  # 👈 relación padre-hijo
 
         # ======== Formatos especiales ========
         formatos_especiales = {
@@ -81,8 +81,8 @@ def v_tblprov_data():
             nombre="Proveedores Activos",
             columnas=columnas,
             data=df,
-            filtros=filtros,
-            relacion_filtros=relacion_filtros,
+       #     filtros=filtros,
+       #     relacion_filtros=relacion_filtros,
             exportar=True,
             congelar=["proveedor", "familia"],
             formatos_especiales=formatos_especiales,
