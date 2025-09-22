@@ -6,6 +6,7 @@ from utils.helpers import sanitize_dataframe
 from core import layout
 from core.__version__ import __version__, __build__
 
+
 @ui.page("/v_tblprov_data")
 def v_tblprov_data():
     print(f"[v_tblprov_data] Versión: {__version__}, Build: {__build__}")
@@ -32,8 +33,10 @@ def v_tblprov_data():
         filtros = [
             {'type': 'select', 'column': 'proveedor', 'label': 'Proveedor'},
             {'type': 'select', 'column': 'familia', 'label': 'Familia'},
-            {'type': 'input', 'column': 'code_sys', 'label': 'Buscar Código Sys.', 'placeholder': 'Ingrese código...'}
         ]
+
+        # Relación padre-hijo
+        relacion_filtros = {"familia": "proveedor"}
 
         # ======== Definir formatos especiales ESPECÍFICOS ========
         formatos_especiales = {
@@ -48,7 +51,8 @@ def v_tblprov_data():
         def mostrar_info(row):
             with ui.dialog() as dialog, ui.card().classes("w-[680px]"):
                 ui.label("Detalle del registro").classes("text-lg font-bold mb-2")
-                with ui.separator(): pass
+                with ui.separator():
+                    pass
                 with ui.grid(columns=2).classes("gap-2 my-2"):
                     for k, v in row.items():
                         if k == 'acciones':
@@ -67,7 +71,7 @@ def v_tblprov_data():
             {"icon": "edit", "name": "edit", "func": editar_registro},
         ]
 
-        # ======== Usar tabla genérica ========
+        # ======== Crear tabla genérica ========
         crear_tabla(
             nombre="Proveedores Activos",
             columnas=columnas,
@@ -76,7 +80,8 @@ def v_tblprov_data():
             exportar=True,
             congelar=["proveedor", "familia"],
             formatos_especiales=formatos_especiales,
-            acciones=acciones
+            acciones=acciones,
+            relacion_filtros=relacion_filtros,   # 👈 Aquí se define la dependencia
         )
 
     # 👉 Integración al layout

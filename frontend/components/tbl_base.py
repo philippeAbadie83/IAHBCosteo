@@ -1,8 +1,9 @@
-from typing import Optional, Any, cast, List, Dict
+from typing import Optional, List, Dict
 from nicegui import ui
 import pandas as pd
 import io
 from utils.styles import apply_table_styles
+
 
 def crear_tabla(
     nombre: str,
@@ -13,12 +14,22 @@ def crear_tabla(
     exportar: bool = False,
     congelar: Optional[list] = None,
     formatos_especiales: Optional[Dict] = None,
+    relacion_filtros: Optional[Dict[str, str]] = None,   # hijo:padre (ej: {"familia": "proveedor"})
 ):
     """
     Crear tabla universal en NiceGUI completamente GENÉRICA
+    con soporte para:
+      - Filtros (input, select)
+      - Exportar a Excel
+      - Acciones por fila
+      - Slots especiales (ej. comentarios)
+      - Congelar columnas
+      - Relación padre-hijo en filtros
     """
-    # Aplicar estilos de tabla mejorados
+
+    # ======== Estilos ========
     apply_table_styles()
+    df = data.copy()
 
     # ======== Título y Botón de Exportar ========
     with ui.row().classes("w-full items-center justify-between mb-4"):
@@ -36,8 +47,6 @@ def crear_tabla(
 
             ui.button("Exportar a Excel", icon="download", on_click=exportar_excel) \
                 .classes("export-btn-pro")
-
-    df = data.copy()
 
     # ======== Filtros ========
     filter_elements = {}
@@ -65,13 +74,13 @@ def crear_tabla(
                         ).classes("min-w-[250px]")
 
     # ===============================================================
-    # ACCIONES ESTÁNDAR (en esta app):
-    #   - Info (ℹ️)   → ver detalles en dialog
-    #   - Update (✏️) → editar registro en dialog/formulario
+    # ACCIONES ESTÁNDAR:
+    #   - Info (ℹ️)
+    #   - Update (✏️)
     #
-    # ACCIONES EXTRA (opcional, no usadas en esta app):
+    # ACCIONES EXTRA:
     #   - Navegar (🔗)
-    #   - Seleccionar/Exportar 📑
+    #   - Exportar 📑
     #   - Duplicar 📄
     #   - Activar/Desactivar 🔄
     # ===============================================================
@@ -109,7 +118,7 @@ def crear_tabla(
                         df_f = df_f[df_f[filter_column].astype(str) == filter_element.value]
                     elif filter_type == 'input' and filter_element.value:
                         s = filter_element.value.lower()
-                        df_f = df_f[df_f[filter_column].ast(str).str.lower().str.contains(s, na=False)]
+                        df_f = df_f[df_f[filter_column].astype(str).str.lower().str.contains(s, na=False)]
         return df_f
 
     # ======== Helpers de formato ========
@@ -158,7 +167,6 @@ def crear_tabla(
 
     # ======== Slot para truncar 'comentarios' ========
     if any(col.get('name') == 'comentarios' for col in columnas):
-        # Definir el slot como string template
         comentarios_slot = """
         <q-td key="comentarios" :props="props">
             <div style="max-width:320px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"
@@ -171,36 +179,20 @@ def crear_tabla(
 
     # ======== Acciones por fila ========
     if acciones:
-        # Guardar las funciones de acciones en variables locales
         info_func = next((accion["func"] for accion in acciones if accion["name"] == "info"), None)
         edit_func = next((accion["func"] for accion in acciones if accion["name"] == "edit"), None)
         info_icon = next((accion["icon"] for accion in acciones if accion["name"] == "info"), "info")
         edit_icon = next((accion["icon"] for accion in acciones if accion["name"] == "edit"), "edit")
 
-        # Definir el slot de acciones como string template con JavaScript
-        acciones_slot = """
+        acciones_slot = f"""
         <q-td key="acciones" :props="props">
             <div class="row justify-center gap-1">
-                <q-btn
-                    icon="{{ info_icon }}"
-                    @click="() => $root.infoAction(props.row)"
-                    flat dense
-                    class="action-btn"
-                />
-                <q-btn
-                    icon="{{ edit_icon }}"
-                    @click="() => $root.editAction(props.row)"
-                    flat dense
-                    class="action-btn"
-                />
+                <q-btn icon="{info_icon}" @click="() => $root.infoAction(props.row)" flat dense class="action-btn"/>
+                <q-btn icon="{edit_icon}" @click="() => $root.editAction(props.row)" flat dense class="action-btn"/>
             </div>
         </q-td>
         """
-
-        # Agregar el slot
         table.add_slot('body-cell-acciones', acciones_slot)
-
-        # Agregar métodos globales para las acciones
 
         def add_global_methods():
             def info_action(row):
@@ -216,8 +208,26 @@ def crear_tabla(
                 'editAction': edit_action
             }
 
+    # ======== Congelar columnas ========
     if congelar:
         for col in congelar:
             table.classes(f"sticky-col sticky-{col}")
+
+    # ======== Relación padre-hijo en filtros ========
+    if relacion_filtros and filter_elements:
+        for hijo, padre in relacion_filtros.items():
+            if hijo in filter_elements and padre in filter_elements:
+                def _update_child(e, _h=hijo, _p=padre):
+                    pv = filter_elements[_p].value
+                    if pv == "Todos":
+                        opts = ["Todos"] + sorted(df[_h].dropna().astype(str).unique().tolist())
+                    else:
+                        opts = ["Todos"] + sorted(
+                            df[df[_p].astype(str) == pv][_h].dropna().astype(str).unique().tolist()
+                        )
+                    filter_elements[_h].options = opts
+                    filter_elements[_h].value = "Todos"
+                    update_table()
+                filter_elements[padre].on("update:model-value", _update_child)
 
     return table

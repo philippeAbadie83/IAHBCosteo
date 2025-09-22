@@ -8,6 +8,24 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # Changelog
 
+# v1.0.127.0 (2025-09-22)
+
+## 🚀 Mejoras
+
+- Refactorizado `v_tblprov_data.py` para evitar variables indefinidas en Pylance.
+- Movido `crear_tabla(...)` dentro de la función `content()` para que todas las variables (`df`, `columnas`, `filtros`, etc.) estén en el mismo ámbito.
+- Integración clara con `layout.render(content)` manteniendo la modularidad.
+- Se mantiene el soporte para:
+  - Filtros padre–hijo (`familia → proveedor`).
+  - Exportación a Excel.
+  - Formatos especiales para columnas de porcentaje.
+  - Acciones estándar: **info** y **edit** con UI dialogs.
+
+## 🐞 Fixes
+
+- Corregido bug de **variables no definidas** (`columnas`, `df`, `filtros`, `acciones`, etc.).
+- Eliminada duplicación innecesaria de funciones anidadas que causaba confusión y exceso de líneas.
+
 ## [1.0.126.11] - 2025-09-21
 
 ### Cambios
