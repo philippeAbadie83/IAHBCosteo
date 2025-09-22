@@ -70,7 +70,6 @@ def crear_tabla(
     # ACCIONES ESTÁNDAR (en esta app):
     #   - Info (ℹ️)   → ver detalles en dialog
     #   - Update (✏️) → editar registro en dialog/formulario
-    #   - Delete (🗑️) → eliminar registro con confirmación
     #
     # ACCIONES EXTRA (opcional, no usadas en esta app):
     #   - Navegar (🔗)
@@ -119,7 +118,6 @@ def crear_tabla(
     def _fmt_percent(value) -> str:
         try:
             v = float(str(value).replace('%', '').strip())
-            # 0.11 => 11%
             if 0 <= v <= 1:
                 v = v * 100
             return f"{int(round(v))}%"
@@ -135,21 +133,18 @@ def crear_tabla(
         df_filtrado = get_filtered_data()
         rows = df_filtrado.to_dict(orient="records")
 
-        # Formato de porcentajes como enteros con '%'
         if percent_cols:
             for r in rows:
                 for c in percent_cols:
                     if c in r and r[c] is not None:
                         r[c] = _fmt_percent(r[c])
 
-        # Inyectar columna auxiliar para acciones
         if acciones:
             for r in rows:
                 r["acciones"] = "acciones"
 
         table.rows = rows
 
-        # Contador de resultados
         result_text = f"Mostrando {len(rows)} de {len(df)} registros"
         if hasattr(update_table, 'result_count'):
             update_table.result_count.text = result_text
@@ -157,15 +152,13 @@ def crear_tabla(
             with ui.row().classes("w-full justify-end mt-2"):
                 update_table.result_count = ui.label(result_text).classes("result-counter-pro")
 
-    # Eventos de filtrado
     if filtros:
         for filter_element in filter_elements.values():
             filter_element.on("update:model-value", lambda: update_table())
 
     update_table()
 
-    # ======== Slot para truncar 'comentarios' con tooltip ========
-    # Si existe columna 'comentarios', la renderizamos truncada con ellipsis y title
+    # ======== Slot para truncar 'comentarios' ========
     if any(col.get('name') == 'comentarios' for col in columnas):
         def render_comentarios(row):
             val = str(row.get('comentarios', '') or '')
@@ -175,7 +168,7 @@ def crear_tabla(
             )
         table.add_slot("body-cell-comentarios", cast(Any, render_comentarios))
 
-    # ======== Acciones por fila (después de crear la tabla) ========
+    # ======== Acciones por fila ========
     if acciones:
 
         def _open_info_dialog(r: dict):
@@ -183,15 +176,11 @@ def crear_tabla(
                 ui.label("Detalle del registro").classes("text-lg font-bold mb-2")
                 with ui.separator():
                     pass
-                # Muestra pares clave/valor de forma limpia (dos columnas)
                 with ui.grid(columns=2).classes("gap-2 my-2"):
                     for k, v in r.items():
-                        # No mostramos el campo auxiliar 'acciones'
                         if k == 'acciones':
                             continue
-                        # Etiqueta
                         ui.label(str(k).replace('_', ' ').title()).classes("text-sm text-gray-600")
-                        # Valor (ya llega con % si aplica)
                         ui.label("" if v is None else str(v)).classes("text-sm")
                 with ui.row().classes("justify-end mt-2"):
                     ui.button("Cerrar", on_click=dialog.close)
@@ -203,17 +192,16 @@ def crear_tabla(
                     if accion["name"] == "info":
                         ui.button(
                             icon=accion["icon"],
-                            on_click=lambda e, r=row: _open_info_dialog(r),
+                            on_click=lambda e, r=row, f=accion["func"]: f(r),
                         ).props("flat dense").classes("action-btn")
                     elif accion["name"] == "edit":
                         ui.button(
                             icon=accion["icon"],
-                            on_click=lambda e, r=row: ui.notify(f"Editar: {r}"),
+                            on_click=lambda e, r=row, f=accion["func"]: f(r),
                         ).props("flat dense").classes("action-btn")
 
         table.add_slot("body-cell-acciones", cast(Any, render_acciones))
 
-    # ======== Congelar columnas ========
     if congelar:
         for col in congelar:
             table.classes(f"sticky-col sticky-{col}")

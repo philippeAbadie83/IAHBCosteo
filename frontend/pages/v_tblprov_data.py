@@ -1,4 +1,3 @@
-
 # frontend/pages/v_tblprov_data.py
 from nicegui import ui
 import pandas as pd
@@ -28,9 +27,6 @@ def v_tblprov_data():
             {"name": "flete_mex", "label": "Flete Mex %", "field": "flete_mex", "align": "right"},
             {"name": "total_gastos", "label": "Total Gastos %", "field": "total_gastos", "align": "right"},
             {"name": "comentarios", "label": "Comentarios", "field": "comentarios", "align": "left"},
-            {"name": "version", "label": "Versión", "field": "version", "align": "center"},
-            {"name": "fecha_update", "label": "Última Actualización", "field": "fecha_update", "align": "center"},
-            {"name": "usuario_update", "label": "Actualizado por", "field": "usuario_update", "align": "left"},
         ]
 
         # ======== Definir filtros ESPECÍFICOS ========
@@ -49,11 +45,28 @@ def v_tblprov_data():
             'total_gastos': {'tipo': 'porcentaje'}
         }
 
-        acciones = [
-            {"icon": "info", "name": "info"},
-            {"icon": "edit", "name": "edit"},
-        ]
+        # ======== Funciones de acciones ========
+        def mostrar_info(row):
+            with ui.dialog() as dialog, ui.card().classes("w-[680px]"):
+                ui.label("Detalle del registro").classes("text-lg font-bold mb-2")
+                with ui.separator(): pass
+                with ui.grid(columns=2).classes("gap-2 my-2"):
+                    for k, v in row.items():
+                        if k == 'acciones':
+                            continue
+                        ui.label(str(k).replace('_', ' ').title()).classes("text-sm text-gray-600")
+                        ui.label("" if v is None else str(v)).classes("text-sm")
+                with ui.row().classes("justify-end mt-2"):
+                    ui.button("Cerrar", on_click=dialog.close)
+            dialog.open()
 
+        def editar_registro(row):
+            ui.notify(f"Editar: {row.get('proveedor', '')}")
+
+        acciones = [
+            {"icon": "info", "name": "info", "func": mostrar_info},
+            {"icon": "edit", "name": "edit", "func": editar_registro},
+        ]
 
         # ======== Usar tabla genérica ========
         crear_tabla(
@@ -64,7 +77,7 @@ def v_tblprov_data():
             exportar=True,
             congelar=["proveedor", "familia"],
             formatos_especiales=formatos_especiales,
-            acciones=acciones  # 👈 aquí
+            acciones=acciones
         )
 
     # 👉 Integración al layout

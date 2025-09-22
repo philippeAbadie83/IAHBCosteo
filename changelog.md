@@ -8,6 +8,18 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # Changelog
 
+## [1.0.126.8] - 2025-09-21
+
+### Fixed
+
+- Se corrigió el error `TypeError: Type is not JSON serializable: function` en la vista `v_tblprov_data`.
+- Ahora las acciones (`info`, `edit`) pasan funciones explícitas (`func`) para su ejecución en `tbl_base.py`.
+
+### Changed
+
+- Actualización de `v_tblprov_data.py` para definir funciones `mostrar_info` y `editar_registro`, conectadas directamente a las acciones.
+- Mejor integración con el `render_acciones` en `tbl_base.py`.
+
 ## [1.0.126.7] - 2025-09-21
 
 ### Added
