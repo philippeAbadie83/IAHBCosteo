@@ -84,8 +84,8 @@ def crear_tabla_fixed(
     result_label = ui.label("").classes("text-sm text-gray-600 mb-2")
 
     # 6. TABLA BÁSICA SIN SLOTS COMPLEJOS
-    with ui.card().classes("w-full border rounded-lg"):
-        table = ui.table(
+    #with ui.card().classes("w-full border rounded-lg"):
+    table = ui.table(
             columns=columnas_finales,
             rows=[],
             row_key=row_key,
