@@ -25,7 +25,7 @@ def v_tblprov_data():
 
         # ======== Definir columnas ========
         columnas = [
-
+            {"name": "id", "label": "ID", "field": "id", "sortable": True, "align": "left"},
             {"name": "proveedor", "label": "Proveedor", "field": "proveedor", "sortable": True, "align": "left"},
             {"name": "familia", "label": "Familia", "field": "familia", "sortable": True, "align": "left"},
             {"name": "valor", "label": "Valor", "field": "valor", "align": "right"},

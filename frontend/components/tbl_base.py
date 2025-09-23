@@ -104,7 +104,7 @@ def crear_tabla(
         table = ui.table(
             columns=columnas,
             rows=[],
-            row_key="id",
+            row_key="proveedor",
         ).props(
             "pagination rows-per-page-options='10,25,50,75,100' rows-per-page=25"
         ).classes("h-[600px]")
