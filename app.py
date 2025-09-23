@@ -16,6 +16,9 @@ import frontend.pages.ttbl2
 import frontend.pages.ttbl_pipeline
 import frontend.pages.test_tbl_simple  # ✅ CORRECTO
 import frontend.pages.test_tbl_sample  # ✅ CORRECTO
+import frontend.pages.test_fix
+import frontend.pages.test_minimal
+import frontend.pages.test_table
 
 # Importar placeholders (👉 muy importante)
 import frontend.pages.placeholders
