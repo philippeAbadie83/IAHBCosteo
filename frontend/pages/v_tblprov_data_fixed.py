@@ -37,18 +37,31 @@ def v_tblprov_data_fixed():
             {"type": "select", "column": "familia", "label": "Familia"},
         ]
 
-
         # 6. RELACIÓN PADRE-HIJO (NUEVO)
         relacion_filtros = {"familia": "proveedor"}  # 👈 hijo: padre
 
-        # 7. Tabla FIXED con RELACIÓN PADRE-HIJO
+        # 7. ACCIONES (NUEVO)
+        def mostrar_info(row):
+            ui.notify(f"Info: {row.get('proveedor', '')}")
+
+        def editar_registro(row):
+            ui.notify(f"Editar: {row.get('proveedor', '')}")
+
+        acciones = [
+            {"icon": "info", "name": "info", "func": mostrar_info},
+            {"icon": "edit", "name": "edit", "func": editar_registro},
+        ]
+
+        #*** Tabla FIXED con TODO
         crear_tabla_fixed(
-            nombre="Proveedores Activos (CON RELACIÓN PADRE-HIJO)",
+            nombre="Proveedores Activos (CON EXPORTAR Y ACCIONES)",
             columnas=columnas,
             data=df,
             row_key="id",
             filtros=filtros,
-            relacion_filtros=relacion_filtros  # 👈 PROBAR ESTO
+            relacion_filtros=relacion_filtros,
+            exportar=True,  # 👈 PROBAR EXPORTAR
+            acciones=acciones  # 👈 PROBAR ACCIONES
         )
 
 
