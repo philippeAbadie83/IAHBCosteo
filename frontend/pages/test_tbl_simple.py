@@ -6,7 +6,7 @@ from frontend.components.tbl_base_simple import crear_tabla_simple
 from core import layout
 
 
-@ui.page("/test_tabla_simple")
+@ui.page("/test_tbl_simple")
 def test_tabla_simple():
     def content():
         ui.label("🔧 TEST TABLA SIMPLE").classes("text-3xl font-bold mb-6")

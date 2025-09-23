@@ -15,7 +15,7 @@ def get_sample_data():
         {"id": 5, "nombre": "Usuario 5", "email": "user5@example.com", "edad": 32, "ciudad": "Sevilla"},
     ])
 
-@ui.page("/test_tabla_sample")
+@ui.page("/test_tbl_sample")
 def test_tabla_sample():
     def content():
         ui.label("🧪 TEST CON DATOS SAMPLE").classes("text-3xl font-bold mb-6")
