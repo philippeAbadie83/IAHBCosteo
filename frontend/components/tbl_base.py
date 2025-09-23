@@ -105,6 +105,7 @@ def crear_tabla(
             columns=columnas,
             rows=[],
             row_key="id",
+            pagination=10,  # 👈 ¡Así se hace!
         )
 
     # ======== Función de filtrado ========

@@ -89,6 +89,7 @@ def crear_tabla_fixed(
             columns=columnas_finales,
             rows=[],
             row_key=row_key,
+            pagination=15,  # 👈 ¡Así se hace!
         )
         #.props("pagination rows-per-page-options='[25,50,100,250]' rows-per-page=50")
 
