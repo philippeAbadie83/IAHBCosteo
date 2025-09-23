@@ -1,4 +1,4 @@
-# frontend/pages/test_tabla_sample.py
+# frontend/pages/test_tbl_sample.py
 
 from nicegui import ui
 import pandas as pd

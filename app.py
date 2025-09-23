@@ -1,5 +1,6 @@
 # app.py
 
+from sys import implementation
 from core.__version__ import __version__, __build__
 print(f"Versión: {__version__}, Build: {__build__}")
 
@@ -13,6 +14,8 @@ import frontend.pages.p_imp_provData
 import frontend.pages.ttbl
 import frontend.pages.ttbl2
 import frontend.pages.ttbl_pipeline
+import frontend.pages.test_tbl_simple  # ✅ CORRECTO
+import frontend.pages.test_tbl_sample  # ✅ CORRECTO
 
 # Importar placeholders (👉 muy importante)
 import frontend.pages.placeholders
