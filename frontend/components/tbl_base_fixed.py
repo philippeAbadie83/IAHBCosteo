@@ -1,4 +1,4 @@
-# frontend/components/tbl_base_fixed.py - VERSIÓN MEJORADA
+# frontend/components/tbl_base_fixed.py - VERSIÓN CORREGIDA
 
 from nicegui import ui
 import pandas as pd
@@ -16,44 +16,46 @@ def crear_tabla_fixed(
     relacion_filtros: Optional[Dict[str, str]] = None,
     exportar: bool = False,
     acciones: Optional[list] = None,
-    truncate_columns: Optional[Dict[str, int]] = None  # 👈 NUEVO: truncamiento
+    truncate_columns: Optional[Dict[str, int]] = None
 ):
-    """Versión FIXED mejorada - Con todas las funcionalidades integradas"""
+    """Versión FIXED - Sin slots problemáticos"""
     df = data.copy()
 
-    # 1. TÍTULO Y EXPORTAR - En misma línea con contador
-    with ui.row().classes("w-full items-center justify-between mb-2"):  # 👈 menos margin
+    # 1. TÍTULO Y EXPORTAR - VOLVEMOS A LA VERSIÓN ANTERIOR
+    with ui.row().classes("w-full items-center justify-between mb-4"):
         if nombre:
             ui.label(nombre).classes("text-2xl font-bold text-gray-800")
 
-        # Contador TEMPORAL aquí
-        contador_temp = ui.label("").classes("text-sm text-gray-600")
+        if exportar:
+            def exportar_excel():
+                output = io.BytesIO()
+                df.to_excel(output, index=False)
+                filename = f"{nombre}_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx"
+                ui.download(output.getvalue(), filename=filename)
 
-    # 2. FILTROS Y CONTADOR EN MISMA LÍNEA - Layout compacto
-    with ui.row().classes("w-full items-end gap-4 mb-3"):  # 👈 items-end para alinear
-        # FILTROS
-        filter_elements = {}
-        if filtros and not df.empty:
-            for filter_config in filtros:
-                filter_type = filter_config.get('type', 'select')
-                filter_label = filter_config.get('label', 'Filtro')
-                filter_column = filter_config.get('column', '')
+            ui.button("Exportar a Excel", icon="download", on_click=exportar_excel) \
+                .classes("export-btn-pro")
 
-                if filter_type == 'select' and filter_column in df.columns:
-                    options = ["Todos"] + sorted(df[filter_column].dropna().astype(str).unique().tolist())
-                    filter_elements[filter_column] = ui.select(
-                        options=options,
-                        value="Todos",
-                        label=filter_label,
-                    ).classes("min-w-[180px]")  # 👈 más compacto
+    # 2. FILTROS - VOLVEMOS A LA VERSIÓN ANTERIOR
+    filter_elements = {}
+    if filtros and not df.empty:
+        with ui.card().classes("w-full mb-4 p-4 bg-gray-50"):
+            ui.label("Filtros").classes("font-bold mb-2")
+            with ui.row().classes("w-full items-center gap-4"):
+                for filter_config in filtros:
+                    filter_type = filter_config.get('type', 'select')
+                    filter_label = filter_config.get('label', 'Filtro')
+                    filter_column = filter_config.get('column', '')
 
-        # ESPACIO FLEXIBLE
-        ui.space()  # 👈 Empuja el contador a la derecha
+                    if filter_type == 'select' and filter_column in df.columns:
+                        options = ["Todos"] + sorted(df[filter_column].dropna().astype(str).unique().tolist())
+                        filter_elements[filter_column] = ui.select(
+                            options=options,
+                            value="Todos",
+                            label=filter_label,
+                        ).classes("min-w-[200px]")
 
-        # CONTADOR FIJO A LA DERECHA
-        result_label = ui.label("").classes("text-sm text-gray-600 font-medium")
-
-    # 3. RELACIÓN PADRE-HIJO (mantener igual)
+    # 3. RELACIÓN PADRE-HIJO
     if relacion_filtros and filter_elements:
         for hijo, padre in relacion_filtros.items():
             if hijo in filter_elements and padre in filter_elements:
@@ -78,42 +80,26 @@ def crear_tabla_fixed(
             {"name": "acciones", "label": "Acciones", "field": "acciones", "align": "center"}
         )
 
-    # 5. Contador (original - se mantiene por compatibilidad)
-    # result_label se usa ahora en la línea de filtros
+    # 5. CONTADOR SIMPLE
+    result_label = ui.label("").classes("text-sm text-gray-600 mb-2")
 
-    # 6. Tabla básica CON MÁS LÍNEAS
-    with ui.card().classes("w-full border rounded-lg mt-1"):  # 👈 menos margen arriba
+    # 6. TABLA BÁSICA SIN SLOTS COMPLEJOS
+    with ui.card().classes("w-full border rounded-lg"):
         table = ui.table(
             columns=columnas_finales,
             rows=[],
             row_key=row_key,
-        ).props(
-            "pagination rows-per-page-options='[25,50,100]' rows-per-page=50"  # 👈 Más líneas
-        ).classes("h-[700px]")  # 👈 Más altura
+        ).props("pagination rows-per-page=25").classes("h-[600px]")
 
-    # 7. SLOT PARA TEXTO TRUNCADO (NUEVO)
-    if truncate_columns:
-        for col_name, max_len in truncate_columns.items():
-            if any(col.get('name') == col_name for col in columnas_finales):
-                slot_code = f"""
-                <q-td key="{col_name}" :props="props">
-                    <div style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
-                         :title="props.row.{col_name} || ''">
-                        {{{{ props.row.{col_name} || '' }}}}
-                    </div>
-                </q-td>
-                """
-                table.add_slot(f'body-cell-{col_name}', slot_code)
+    # 7. **QUITAMOS LOS SLOTS PERSONALIZADOS** - Esto causa el problema "No data available"
 
-    # 8. SLOT PARA ACCIONES
+    # 8. SLOT SOLO PARA ACCIONES (MANTENEMOS ESTE)
     if acciones:
-        # Buscar funciones de info y edit
         info_func = next((accion["func"] for accion in acciones if accion["name"] == "info"), None)
         edit_func = next((accion["func"] for accion in acciones if accion["name"] == "edit"), None)
         info_icon = next((accion["icon"] for accion in acciones if accion["name"] == "info"), "info")
         edit_icon = next((accion["icon"] for accion in acciones if accion["name"] == "edit"), "edit")
 
-        # Slot simple para acciones
         acciones_slot = f"""
         <q-td key="acciones" :props="props">
             <div class="row justify-center gap-1">
@@ -124,7 +110,6 @@ def crear_tabla_fixed(
         """
         table.add_slot('body-cell-acciones', acciones_slot)
 
-        # Funciones globales
         def info_action(row):
             if info_func:
                 info_func(row)
@@ -133,7 +118,6 @@ def crear_tabla_fixed(
             if edit_func:
                 edit_func(row)
 
-        # Agregar al contexto global
         ui.add_body_html(f"""
         <script>
             window.infoAction = {info_action};
@@ -141,7 +125,7 @@ def crear_tabla_fixed(
         </script>
         """)
 
-    # 9. Actualización
+    # 9. ACTUALIZACIÓN
     def update_table():
         df_filtrado = df.copy()
         if filtros and filter_elements:
@@ -154,32 +138,18 @@ def crear_tabla_fixed(
 
         rows = df_filtrado.to_dict(orient="records")
 
-        # Agregar campo "acciones" a cada fila si hay acciones
         if acciones:
             for r in rows:
                 r["acciones"] = "acciones"
 
         table.rows = rows
         result_label.text = f"Mostrando {len(rows)} de {len(df)} registros"
-        contador_temp.text = ""  # Limpiar temporal
 
     update_table()
 
-    # 10. Conectar filtros
+    # 10. CONECTAR FILTROS
     if filtros:
         for filter_element in filter_elements.values():
             filter_element.on("update:model-value", lambda: update_table())
-
-    # 11. BOTÓN EXPORTAR (si está activado) - En nueva posición
-    if exportar:
-        with ui.row().classes("w-full justify-end mt-2"):
-            def exportar_excel():
-                output = io.BytesIO()
-                df.to_excel(output, index=False)  # Exportar datos completos
-                filename = f"{nombre}_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx"
-                ui.download(output.getvalue(), filename=filename)
-
-            ui.button("Exportar a Excel", icon="download", on_click=exportar_excel) \
-                .classes("export-btn-pro")
 
     return table

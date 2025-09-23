@@ -14,7 +14,6 @@ def v_tblprov_data_fixed():
         # 2. Sanitizar con todas las mejoras
         df = sanitize_dataframe(df,
             percent_columns=["flete_origen", "arancel", "gtos_aduana", "flete_mex", "total_gastos"],
-            truncate_columns={"comentarios": 50}  # Trunca comentarios a 50 chars
         )
 
         # 3. Columnas completas
@@ -61,7 +60,6 @@ def v_tblprov_data_fixed():
             relacion_filtros=relacion_filtros,
             exportar=True,
             acciones=acciones,
-            truncate_columns={"comentarios": 50}
         )
 
     layout.render(content)
