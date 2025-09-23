@@ -8,6 +8,28 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 # Changelog
 
+## [1.0.129.0] - 2025-09-23
+
+### Added
+
+- Nueva versión de tabla genérica **`tbl_base_final.py`**, simplificada y estable.
+- Estilos globales ajustados en **`utils/styles.py`** y **`utils/sty_tables.py`** para trabajar directamente con clases de Quasar (`.q-*`).
+- Integración de los nuevos estilos al **layout** para aplicarse en toda la aplicación.
+
+### Fixed
+
+- Problema de **paginación invisible** en `tbl_base` causado por `card` y `overflow:hidden`.
+- Correcciones en filtros padre-hijo (`proveedor` → `familia`) y en el renderizado de columnas especiales.
+- Eliminación de duplicados y reglas CSS agresivas que interferían con Quasar.
+
+### Updated
+
+- Refactor en `tbl_base` para mantener compatibilidad mientras se adopta `tbl_base_final`.
+- Documentación de estilos simplificada, separando **global** de **tabla**.
+- Ajuste visual en botones de exportación y contador de resultados para consistencia.
+
+---
+
 ## [1.0.128.4] - 2025-09-22
 
 ### Cambios

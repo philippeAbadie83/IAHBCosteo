@@ -43,6 +43,7 @@ def create_sidebar() -> None:
         # ---------------- Proveedor ----------------
         with ui.expansion('Proveedores', icon='inventory_2', value=True).classes('w-full text-sm mt-2'):
             nav_btn('Proveedores Activos', 'table_chart', '/v_tblprov_data')
+            nav_btn('Proveedores Activos2', 'table_chart', '/v_tblprov_data_final')
             nav_btn('Proveedores (Todos)', 'fact_check', '/v_tblprov_all')
             nav_btn('Importar Datos', 'upload_file', '/importar_proveedores')
 
@@ -83,6 +84,7 @@ def create_sidebar() -> None:
             nav_btn('Tabla TTBL', 'table_chart', '/ttbl')
             nav_btn('Tabla TTBL2', 'table_chart', '/ttbl2')
             nav_btn('Tabla Pipeline', 'table_chart', '/pipeline')
+            nav_btn('Tabla Minimal', 'table_chart', '/test_minimal')
 
         # ---------------- Sistema ----------------
         ui.label('Sistema').classes('section-label px-3 pt-3 pb-1 mini-hidden')

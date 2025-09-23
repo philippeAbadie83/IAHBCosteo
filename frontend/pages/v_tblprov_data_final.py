@@ -1,6 +1,6 @@
 from nicegui import ui
 import pandas as pd
-from frontend.components.tbl_base_fixed import crear_tabla_fixed
+from frontend.components.tbl_base_final import crear_tabla_fixed
 from services.db_services import get_proveedores_activos
 from utils.helpers import sanitize_dataframe
 from core import layout
