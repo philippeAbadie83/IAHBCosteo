@@ -19,6 +19,9 @@ import frontend.pages.test_tbl_sample  # ✅ CORRECTO
 import frontend.pages.test_fix
 import frontend.pages.test_minimal
 import frontend.pages.test_table
+import frontend.pages.v_tblprov_data_fixed
+
+
 
 # Importar placeholders (👉 muy importante)
 import frontend.pages.placeholders
