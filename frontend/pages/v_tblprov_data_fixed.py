@@ -37,13 +37,19 @@ def v_tblprov_data_fixed():
             {"type": "select", "column": "familia", "label": "Familia"},
         ]
 
-        # 6. Tabla FIXED con TODO
+
+        # 6. RELACIÓN PADRE-HIJO (NUEVO)
+        relacion_filtros = {"familia": "proveedor"}  # 👈 hijo: padre
+
+        # 7. Tabla FIXED con RELACIÓN PADRE-HIJO
         crear_tabla_fixed(
-            nombre="Proveedores Activos (CON FILTROS Y FORMATOS)",
+            nombre="Proveedores Activos (CON RELACIÓN PADRE-HIJO)",
             columnas=columnas,
             data=df,
             row_key="id",
-            filtros=filtros
+            filtros=filtros,
+            relacion_filtros=relacion_filtros  # 👈 PROBAR ESTO
         )
+
 
     layout.render(content)

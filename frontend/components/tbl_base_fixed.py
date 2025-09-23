@@ -1,8 +1,10 @@
-# frontend/components/tbl_base_fixed.py
+
+# frontend/components/tbl_base_fixed.py - AGREGAR RELACIÓN PADRE-HIJO
 
 from nicegui import ui
 import pandas as pd
 from typing import Optional, Dict, Any, List
+
 
 def crear_tabla_fixed(
     nombre: str,
@@ -10,16 +12,17 @@ def crear_tabla_fixed(
     data: pd.DataFrame,
     row_key: str = "id",
     formatos_especiales: Optional[Dict[str, Any]] = None,
-    filtros: Optional[List[Dict]] = None  # 👈 AGREGAR FILTROS
+    filtros: Optional[List[Dict]] = None,
+    relacion_filtros: Optional[Dict[str, str]] = None  # 👈 NUEVO: {"familia": "proveedor"}
 ):
-    """Versión FIXED - Con formatos Y filtros"""
+    """Versión FIXED - Con relación padre-hijo en filtros"""
     df = data.copy()
 
     # 1. Título simple
     if nombre:
         ui.label(nombre).classes("text-2xl font-bold mb-4")
 
-    # 2. FILTROS (NUEVO)
+    # 2. FILTROS
     filter_elements = {}
     if filtros and not df.empty:
         with ui.card().classes("w-full mb-4 p-4 bg-gray-50"):
@@ -38,10 +41,31 @@ def crear_tabla_fixed(
                             label=filter_label,
                         ).classes("min-w-[200px]")
 
-    # 3. Contador SEPARADO
+    # 3. RELACIÓN PADRE-HIJO (NUEVO)
+    if relacion_filtros and filter_elements:
+        for hijo, padre in relacion_filtros.items():
+            if hijo in filter_elements and padre in filter_elements:
+                def _update_child_options(_h=hijo, _p=padre):
+                    # Actualizar opciones del filtro hijo basado en padre
+                    pv = filter_elements[_p].value
+                    if pv == "Todos":
+                        opts = ["Todos"] + sorted(df[_h].dropna().astype(str).unique().tolist())
+                    else:
+                        opts = ["Todos"] + sorted(
+                            df[df[_p].astype(str) == pv][_h].dropna().astype(str).unique().tolist()
+                        )
+                    filter_elements[_h].options = opts
+                    # Resetear valor si ya no es válido
+                    if filter_elements[_h].value not in opts:
+                        filter_elements[_h].value = "Todos"
+                    update_table()
+
+                filter_elements[padre].on("update:model-value", _update_child_options)
+
+    # 4. Contador
     result_label = ui.label("").classes("text-sm text-gray-600 mb-2")
 
-    # 4. Tabla básica
+    # 5. Tabla básica
     with ui.card().classes("w-full border rounded-lg"):
         table = ui.table(
             columns=columnas,
@@ -49,9 +73,8 @@ def crear_tabla_fixed(
             row_key=row_key,
         ).props("pagination rows-per-page=25").classes("h-[500px]")
 
-    # 5. Actualización CON FILTROS
+    # 6. Actualización
     def update_table():
-        # Aplicar filtros
         df_filtrado = df.copy()
         if filtros and filter_elements:
             for filter_config in filtros:
@@ -67,7 +90,7 @@ def crear_tabla_fixed(
 
     update_table()
 
-    # 6. Conectar filtros a actualización
+    # 7. Conectar filtros
     if filtros:
         for filter_element in filter_elements.values():
             filter_element.on("update:model-value", lambda: update_table())
