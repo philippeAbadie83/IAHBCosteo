@@ -5,7 +5,7 @@ from services.db_services import get_proveedores_activos
 from utils.helpers import sanitize_dataframe
 from core import layout
 
-@ui.page("/v_tblprov_data_fixed")
+@ui.page("/v_tblprov_data_final")
 def v_tblprov_data_fixed():
     def content():
         # 1. Obtener datos
@@ -26,7 +26,7 @@ def v_tblprov_data_fixed():
             {"name": "gtos_aduana", "label": "Gtos Aduana %", "field": "gtos_aduana", "align": "right"},
             {"name": "flete_mex", "label": "Flete Mex %", "field": "flete_mex", "align": "right"},
             {"name": "total_gastos", "label": "Total Gastos %", "field": "total_gastos", "align": "right"},
-            {"name": "comentarios", "label": "Comentarios", "field": "comentarios", "align": "left"},
+        #    {"name": "comentarios", "label": "Comentarios", "field": "comentarios", "align": "left"},
         ]
 
         # 4. Filtros
