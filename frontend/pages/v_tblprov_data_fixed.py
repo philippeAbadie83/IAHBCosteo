@@ -1,5 +1,3 @@
-# frontend/pages/v_tblprov_data_fixed.py
-
 from nicegui import ui
 import pandas as pd
 from frontend.components.tbl_base_fixed import crear_tabla_fixed
@@ -13,13 +11,13 @@ def v_tblprov_data_fixed():
         # 1. Obtener datos
         df: pd.DataFrame = get_proveedores_activos()
 
-        # 2. Definir columnas que son porcentajes
-        percent_columns = ["flete_origen", "arancel", "gtos_aduana", "flete_mex", "total_gastos"]
+        # 2. Sanitizar con todas las mejoras
+        df = sanitize_dataframe(df,
+            percent_columns=["flete_origen", "arancel", "gtos_aduana", "flete_mex", "total_gastos"],
+            truncate_columns={"comentarios": 50}  # Trunca comentarios a 50 chars
+        )
 
-        # 3. Sanitizar INCLUYENDO porcentajes
-        df = sanitize_dataframe(df, percent_columns=percent_columns)
-
-        # 4. Columnas básicas
+        # 3. Columnas completas
         columnas = [
             {"name": "proveedor", "label": "Proveedor", "field": "proveedor", "sortable": True},
             {"name": "familia", "label": "Familia", "field": "familia", "sortable": True},
@@ -29,18 +27,19 @@ def v_tblprov_data_fixed():
             {"name": "gtos_aduana", "label": "Gtos Aduana %", "field": "gtos_aduana", "align": "right"},
             {"name": "flete_mex", "label": "Flete Mex %", "field": "flete_mex", "align": "right"},
             {"name": "total_gastos", "label": "Total Gastos %", "field": "total_gastos", "align": "right"},
+            {"name": "comentarios", "label": "Comentarios", "field": "comentarios", "align": "left"},
         ]
 
-        # 5. FILTROS (NUEVO)
+        # 4. Filtros
         filtros = [
             {"type": "select", "column": "proveedor", "label": "Proveedor"},
             {"type": "select", "column": "familia", "label": "Familia"},
         ]
 
-        # 6. RELACIÓN PADRE-HIJO (NUEVO)
-        relacion_filtros = {"familia": "proveedor"}  # 👈 hijo: padre
+        # 5. Relación padre-hijo
+        relacion_filtros = {"familia": "proveedor"}
 
-        # 7. ACCIONES (NUEVO)
+        # 6. Acciones
         def mostrar_info(row):
             ui.notify(f"Info: {row.get('proveedor', '')}")
 
@@ -52,17 +51,17 @@ def v_tblprov_data_fixed():
             {"icon": "edit", "name": "edit", "func": editar_registro},
         ]
 
-        #*** Tabla FIXED con TODO
+        # 7. Crear tabla con todas las funcionalidades
         crear_tabla_fixed(
-            nombre="Proveedores Activos (CON EXPORTAR Y ACCIONES)",
+            nombre="Proveedores Activos (TODAS LAS MEJORAS)",
             columnas=columnas,
             data=df,
             row_key="id",
             filtros=filtros,
             relacion_filtros=relacion_filtros,
-            exportar=True,  # 👈 PROBAR EXPORTAR
-            acciones=acciones  # 👈 PROBAR ACCIONES
+            exportar=True,
+            acciones=acciones,
+            truncate_columns={"comentarios": 50}
         )
-
 
     layout.render(content)

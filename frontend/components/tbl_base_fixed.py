@@ -1,5 +1,4 @@
-
-# frontend/components/tbl_base_fixed.py - AGREGAR EXPORTAR Y ACCIONES
+# frontend/components/tbl_base_fixed.py - VERSIÓN MEJORADA
 
 from nicegui import ui
 import pandas as pd
@@ -15,46 +14,44 @@ def crear_tabla_fixed(
     formatos_especiales: Optional[Dict[str, Any]] = None,
     filtros: Optional[List[Dict]] = None,
     relacion_filtros: Optional[Dict[str, str]] = None,
-    exportar: bool = False,  # 👈 NUEVO: Botón exportar
-    acciones: Optional[list] = None  # 👈 NUEVO: Acciones por fila
+    exportar: bool = False,
+    acciones: Optional[list] = None,
+    truncate_columns: Optional[Dict[str, int]] = None  # 👈 NUEVO: truncamiento
 ):
-    """Versión FIXED - Con exportar y acciones"""
+    """Versión FIXED mejorada - Con todas las funcionalidades integradas"""
     df = data.copy()
 
-    # 1. TÍTULO Y EXPORTAR (NUEVO)
-    with ui.row().classes("w-full items-center justify-between mb-4"):
+    # 1. TÍTULO Y EXPORTAR - En misma línea con contador
+    with ui.row().classes("w-full items-center justify-between mb-2"):  # 👈 menos margin
         if nombre:
             ui.label(nombre).classes("text-2xl font-bold text-gray-800")
 
-        if exportar:
-            def exportar_excel():
-                df_f = df.copy()  # Exportar datos completos (sin filtrar por simplicidad)
-                output = io.BytesIO()
-                df_f.to_excel(output, index=False)
-                filename = f"{nombre}_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx"
-                ui.download(output.getvalue(), filename=filename)
+        # Contador TEMPORAL aquí
+        contador_temp = ui.label("").classes("text-sm text-gray-600")
 
-            ui.button("Exportar a Excel", icon="download", on_click=exportar_excel) \
-                .classes("export-btn-pro")
+    # 2. FILTROS Y CONTADOR EN MISMA LÍNEA - Layout compacto
+    with ui.row().classes("w-full items-end gap-4 mb-3"):  # 👈 items-end para alinear
+        # FILTROS
+        filter_elements = {}
+        if filtros and not df.empty:
+            for filter_config in filtros:
+                filter_type = filter_config.get('type', 'select')
+                filter_label = filter_config.get('label', 'Filtro')
+                filter_column = filter_config.get('column', '')
 
-    # 2. FILTROS (mantener igual)
-    filter_elements = {}
-    if filtros and not df.empty:
-        with ui.card().classes("w-full mb-4 p-4 bg-gray-50"):
-            ui.label("Filtros").classes("font-bold mb-2")
-            with ui.row().classes("w-full items-center gap-4"):
-                for filter_config in filtros:
-                    filter_type = filter_config.get('type', 'select')
-                    filter_label = filter_config.get('label', 'Filtro')
-                    filter_column = filter_config.get('column', '')
+                if filter_type == 'select' and filter_column in df.columns:
+                    options = ["Todos"] + sorted(df[filter_column].dropna().astype(str).unique().tolist())
+                    filter_elements[filter_column] = ui.select(
+                        options=options,
+                        value="Todos",
+                        label=filter_label,
+                    ).classes("min-w-[180px]")  # 👈 más compacto
 
-                    if filter_type == 'select' and filter_column in df.columns:
-                        options = ["Todos"] + sorted(df[filter_column].dropna().astype(str).unique().tolist())
-                        filter_elements[filter_column] = ui.select(
-                            options=options,
-                            value="Todos",
-                            label=filter_label,
-                        ).classes("min-w-[200px]")
+        # ESPACIO FLEXIBLE
+        ui.space()  # 👈 Empuja el contador a la derecha
+
+        # CONTADOR FIJO A LA DERECHA
+        result_label = ui.label("").classes("text-sm text-gray-600 font-medium")
 
     # 3. RELACIÓN PADRE-HIJO (mantener igual)
     if relacion_filtros and filter_elements:
@@ -74,25 +71,41 @@ def crear_tabla_fixed(
                     update_table()
                 filter_elements[padre].on("update:model-value", _update_child_options)
 
-    # 4. AGREGAR COLUMNA ACCIONES SI HAY ACCIONES (NUEVO)
+    # 4. AGREGAR COLUMNA ACCIONES SI HAY ACCIONES
     columnas_finales = columnas.copy()
     if acciones:
         columnas_finales.append(
             {"name": "acciones", "label": "Acciones", "field": "acciones", "align": "center"}
         )
 
-    # 5. Contador
-    result_label = ui.label("").classes("text-sm text-gray-600 mb-2")
+    # 5. Contador (original - se mantiene por compatibilidad)
+    # result_label se usa ahora en la línea de filtros
 
-    # 6. Tabla básica
-    with ui.card().classes("w-full border rounded-lg"):
+    # 6. Tabla básica CON MÁS LÍNEAS
+    with ui.card().classes("w-full border rounded-lg mt-1"):  # 👈 menos margen arriba
         table = ui.table(
-            columns=columnas_finales,  # 👈 Usar columnas_finales
+            columns=columnas_finales,
             rows=[],
             row_key=row_key,
-        ).props("pagination rows-per-page=25").classes("h-[500px]")
+        ).props(
+            "pagination rows-per-page-options='[25,50,100]' rows-per-page=50"  # 👈 Más líneas
+        ).classes("h-[700px]")  # 👈 Más altura
 
-    # 7. SLOT PARA ACCIONES (NUEVO)
+    # 7. SLOT PARA TEXTO TRUNCADO (NUEVO)
+    if truncate_columns:
+        for col_name, max_len in truncate_columns.items():
+            if any(col.get('name') == col_name for col in columnas_finales):
+                slot_code = f"""
+                <q-td key="{col_name}" :props="props">
+                    <div style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                         :title="props.row.{col_name} || ''">
+                        {{{{ props.row.{col_name} || '' }}}}
+                    </div>
+                </q-td>
+                """
+                table.add_slot(f'body-cell-{col_name}', slot_code)
+
+    # 8. SLOT PARA ACCIONES
     if acciones:
         # Buscar funciones de info y edit
         info_func = next((accion["func"] for accion in acciones if accion["name"] == "info"), None)
@@ -111,7 +124,7 @@ def crear_tabla_fixed(
         """
         table.add_slot('body-cell-acciones', acciones_slot)
 
-        # Funciones globales (simplificado)
+        # Funciones globales
         def info_action(row):
             if info_func:
                 info_func(row)
@@ -120,7 +133,7 @@ def crear_tabla_fixed(
             if edit_func:
                 edit_func(row)
 
-        # Agregar al contexto global (simplificado)
+        # Agregar al contexto global
         ui.add_body_html(f"""
         <script>
             window.infoAction = {info_action};
@@ -128,7 +141,7 @@ def crear_tabla_fixed(
         </script>
         """)
 
-    # 8. Actualización
+    # 9. Actualización
     def update_table():
         df_filtrado = df.copy()
         if filtros and filter_elements:
@@ -148,12 +161,25 @@ def crear_tabla_fixed(
 
         table.rows = rows
         result_label.text = f"Mostrando {len(rows)} de {len(df)} registros"
+        contador_temp.text = ""  # Limpiar temporal
 
     update_table()
 
-    # 9. Conectar filtros
+    # 10. Conectar filtros
     if filtros:
         for filter_element in filter_elements.values():
             filter_element.on("update:model-value", lambda: update_table())
+
+    # 11. BOTÓN EXPORTAR (si está activado) - En nueva posición
+    if exportar:
+        with ui.row().classes("w-full justify-end mt-2"):
+            def exportar_excel():
+                output = io.BytesIO()
+                df.to_excel(output, index=False)  # Exportar datos completos
+                filename = f"{nombre}_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx"
+                ui.download(output.getvalue(), filename=filename)
+
+            ui.button("Exportar a Excel", icon="download", on_click=exportar_excel) \
+                .classes("export-btn-pro")
 
     return table
