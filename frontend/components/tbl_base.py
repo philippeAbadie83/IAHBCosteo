@@ -105,9 +105,7 @@ def crear_tabla(
             columns=columnas,
             rows=[],
             row_key="id",
-        ).props(
-            "pagination rows-per-page-options='10,25,50,75,100' rows-per-page=25"
-        ).classes("h-[600px]")
+        )
 
     # ======== Función de filtrado ========
     def get_filtered_data():

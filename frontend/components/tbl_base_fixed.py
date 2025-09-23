@@ -89,7 +89,8 @@ def crear_tabla_fixed(
             columns=columnas_finales,
             rows=[],
             row_key=row_key,
-        ).props("pagination rows-per-page-options='[25,50,100,250]' rows-per-page=50")
+        )
+        #.props("pagination rows-per-page-options='[25,50,100,250]' rows-per-page=50")
 
     # 7. **QUITAMOS LOS SLOTS PERSONALIZADOS** - Esto causa el problema "No data available"
 
