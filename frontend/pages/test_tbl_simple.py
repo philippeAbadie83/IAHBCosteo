@@ -50,6 +50,7 @@ def test_tabla_simple():
 
         # ======== PRUEBA 3: Con datos reales de proveedores ========
         ui.label("PRUEBA 3: Datos reales").classes("text-xl font-bold mt-6 mb-2")
+        ui.label("(Se reactivará cuando solucionemos el problema de Timestamps)")
 
         # Importar la función real
     #    from services.db_services import get_proveedores_activos
