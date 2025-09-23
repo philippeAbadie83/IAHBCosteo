@@ -12,9 +12,14 @@ def v_tblprov_data_fixed():
     def content():
         # 1. Obtener datos
         df: pd.DataFrame = get_proveedores_activos()
-        df = sanitize_dataframe(df)
 
-        # 2. Columnas básicas
+        # 2. Definir columnas que son porcentajes
+        percent_columns = ["flete_origen", "arancel", "gtos_aduana", "flete_mex", "total_gastos"]
+
+        # 3. Sanitizar INCLUYENDO porcentajes
+        df = sanitize_dataframe(df, percent_columns=percent_columns)
+
+        # 4. Columnas básicas
         columnas = [
             {"name": "proveedor", "label": "Proveedor", "field": "proveedor", "sortable": True},
             {"name": "familia", "label": "Familia", "field": "familia", "sortable": True},
@@ -26,22 +31,19 @@ def v_tblprov_data_fixed():
             {"name": "total_gastos", "label": "Total Gastos %", "field": "total_gastos", "align": "right"},
         ]
 
-        # 3. Formatos especiales
-        formatos_especiales = {
-            "flete_origen": {"tipo": "porcentaje"},
-            "arancel": {"tipo": "porcentaje"},
-            "gtos_aduana": {"tipo": "porcentaje"},
-            "flete_mex": {"tipo": "porcentaje"},
-            "total_gastos": {"tipo": "porcentaje"},
-        }
+        # 5. FILTROS (NUEVO)
+        filtros = [
+            {"type": "select", "column": "proveedor", "label": "Proveedor"},
+            {"type": "select", "column": "familia", "label": "Familia"},
+        ]
 
-        # 4. Tabla FIXED con formatos
+        # 6. Tabla FIXED con TODO
         crear_tabla_fixed(
-            nombre="Proveedores Activos (CON FORMATOS)",
+            nombre="Proveedores Activos (CON FILTROS Y FORMATOS)",
             columnas=columnas,
             data=df,
             row_key="id",
-            formatos_especiales=formatos_especiales  # 👈 Paréntesis correctamente cerrado
+            filtros=filtros
         )
 
     layout.render(content)
