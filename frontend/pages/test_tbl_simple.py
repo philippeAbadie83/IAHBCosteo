@@ -52,28 +52,28 @@ def test_tabla_simple():
         ui.label("PRUEBA 3: Datos reales").classes("text-xl font-bold mt-6 mb-2")
 
         # Importar la función real
-        from services.db_services import get_proveedores_activos
+    #    from services.db_services import get_proveedores_activos
 
-        try:
-            df_real = get_proveedores_activos()
-            ui.label(f"✅ Datos reales cargados: {len(df_real)} registros, columnas: {list(df_real.columns)}")
+     #   try:
+     #       df_real = get_proveedores_activos()
+     #       ui.label(f"✅ Datos reales cargados: {len(df_real)} registros, columnas: {list(df_real.columns)}")
 
             # Columnas para datos reales
-            columnas_reales = [
-                {"name": "id", "label": "ID", "field": "id", "sortable": True, "align": "left"},
-                {"name": "proveedor", "label": "Proveedor", "field": "proveedor", "sortable": True, "align": "left"},
-                {"name": "familia", "label": "Familia", "field": "familia", "sortable": True, "align": "left"},
-                {"name": "valor", "label": "Valor", "field": "valor", "sortable": True, "align": "right"},
-            ]
+      #      columnas_reales = [
+      #          {"name": "id", "label": "ID", "field": "id", "sortable": True, "align": "left"},
+      #          {"name": "proveedor", "label": "Proveedor", "field": "proveedor", "sortable": True, "align": "left"},
+      #          {"name": "familia", "label": "Familia", "field": "familia", "sortable": True, "align": "left"},
+      #          {"name": "valor", "label": "Valor", "field": "valor", "sortable": True, "align": "right"},
+      #      ]
 
-            crear_tabla_simple(
-                nombre="Proveedores Reales",
-                columnas=columnas_reales,
-                data=df_real,
-                row_key="id"
-            )
+      #      crear_tabla_simple(
+      #          nombre="Proveedores Reales",
+      #          columnas=columnas_reales,
+      #          data=df_real,
+      #          row_key="id"
+      #     )
 
-        except Exception as e:
-            ui.label(f"❌ Error cargando datos reales: {e}").classes("text-red-500")
+       # except Exception as e:
+       #     ui.label(f"❌ Error cargando datos reales: {e}").classes("text-red-500")
 
     layout.render(content)
