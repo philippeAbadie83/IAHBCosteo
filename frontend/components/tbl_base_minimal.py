@@ -3,21 +3,25 @@
 from nicegui import ui
 import pandas as pd
 
-def crear_tabla_minimal(nombre: str, columnas: list, data: pd.DataFrame):
-    """Versión MÍNIMA sin row_key para test"""
-
+def crear_tabla_minimal(
+    nombre: str,
+    columnas: list,
+    data: pd.DataFrame,
+    row_key: str = "id"
+):
+    """Versión MINIMALISTA sin actualizaciones dinámicas"""
     df = data.copy()
 
-    ui.label(nombre).classes("text-xl font-bold mb-2")
+    if nombre:
+        ui.label(nombre).classes("text-xl font-bold mb-2")
 
-    # Debug info
-    with ui.card().classes("bg-green-100 p-2 mb-2"):
-        ui.label(f"📊 Datos: {len(df)} filas x {len(df.columns)} columnas")
-        ui.label(f"Columnas: {list(df.columns)}")
+    # Convertir DataFrame a lista de diccionarios
+    rows = df.to_dict(orient="records")
 
-    # Tabla SIN row_key
-    table = ui.table(columns=columnas, rows=df.to_dict('records'))
+    # Crear contador simple
+    ui.label(f"Mostrando {len(rows)} registros").classes("text-sm text-gray-600 mb-2")
 
-    ui.label(f"Mostrando {len(df)} registros")
+    # Crear tabla directamente
+    table = ui.table(columns=columnas, rows=rows, row_key=row_key).classes("w-full")
 
     return table
