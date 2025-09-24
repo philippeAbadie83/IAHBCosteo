@@ -7,6 +7,20 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 ---
 
 # CHANGELOG
+# Changelog
+
+## [1.0.130.2] - 2025-09-24
+### Fix
+- Eliminada la validación de columna `Pr Lista Prov` en la importación de productos.
+- Ajustada la lista de `required_cols` para que solo valide:
+  - Proveedor
+  - Familia
+  - No. part Prov
+  - Código del producto (en sistema)
+  - Nombre del producto
+- Limpieza de código: se eliminaron comentarios y referencias a `prod_price_ori` que ya no aplicaban en la importación de productos.
+
+
 
 ## [1.0.131.1] - 2025-09-23
 ### Added

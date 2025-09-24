@@ -1,3 +1,4 @@
+# frontend/pages/p_imp_prodData.py -productos
 from nicegui import ui
 import pandas as pd
 import io
@@ -44,13 +45,11 @@ def importar_productos():
                     "No. part Prov": "prod_sku_prov",
                     "Código del producto (en sistema)": "prod_sku_sys",
                     "Nombre del producto": "prod_name",
-                   # "Pr Lista Prov": "prod_price_ori",
                 })
 
                 df = df.fillna({
                     "prod_sku_sys": "",
                     "prod_name": "",
-                  #  "prod_price_ori": 0
                 })
 
                 for _, row in df.iterrows():
@@ -87,7 +86,6 @@ def importar_productos():
                 {"name": "prod_sku_prov", "label": "SKU Proveedor", "field": "prod_sku_prov"},
                 {"name": "prod_sku_sys", "label": "SKU Sistema", "field": "prod_sku_sys"},
                 {"name": "prod_name", "label": "Nombre Producto", "field": "prod_name"},
-             #   {"name": "prod_price_ori", "label": "Precio Lista", "field": "prod_price_ori"},
                 {"name": "prod_version", "label": "Versión", "field": "prod_version"},
                 {"name": "prod_createdate", "label": "Creado", "field": "prod_createdate"},
                 {"name": "prod_updatedate", "label": "Actualizado", "field": "prod_updatedate"},
