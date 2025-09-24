@@ -18,16 +18,17 @@ def v_tblprod_data_page():
 
         # 3. Definir columnas
         columnas = [
-            {"name": "proveedor", "label": "Proveedor", "field": "proveedor"},
-            {"name": "familia", "label": "Familia", "field": "familia"},
-            {"name": "sku_prov", "label": "SKU Proveedor", "field": "sku_prov"},
-            {"name": "sku_sys", "label": "SKU Sistema", "field": "sku_sys"},
-            {"name": "nombre", "label": "Nombre Producto", "field": "nombre"},
+            {"name": "proveedor", "label": "Proveedor", "field": "proveedor", "align": "left"},
+            {"name": "familia", "label": "Familia", "field": "familia", "align": "left"},
+            {"name": "sku_prov", "label": "SKU Proveedor", "field": "sku_prov", "align": "left"},
+            {"name": "sku_sys", "label": "SKU Sistema", "field": "sku_sys", "align": "left"},
+            {"name": "nombre", "label": "Nombre Producto", "field": "nombre", "align": "left"},
             {"name": "precio_lista", "label": "Precio Lista", "field": "precio_lista", "align": "right"},
             {"name": "version", "label": "Versión", "field": "version", "align": "center"},
-            {"name": "fecha_update", "label": "Última Actualización", "field": "fecha_update"},
-            {"name": "usuario_update", "label": "Actualizado por", "field": "usuario_update"},
+            {"name": "fecha_update", "label": "Última Actualización", "field": "fecha_update", "align": "center"},
+            {"name": "usuario_update", "label": "Actualizado por", "field": "usuario_update", "align": "left"},
         ]
+
 
         # 4. Filtros
         filtros = [
