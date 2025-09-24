@@ -6,7 +6,25 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 ---
 
-# Changelog
+# CHANGELOG
+
+## [1.0.131.1] - 2025-09-23
+### Added
+- Nueva página **`/importar_productos`** para cargar productos desde CSV/Excel.
+  - Columnas requeridas: `Proveedor`, `Familia`, `No. part Prov`, `Código del producto (en sistema)`, `Nombre del producto`.
+  - Renombrado automático a los campos de BD: `prov_name`, `prov_famil`, `prod_sku_prov`, `prod_sku_sys`, `prod_name`.
+  - Valores faltantes en `prod_sku_sys` y `prod_name` se completan con vacío `""`.
+  - Inserción en BD mediante `insertar_producto`, con trazabilidad de usuario (`prod_createby="Philippe"`).
+  - Notificación de éxito mostrando cantidad de registros importados.
+  - Tabla de verificación automática de los productos importados en la fecha actual.
+
+### Changed
+- Eliminada la dependencia de la columna `"Pr Lista Prov"` en la importación de productos.
+- Tabla de verificación simplificada: muestra **Proveedor, Familia, SKU Proveedor, SKU Sistema, Nombre Producto, Versión, Creado, Actualizado**.
+
+### Fixed
+- Error 404 en la ruta de importación de productos: ahora disponible en `/importar_productos`.
+
 
 ## [1.0.131.0] - 2025-09-24
 ### Fixed

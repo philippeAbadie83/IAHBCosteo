@@ -29,7 +29,7 @@ def importar_productos():
                 required_cols = [
                     "Proveedor", "Familia",
                     "No. part Prov", "Código del producto (en sistema)",
-                    "Nombre del producto", "Pr Lista Prov"
+                    "Nombre del producto"
                 ]
                 missing = [c for c in required_cols if c not in df.columns]
                 if missing:
@@ -44,13 +44,13 @@ def importar_productos():
                     "No. part Prov": "prod_sku_prov",
                     "Código del producto (en sistema)": "prod_sku_sys",
                     "Nombre del producto": "prod_name",
-                    "Pr Lista Prov": "prod_price_ori",
+                   # "Pr Lista Prov": "prod_price_ori",
                 })
 
                 df = df.fillna({
                     "prod_sku_sys": "",
                     "prod_name": "",
-                    "prod_price_ori": 0,
+                  #  "prod_price_ori": 0
                 })
 
                 for _, row in df.iterrows():
@@ -87,7 +87,7 @@ def importar_productos():
                 {"name": "prod_sku_prov", "label": "SKU Proveedor", "field": "prod_sku_prov"},
                 {"name": "prod_sku_sys", "label": "SKU Sistema", "field": "prod_sku_sys"},
                 {"name": "prod_name", "label": "Nombre Producto", "field": "prod_name"},
-                {"name": "prod_price_ori", "label": "Precio Lista", "field": "prod_price_ori"},
+             #   {"name": "prod_price_ori", "label": "Precio Lista", "field": "prod_price_ori"},
                 {"name": "prod_version", "label": "Versión", "field": "prod_version"},
                 {"name": "prod_createdate", "label": "Creado", "field": "prod_createdate"},
                 {"name": "prod_updatedate", "label": "Actualizado", "field": "prod_updatedate"},
