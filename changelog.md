@@ -7,7 +7,20 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 ---
 
 # Changelog
-si
+
+## [1.0.131.0] - 2025-09-24
+### Fixed
+- Se corrigió el error **404 en la página `/importar_productos`**:
+  - Ahora se importa correctamente el módulo `p_imp_prodData.py` en `app.py`.
+  - Se diferenció claramente `p_imp_provData` (importación de proveedores) de `p_imp_prodData` (importación de productos).
+- Se garantiza que NiceGUI registre ambas rutas:
+  - `/importar_proveedores`
+  - `/importar_productos`
+
+### Notes
+- Verificado que las rutas cargan correctamente al iniciar el servidor.
+- Pendiente validar flujo completo de importación con archivo Excel/CSV real.
+
 
 ## [1.0.130.0] - 2025-09-23
 ### Added

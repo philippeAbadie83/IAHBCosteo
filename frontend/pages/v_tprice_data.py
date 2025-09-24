@@ -1,4 +1,4 @@
-# frontend/pages/v_tblprice_data.py
+# frontend/pages/v_tprice_data.py
 
 from nicegui import ui
 import pandas as pd
@@ -7,8 +7,8 @@ from services.db_productos import get_precios
 from utils.helpers import sanitize_dataframe
 from core import layout
 
-@ui.page("/v_price_data")
-def v_tblprice_data_page():
+@ui.page("/v_tprice_data")
+def v_tprice_data():
     def content():
         # 1. Obtener datos de precios (todos por defecto)
         df: pd.DataFrame = get_precios()

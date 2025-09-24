@@ -12,7 +12,11 @@ from utils import styles
 import frontend.pages.v_tprov_data
 import frontend.pages.v_tprod_data     # ✅ productos
 import frontend.pages.v_tprice_data    # ✅ precios
+
+import frontend.pages.p_imp_prodData   # ✅ Importar página de importar productos
 import frontend.pages.p_imp_provData
+
+
 import frontend.pages.ttbl
 import frontend.pages.ttbl2
 import frontend.pages.ttbl_pipeline
