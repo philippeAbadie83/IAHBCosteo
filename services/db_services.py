@@ -137,8 +137,6 @@ def get_proveedores_latest():
     return df
 
 
-
-
 def get_proveedores_activos():
     query = """
     SELECT

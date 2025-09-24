@@ -7,6 +7,53 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 ---
 
 # Changelog
+si
+
+## [1.0.130.0] - 2025-09-23
+### Added
+- Se agregaron nuevas páginas en **`app.py`**:
+  - `v_tprov_data.py` (Proveedores)
+  - `v_tprod_data.py` (Productos)
+  - `v_tprice_data.py` (Precios)
+
+- Se creó la página **`v_tblprice_data.py`**:
+  - Tabla de precios activos con filtros por **Proveedor**, **Familia** y **SKU Proveedor**.
+  - Inclusión de acciones con notificación (`info`).
+  - Uso de `sanitize_dataframe` con soporte a columnas decimales (ej. `precio`).
+
+- Se implementó en **`services/db_productos.py`** la función:
+  - `get_precios(...)`: llamada al SP `sp_get_precios` con soporte a filtros.
+  - Soporte a alias de columnas para nombres más legibles en el frontend:
+    - `prov_name` → `proveedor`
+    - `prov_famil` → `familia`
+    - `prod_sku_prov` → `sku_prov`
+    - `prod_price_prov` → `precio`
+    - `price_version` → `version`
+    - `price_status` → `estatus`
+    - `price_vig_ini` → `vigencia_inicio`
+    - `price_vig_fin` → `vigencia_fin`
+    - `price_updateby` → `usuario_update`
+    - `price_updatedate` → `fecha_update`
+
+### Changed
+- **`core/layout.py`**:
+  - Se actualizaron secciones del sidebar:
+    - Grupo **Proveedores** actualizado con rutas `/v_tblprov_data`, `/v_tblprov_data_final`, `/v_tblprov_all` e importación de datos.
+    - Grupo **Productos** con accesos a listado, importación, precios, carga de precios y cálculo de costeo.
+  - Ajuste de `mini-hidden`:
+    - Ahora se aplica **solo a labels de sección** (`ui.label(...)`) para que en modo mini sidebar se oculten los títulos pero **los botones sigan visibles**.
+    - Evita el problema de "sidebar siempre cerrado".
+
+### Fixed
+- Se resolvió error de Pylance al pasar diccionario con `None` en parámetros de `read_sql`:
+  - Se ajustó `params={...}` en `get_precios` para enviar cadenas vacías (`""`) en lugar de `None`.
+
+### Pending
+- Revisión de consistencia entre nombres de columnas en vistas SQL (`vw_prod_price_latest`) y alias en servicios.
+- Consolidar imports de páginas en `app.py` para evitar duplicados y asegurar rutas limpias.
+
+
+
 
 ## [1.0.129.0] - 2025-09-23
 

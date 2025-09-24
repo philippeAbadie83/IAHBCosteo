@@ -1,6 +1,8 @@
+# Frontend/pages/v_tblprov_data_final.py
+
 from nicegui import ui
 import pandas as pd
-from frontend.components.tbl_base_final import crear_tabla_fixed
+from frontend.components.tbl_base_final import crear_tabla_final
 from services.db_services import get_proveedores_activos
 from utils.helpers import sanitize_dataframe
 from core import layout
@@ -51,7 +53,7 @@ def v_tblprov_data_fixed():
         ]
 
         # 7. Crear tabla con todas las funcionalidades
-        crear_tabla_fixed(
+        crear_tabla_final(
             nombre="Proveedores Activos (TODAS LAS MEJORAS)",
             columnas=columnas,
             data=df,

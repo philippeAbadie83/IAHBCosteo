@@ -6,7 +6,7 @@ import io
 from typing import Optional, Dict, Any, List
 from datetime import datetime
 
-def crear_tabla_fixed(
+def crear_tabla_final(
     nombre: str,
     columnas: list,
     data: pd.DataFrame,
@@ -85,13 +85,14 @@ def crear_tabla_fixed(
 
     # 6. TABLA BÁSICA SIN SLOTS COMPLEJOS
     #with ui.card().classes("w-full border rounded-lg"):
-    table = ui.table(
-            columns=columnas_finales,
-            rows=[],
-            row_key=row_key,
-            pagination={'rowsPerPage': 50}  # ← FORMA CORRECTA,
-        )
-        #.props("pagination rows-per-page-options='[25,50,100,250]' rows-per-page=50")
+    with ui.card().classes("w-full shadow-md border border-gray-200 rounded-lg"):
+        table = ui.table(
+                columns=columnas_finales,
+                rows=[],
+                row_key=row_key,
+                pagination={'rowsPerPage': 50}  # ← FORMA CORRECTA,
+            )
+            #.props("pagination rows-per-page-options='[25,50,100,250]' rows-per-page=50")
 
     # 7. **QUITAMOS LOS SLOTS PERSONALIZADOS** - Esto causa el problema "No data available"
 

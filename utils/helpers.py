@@ -7,7 +7,9 @@ from typing import Optional, List, Dict
 
 def sanitize_dataframe(df: pd.DataFrame,
                       percent_columns: Optional[List[str]] = None,
-                      truncate_columns: Optional[Dict[str, int]] = None) -> pd.DataFrame:
+                      truncate_columns: Optional[Dict[str, int]] = None,
+                      decimal_columns: Optional[List[str]] = None) -> pd.DataFrame:
+
     """
     Convierte un DataFrame a un formato seguro para serialización JSON.
 
@@ -27,6 +29,12 @@ def sanitize_dataframe(df: pd.DataFrame,
     # 🔹 Decimals → float
     for col in df.columns:
         df[col] = df[col].apply(lambda x: float(x) if isinstance(x, Decimal) else x)
+
+    # 🔹 Decimales → redondear a 2 si están listados
+    if decimal_columns:
+        for col in decimal_columns:
+            if col in df.columns:
+                df[col] = df[col].apply(lambda x: round(float(x), 2) if pd.notna(x) else x)
 
     # 🔹 PORCENTAJES → string con formato
     if percent_columns:

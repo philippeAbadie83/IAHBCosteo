@@ -11,7 +11,7 @@ from core import layout
 from core.__version__ import __version__, __build__
 
 
-@ui.page("/v_tblprov_data")
+@ui.page("/v_tprov_data")
 def v_tblprov_data():
     print(f"[v_tblprov_data] Versión: {__version__}, Build: {__build__}")
 

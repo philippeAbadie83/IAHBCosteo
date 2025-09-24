@@ -9,19 +9,19 @@ from core import layout
 from utils import styles
 
 # Importar páginas reales
-import frontend.pages.v_tblprov_data
+import frontend.pages.v_tprov_data
+import frontend.pages.v_tprod_data     # ✅ productos
+import frontend.pages.v_tprice_data    # ✅ precios
 import frontend.pages.p_imp_provData
 import frontend.pages.ttbl
 import frontend.pages.ttbl2
 import frontend.pages.ttbl_pipeline
-import frontend.pages.test_tbl_simple  # ✅ CORRECTO
-import frontend.pages.test_tbl_sample  # ✅ CORRECTO
+import frontend.pages.test_tbl_simple
+import frontend.pages.test_tbl_sample
 import frontend.pages.test_fix
 import frontend.pages.test_minimal
 import frontend.pages.test_table
 import frontend.pages.v_tblprov_data_final
-
-
 
 # Importar placeholders (👉 muy importante)
 import frontend.pages.placeholders
