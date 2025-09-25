@@ -1,4 +1,9 @@
 {
+    "theme": {
+        "primary": "blue",
+        "accent": "red",
+        "style": "corporate"
+    },
     "menu_sections": [
         {
             "label": "Proveedores",

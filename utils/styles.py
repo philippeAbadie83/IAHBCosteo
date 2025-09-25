@@ -2,6 +2,7 @@
 from nicegui import ui
 from nicegui import ui
 from utils.sty_tables import TABLE_STYLES
+from utils.sty_navigation import NAVIGATION_STYLES
 
 GLOBAL_STYLES = """
 /* ===== Header (simple y seguro) ===== */
@@ -34,7 +35,7 @@ GLOBAL_STYLES = """
 
 def setup_global_styles() -> None:
     """Inyecta estilos globales (header/drawer) + tablas."""
-    ui.add_head_html(f'<style>{GLOBAL_STYLES}{TABLE_STYLES}</style>')
+    ui.add_head_html(f'<style>{GLOBAL_STYLES}{TABLE_STYLES}{NAVIGATION_STYLES}</style>')
 
 def apply_table_styles() -> None:
     """Estilos de tabla ya se aplican globalmente."""

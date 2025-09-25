@@ -5,12 +5,10 @@ from nicegui import ui
 from nicegui import app
 
 from core.__version__ import __version__, __build__, __app__
-
 class NavigationManager:
     def __init__(self, config_path: str = "menu_config.json"):
         self.config_path = Path(config_path)
         self.menu_config = self.load_config()
-        self.drawer_collapsed = False
 
     def load_config(self):
         """Carga la configuración del menú desde JSON"""
@@ -19,13 +17,8 @@ class NavigationManager:
                 return json.load(f)
         except FileNotFoundError:
             print(f"⚠️  No se encontró {self.config_path}")
-            # Configuración mínima por defecto con theme
+            # Configuración mínima por defecto
             return {
-                "theme": {
-                    "primary": "blue",
-                    "accent": "red",
-                    "style": "corporate"
-                },
                 "menu_sections": [],
                 "system_menu": {
                     "label": "Sistema",
@@ -37,69 +30,25 @@ class NavigationManager:
                 }
             }
 
-# Instancia global
-nav_manager = NavigationManager()
-
 # Función helper para navegación
 def make_navigate_handler(path):
     """Crea un handler de navegación para un path específico"""
     def handler():
-        app.storage.user['current_path'] = path
         ui.navigate.to(path)
-        # Actualizar estados visuales después de navegar
-        update_active_states()
     return handler
-
-def toggle_drawer():
-    """Toggle entre modo normal y mini del drawer"""
-    nav_manager.drawer_collapsed = not nav_manager.drawer_collapsed
-
-    # Cambiar clases CSS del drawer
-    ui.run_javascript(f'''
-        const drawer = document.querySelector('.q-drawer--left');
-        const container = document.querySelector('.q-page-container');
-
-        if (drawer && container) {{
-            if ({str(nav_manager.drawer_collapsed).lower()}) {{
-                drawer.classList.add('q-drawer--mini');
-                container.classList.add('content-collapsed');
-            }} else {{
-                drawer.classList.remove('q-drawer--mini');
-                container.classList.remove('content-collapsed');
-            }}
-        }}
-    ''')
-
-def update_active_states():
-    """Actualiza los estados activos de navegación"""
-    current_path = app.storage.user.get('current_path')
-
-    # Actualizar usando JavaScript para cambiar clases
-    ui.run_javascript(f'''
-        // Quitar clase activa de todos los botones
-        document.querySelectorAll('.nav-item-active').forEach(btn => {{
-            btn.classList.remove('nav-item-active');
-        }});
-
-        // Agregar clase activa al botón correspondiente
-        const activeBtn = document.querySelector(`[data-path="{current_path}"]`);
-        if (activeBtn) {{
-            activeBtn.classList.add('nav-item-active');
-        }}
-    ''')
 
 # ---------------- HEADER ----------------
 def create_header(system_menu_config: dict) -> None:
-    """Header con botón de toggle mejorado"""
-    with ui.header().classes('flex items-center justify-between px-4 text-white shadow-md h-16'):
-        # Botón del menú lateral - ahora hace toggle del modo mini
-        ui.button(
-            icon='menu',
-            on_click=toggle_drawer
-        ).props('flat round color=white dense').classes('menu-toggle-btn')
+    """Header con menú del sistema"""
+    with ui.header().classes(
+        'flex items-center justify-between px-4 bg-primary text-white shadow-md h-16'
+    ):
+        # Botón del menú lateral
+        ui.button(icon='menu', on_click=lambda: ui.left_drawer().toggle()) \
+            .props('flat round color=white dense')
 
         # Título de la aplicación
-        ui.label(f'AIHB-Costeo v{__version__}').classes('text-lg font-bold header-title')
+        ui.label(f'AIHB-Costeo v{__version__}').classes('text-lg font-bold')
 
         # Menú del sistema
         with ui.row().classes('items-center gap-2'):
@@ -114,7 +63,7 @@ def create_header(system_menu_config: dict) -> None:
                 system_menu_config['label'],
                 icon=system_menu_config['icon'],
                 on_click=system_menu.open
-            ).props('flat color=white').classes('system-menu-btn')
+            ).props('flat color=white')
 
 # ---------------- SIDEBAR CON JSON ----------------
 def create_sidebar(menu_sections: list) -> None:
@@ -122,17 +71,11 @@ def create_sidebar(menu_sections: list) -> None:
     with ui.left_drawer(top_corner=True).classes('bg-grey-2 w-80 border-r border-grey-4 pt-16') as drawer:
         drawer.props('mini-to-overlay')
 
-        # Header del sidebar con botón de colapso
-        with ui.row().classes('drawer-header w-full items-center justify-between px-4 py-3 border-b border-grey-4 bg-white'):
-            with ui.row().classes('items-center gap-3'):
-                ui.icon('navigation', size='md').classes('text-blue-600')
-                ui.label('Navegación').classes('section-title text-lg font-bold text-grey-9')
-
-            # Botón de colapso/expand
-            ui.button(
-                icon='chevron_left',
-                on_click=toggle_drawer
-            ).props('flat dense round').classes('collapse-btn text-blue-600')
+        # Header del sidebar
+        with ui.row().classes('w-full items-center justify-between px-4 py-3 border-b border-grey-4 bg-white'):
+            ui.label('Navegación').classes('text-lg font-bold text-grey-9')
+            ui.button(icon='close', on_click=lambda: drawer.toggle()) \
+                .props('flat dense round')
 
         # Contenido del sidebar desde JSON
         with ui.scroll_area().classes('w-full h-full py-4'):
@@ -140,8 +83,9 @@ def create_sidebar(menu_sections: list) -> None:
                 for section in menu_sections:
                     create_section_item(section)
 
+
 def create_section_item(section: dict):
-    """Crea un item de sección con sus subitems y estados activos"""
+    """Crea un item de sección con sus subitems"""
 
     # Ruta actual
     current_path = app.storage.user.get('current_path')
@@ -159,35 +103,34 @@ def create_section_item(section: dict):
         with ui.column().classes('w-full pl-4 gap-1'):
             for item in section.get('children', []):
                 # Determinar si este item está activo
-                is_active = current_path == item['path']
+                is_active = current_path == item['path'] or item.get('active', False)
 
-                # Crear botón con data attribute para JavaScript
-                button = ui.button(
+                # Clases de color dinámicas (por defecto azul)
+                color_class = (
+                    f"bg-{item.get('color', 'blue')}-2 "
+                    f"text-{item.get('color', 'blue')}-9 "
+                    f"font-bold"
+                    if is_active else ""
+                )
+
+                ui.button(
                     item['label'],
                     icon=item.get('icon', 'chevron_right'),
                     on_click=make_navigate_handler(item['path'])
-                ).props('flat dense').classes('nav-item justify-start w-full text-sm hover:bg-blue-1')
-
-                # Agregar data attribute para identificar el botón
-                button._props['data-path'] = item['path']
-
-                # Aplicar clase activa si corresponde
-                if is_active:
-                    button.classes(add='nav-item-active')
-
-                # Agregar texto para modo colapsado
-                with button:
-                    ui.label(item['label']).classes('nav-item-text')
+                ).props('flat dense') \
+                 .classes(f'justify-start w-full text-sm hover:bg-blue-1 {color_class}')
 
 # ---------------- FOOTER ----------------
 def create_footer() -> None:
     with ui.footer().classes('bg-grey-9 text-white text-center p-3'):
         ui.label(f'© Hidrobart 2025 | {__app__} v.{__version__} (Build {__build__})').classes('text-xs')
 
+
 # ---------------- RENDER ----------------
 def render(content=None) -> None:
     """Renderiza el layout completo usando el JSON"""
 
+    nav_manager = NavigationManager()
     menu_config = nav_manager.menu_config
 
     # Crear componentes
@@ -202,6 +145,7 @@ def render(content=None) -> None:
 # ---------------- OBTENER RUTAS ----------------
 def get_menu_routes():
     """Retorna todas las rutas definidas en el menú"""
+    nav_manager = NavigationManager()
     menu_config = nav_manager.menu_config
 
     routes = []
