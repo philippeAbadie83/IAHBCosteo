@@ -9,12 +9,12 @@ from core import layout
 from frontend.components.tbl_base import crear_tabla
 
 
-@ui.page("/importar_proveedores")
-def importar_proveedores():
+@ui.page("/p_imp_provData")
+def p_imp_provData_page():
     """Página para importar proveedores desde archivo CSV o Excel."""
 
     def content():
-        ui.label("Importar Proveedores desde CSV/Excel") \
+        ui.label("Alta Proveedores desde CSV/Excel") \
             .classes("text-2xl font-bold mb-6")
 
         # ----------------- Handler de Upload -----------------

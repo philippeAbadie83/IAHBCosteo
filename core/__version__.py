@@ -1,5 +1,5 @@
 # core/__version__.py
 __app__ = "Hidrobart Costeo"
-__version__ = "1.0.131.5"
+__version__ = "1.0.131.6"
 __build__ = 131
 __fixbuild__ = 0

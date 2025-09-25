@@ -8,12 +8,12 @@ from core import layout
 from frontend.components.tbl_base import crear_tabla
 
 
-@ui.page("/importar_productos")
-def importar_productos():
+@ui.page("/p_imp_prodData")
+def p_imp_prodData_page():
     """Página para importar productos desde archivo CSV o Excel."""
 
     def content():
-        ui.label("Importar Productos desde CSV/Excel") \
+        ui.label("Alta Productos desde CSV/Excel") \
             .classes("text-2xl font-bold mb-6")
 
         # ----------------- Handler Upload -----------------
