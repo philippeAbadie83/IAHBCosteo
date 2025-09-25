@@ -2,6 +2,7 @@
 """
 Estilos específicos para navegación - Drawer, Header, Estados Activos
 """
+
 NAVIGATION_STYLES = """
 /* ===== HEADER PROFESIONAL ===== */
 .q-header {
@@ -46,13 +47,18 @@ NAVIGATION_STYLES = """
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-/* ===== MODO COLAPSADO ===== */
+/* ===== MODO COLAPSADO MEJORADO ===== */
 .q-drawer--mini {
     width: 72px !important;
 }
 
-.q-drawer--mini .nav-item-text,
-.q-drawer--mini .section-title {
+.q-drawer--mini .q-expansion-item__header {
+    justify-content: center !important;
+    padding: 8px !important;
+}
+
+.q-drawer--mini .q-expansion-item__header .q-expansion-item__toggle-icon,
+.q-drawer--mini .q-expansion-item__header .q-item__label {
     display: none !important;
 }
 
@@ -60,9 +66,24 @@ NAVIGATION_STYLES = """
     display: none !important;
 }
 
-.q-drawer--mini .q-btn {
-    justify-content: center !important;
-    min-width: 48px !important;
+.q-drawer--mini .drawer-header .section-title {
+    display: none !important;
+}
+
+.q-drawer--mini .collapse-btn {
+    transform: rotate(180deg) !important;
+}
+
+/* ===== ICONOS VISIBLES EN MODO MINI ===== */
+.q-drawer--mini .q-expansion-item {
+    margin: 8px 4px !important;
+    background: rgba(255,255,255,0.9) !important;
+    border-radius: 12px !important;
+}
+
+.q-drawer--mini .q-expansion-item:hover {
+    background: rgba(59, 130, 246, 0.1) !important;
+    transform: none !important;
 }
 
 /* ===== HEADER DEL DRAWER ===== */
@@ -104,22 +125,23 @@ NAVIGATION_STYLES = """
 }
 
 /* ===== ITEMS DE NAVEGACION ===== */
-.nav-item {
+.nav-item .q-btn {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     border-radius: 8px !important;
-    margin: 2px 8px !important;
-    position: relative !important;
-    overflow: hidden !important;
+    margin: 2px 0 !important;
+    width: 100% !important;
 }
 
-.nav-item:hover {
+.nav-item .q-btn:hover {
     background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
     transform: translateX(4px) !important;
     box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2) !important;
 }
 
-/* ===== ESTADO ACTIVO (ROJO) ===== */
-.nav-item-active {
+/* ===== ESTADO ACTIVO DINÁMICO POR COLORES ===== */
+
+/* Rojo */
+.nav-item-active.nav-item-red .q-btn {
     background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%) !important;
     color: #dc2626 !important;
     font-weight: 600 !important;
@@ -129,14 +151,48 @@ NAVIGATION_STYLES = """
     border-radius: 0 8px 8px 0 !important;
 }
 
-.nav-item-active:hover {
-    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+/* Azul */
+.nav-item-active.nav-item-blue .q-btn {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%) !important;
+    color: #2563eb !important;
+    font-weight: 600 !important;
     transform: translateX(6px) !important;
-    box-shadow: 0 4px 16px rgba(220, 38, 38, 0.3) !important;
+    box-shadow: 0 2px 12px rgba(37, 99, 235, 0.2) !important;
+    border-left: 4px solid #2563eb !important;
+    border-radius: 0 8px 8px 0 !important;
 }
 
-.nav-item-active .q-btn__content {
-    color: #dc2626 !important;
+/* Verde */
+.nav-item-active.nav-item-green .q-btn {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+    color: #16a34a !important;
+    font-weight: 600 !important;
+    transform: translateX(6px) !important;
+    box-shadow: 0 2px 12px rgba(22, 163, 74, 0.2) !important;
+    border-left: 4px solid #16a34a !important;
+    border-radius: 0 8px 8px 0 !important;
+}
+
+/* Naranja */
+.nav-item-active.nav-item-orange .q-btn {
+    background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%) !important;
+    color: #ea580c !important;
+    font-weight: 600 !important;
+    transform: translateX(6px) !important;
+    box-shadow: 0 2px 12px rgba(234, 88, 12, 0.2) !important;
+    border-left: 4px solid #ea580c !important;
+    border-radius: 0 8px 8px 0 !important;
+}
+
+/* Hover para todos los colores activos */
+.nav-item-active .q-btn:hover {
+    transform: translateX(6px) !important;
+    opacity: 0.9 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
+}
+
+.nav-item-active .q-btn .q-btn__content {
+    font-weight: 600 !important;
 }
 
 /* ===== CONTENIDO PRINCIPAL ===== */

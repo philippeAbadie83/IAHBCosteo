@@ -61,6 +61,9 @@ def toggle_drawer():
         else:
             toggle_drawer.drawer_ref.props(remove='mini')
 
+        # Forzar actualización visual
+        toggle_drawer.drawer_ref.update()
+
 def update_active_states():
     """Actualiza los estados activos de navegación"""
     current_path = app.storage.user.get('current_path')
@@ -159,12 +162,16 @@ def create_section_item(section: dict):
                 # Determinar si este item está activo
                 is_active = current_path == item['path']
 
-                # Clases según estado activo
-                button_classes = 'nav-item justify-start w-full text-sm'
-                if is_active:
-                    button_classes += ' nav-item-active'
+                # Obtener color del JSON o usar azul por defecto
+                item_color = item.get('color', 'blue')
 
-                # Crear botón sin duplicar texto
+                # Clases según estado activo
+                if is_active:
+                    button_classes = f'nav-item-active nav-item-{item_color} justify-start w-full text-sm'
+                else:
+                    button_classes = 'nav-item justify-start w-full text-sm'
+
+                # Crear botón
                 ui.button(
                     item['label'],
                     icon=item.get('icon', 'chevron_right'),
