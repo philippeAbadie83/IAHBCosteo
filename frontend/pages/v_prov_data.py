@@ -1,5 +1,5 @@
 
-# frontend/pages/v_tblprov_data.py
+# frontend/pages/v_prov_data.py
 
 from nicegui import ui
 import pandas as pd
@@ -11,8 +11,8 @@ from core import layout
 from core.__version__ import __version__, __build__
 
 
-@ui.page("/v_tprov_data")
-def v_tblprov_data():
+@ui.page("/v_prov_data")
+def v_prov_data_page():
     print(f"[v_tblprov_data] Versión: {__version__}, Build: {__build__}")
 
     def content():

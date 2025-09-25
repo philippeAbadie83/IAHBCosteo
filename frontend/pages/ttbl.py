@@ -34,7 +34,6 @@ def ttbl():
         nombre="Demo Productos",
         columnas=columnas,
         data=data,
-        filtros=True,
         exportar=True,
         congelar=["proveedor", "familia", "code_sys"],
         # acciones=[]  # 🔹 Si lo dejas vacío, tbl_base no dibuja columna de acciones

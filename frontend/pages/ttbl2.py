@@ -33,7 +33,6 @@ def ttbl2_page():
                 columnas=columnas,
                 data=data,
                 acciones=None,
-                filtros=True,
                 exportar=False,
                 congelar=None,
             )

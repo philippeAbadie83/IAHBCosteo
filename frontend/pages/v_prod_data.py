@@ -1,4 +1,4 @@
-# Frontend/pages/v_tblprod_data.py
+# Frontend/pages/v_prod_data.py
 
 from nicegui import ui
 import pandas as pd
@@ -7,8 +7,8 @@ from services.db_productos import get_productos_activos
 from utils.helpers import sanitize_dataframe
 from core import layout
 
-@ui.page("/v_tprod_data")
-def v_tblprod_data_page():
+@ui.page("/v_prod_data")
+def v_prod_data_page():
     def content():
         # 1. Obtener datos
         df: pd.DataFrame = get_productos_activos()

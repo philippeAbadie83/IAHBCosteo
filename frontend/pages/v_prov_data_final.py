@@ -1,4 +1,4 @@
-# Frontend/pages/v_tblprov_data_final.py
+# Frontend/pages/v_prov_data_final.py
 
 from nicegui import ui
 import pandas as pd
@@ -7,8 +7,8 @@ from services.db_services import get_proveedores_activos
 from utils.helpers import sanitize_dataframe
 from core import layout
 
-@ui.page("/v_tblprov_data_final")
-def v_tblprov_data_fixed():
+@ui.page("/v_prov_data_final")
+def v_prov_data_final_page():
     def content():
         # 1. Obtener datos
         df: pd.DataFrame = get_proveedores_activos()

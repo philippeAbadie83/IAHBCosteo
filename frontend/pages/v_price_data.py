@@ -7,8 +7,8 @@ from services.db_productos import get_precios
 from utils.helpers import sanitize_dataframe
 from core import layout
 
-@ui.page("/v_tprice_data")
-def v_tprice_data():
+@ui.page("/v_price_data")
+def v_price_data_page():
     def content():
         # 1. Obtener datos de precios (todos por defecto)
         df: pd.DataFrame = get_precios()

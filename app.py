@@ -10,10 +10,13 @@ from utils import styles
 from utils.styles import setup_global_styles
 
 # Importar páginas reales (todas ya tienen @ui.page y usan layout.render(content))
-import frontend.pages.v_tprov_data
-import frontend.pages.v_tprod_data     # ✅ productos
-import frontend.pages.v_tprice_data    # ✅ precios
-import frontend.pages.p_imp_prodData   # ✅ Importar página de importar productos
+import frontend.pages.v_prov_data       # ✅ proveedores
+import frontend.pages.v_prod_data       # ✅ productos
+
+import frontend.pages.v_prov_data_final # ✅ provedores usando tbl_base_final
+import frontend.pages.v_price_data      # ✅ precios
+
+import frontend.pages.p_imp_prodData    # ✅ Importar página de importar productos
 import frontend.pages.p_imp_provData
 
 import frontend.pages.ttbl
@@ -23,8 +26,8 @@ import frontend.pages.test_tbl_simple
 import frontend.pages.test_tbl_sample
 import frontend.pages.test_fix
 import frontend.pages.test_minimal
-import frontend.pages.test_table
-import frontend.pages.v_tblprov_data_final
+
+import frontend.pages.v_prov_data_final
 
 # Importar placeholders (👉 muy importante)
 import frontend.pages.placeholders
@@ -55,5 +58,6 @@ if __name__ in ["__main__", "__mp_main__"]:
         reload=True,
         port=5858,
         host="0.0.0.0",
-        show=False
+        show=False,
+        storage_secret="super_secret_key"
     )
