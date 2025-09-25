@@ -54,12 +54,21 @@ def toggle_drawer():
     """Toggle entre modo normal y mini del drawer"""
     nav_manager.drawer_collapsed = not nav_manager.drawer_collapsed
 
-    # Usar la funcionalidad nativa de NiceGUI para mini drawer
-    if hasattr(toggle_drawer, 'drawer_ref'):
-        if nav_manager.drawer_collapsed:
-            toggle_drawer.drawer_ref.props('mini')
-        else:
-            toggle_drawer.drawer_ref.props(remove='mini')
+    # Cambiar clases CSS del drawer
+    ui.run_javascript(f'''
+        const drawer = document.querySelector('.q-drawer--left');
+        const container = document.querySelector('.q-page-container');
+
+        if (drawer && container) {{
+            if ({str(nav_manager.drawer_collapsed).lower()}) {{
+                drawer.classList.add('q-drawer--mini');
+                container.classList.add('content-collapsed');
+            }} else {{
+                drawer.classList.remove('q-drawer--mini');
+                container.classList.remove('content-collapsed');
+            }}
+        }}
+    ''')
 
 def update_active_states():
     """Actualiza los estados activos de navegación"""
@@ -110,15 +119,8 @@ def create_header(system_menu_config: dict) -> None:
 # ---------------- SIDEBAR CON JSON ----------------
 def create_sidebar(menu_sections: list) -> None:
     """Sidebar que se construye dinámicamente desde el JSON"""
-    with ui.left_drawer(
-        top_corner=True
-    ).classes('bg-grey-2 w-80 border-r border-grey-4 pt-16') as drawer:
-
-        # Configurar propiedades después de crear el drawer
+    with ui.left_drawer(top_corner=True).classes('bg-grey-2 w-80 border-r border-grey-4 pt-16') as drawer:
         drawer.props('mini-to-overlay')
-
-        # Guardar referencia para toggle
-        toggle_drawer.drawer_ref = drawer
 
         # Header del sidebar con botón de colapso
         with ui.row().classes('drawer-header w-full items-center justify-between px-4 py-3 border-b border-grey-4 bg-white'):
@@ -159,17 +161,23 @@ def create_section_item(section: dict):
                 # Determinar si este item está activo
                 is_active = current_path == item['path']
 
-                # Clases según estado activo
-                button_classes = 'nav-item justify-start w-full text-sm'
-                if is_active:
-                    button_classes += ' nav-item-active'
-
-                # Crear botón sin duplicar texto
-                ui.button(
+                # Crear botón con data attribute para JavaScript
+                button = ui.button(
                     item['label'],
                     icon=item.get('icon', 'chevron_right'),
                     on_click=make_navigate_handler(item['path'])
-                ).props('flat dense').classes(button_classes)
+                ).props('flat dense').classes('nav-item justify-start w-full text-sm hover:bg-blue-1')
+
+                # Agregar data attribute para identificar el botón
+                button._props['data-path'] = item['path']
+
+                # Aplicar clase activa si corresponde
+                if is_active:
+                    button.classes(add='nav-item-active')
+
+                # Agregar texto para modo colapsado
+                with button:
+                    ui.label(item['label']).classes('nav-item-text')
 
 # ---------------- FOOTER ----------------
 def create_footer() -> None:
