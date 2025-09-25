@@ -8,7 +8,7 @@
             "children": [
                 {
                     "label": "Proveedores Activos",
-                    "path": "/v_tblprov_data",
+                    "path": "/v_tblprov_data_final",
                     "icon": "table_chart",
                     "description": "Ver proveedores activos"
                 },

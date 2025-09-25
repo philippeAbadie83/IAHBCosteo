@@ -33,7 +33,7 @@ import frontend.pages.placeholders
 # Configurar todas las rutas del menú automáticamente
 def setup_routes():
     routes = get_menu_routes()
-
+    print("🔍 VERIFICANDO RUTAS DEL JSON:")
     for route in routes:
         # CORRECCIÓN: Usar una función factory para capturar los valores correctamente
         def create_page_handler(route_path, route_label):

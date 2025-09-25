@@ -108,7 +108,8 @@ def create_footer() -> None:
     with ui.footer().classes('bg-grey-9 text-white text-center p-3'):
         ui.label(f'© Hidrobart 2025 | {__app__} v.{__version__} (Build {__build__})').classes('text-xs')
 
-# ---------------- LAYOUT PRINCIPAL ----------------
+# SOLO CAMBIA la función render - el resto igual
+
 def render(content=None) -> None:
     """Renderiza el layout completo usando el JSON"""
 
@@ -121,10 +122,10 @@ def render(content=None) -> None:
     create_sidebar(menu_config.get('menu_sections', []))
     create_footer()
 
-    # Contenedor principal
-    with ui.column().classes('w-full min-h-screen bg-grey-2 pt-16 pl-80 transition-all duration-300'):
+    # ✅ CONTENEDOR PRINCIPAL CORREGIDO - IGUAL QUE TU LAYOUT ORIGINAL
+    with ui.column().classes('w-full min-h-screen pt-16 pl-80'):
         if content:
-            content()
+            content()  # ✅ Esto renderizará tu tabla de proveedores
 
 # ---------------- FUNCIÓN PARA OBTENER RUTAS ----------------
 def get_menu_routes():
