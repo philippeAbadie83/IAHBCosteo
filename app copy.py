@@ -2,12 +2,11 @@
 
 from sys import implementation
 from core.__version__ import __version__, __build__
-print(f"Versión: {__version__}, Build: {__build__}")
 
 from nicegui import ui
-from core.layout import render, get_menu_routes
+from core import layout
 from utils import styles
-from utils.styles import setup_global_styles
+from core.layout import render, get_menu_routes
 
 # Importar páginas reales
 import frontend.pages.v_tprov_data
@@ -30,27 +29,24 @@ import frontend.pages.v_tblprov_data_final
 # Importar placeholders (👉 muy importante)
 import frontend.pages.placeholders
 
+
+print(f"Versión: {__version__}, Build: {__build__}")
+
 # Configurar todas las rutas del menú automáticamente
 def setup_routes():
     routes = get_menu_routes()
 
     for route in routes:
-        # CORRECCIÓN: Usar una función factory para capturar los valores correctamente
-        def create_page_handler(route_path, route_label):
-            @ui.page(route_path)
-            def page_handler():
-                def content():
-                    with ui.column().classes('w-full p-8'):
-                        ui.label(route_label).classes('text-2xl font-bold mb-4')
-                        ui.label(f'Ruta: {route_path}').classes('text-gray-600')
-                        # Aquí cada página tendrá su contenido específico
+        @ui.page(route['path'])
+        def page_handler(path=route['path'], label=route['label']):
+            def content():
+                # Contenido básico de la página
+                with ui.column().classes('w-full p-8'):
+                    ui.label(label).classes('text-2xl font-bold mb-4')
+                    ui.label(f'Ruta: {path}').classes('text-gray-600')
+                    # Aquí cada página tendrá su contenido específico
 
-                render(content)
-            return page_handler
-
-        # Crear y registrar la página
-        page_handler = create_page_handler(route['path'], route['label'])
-        # La página se registra automáticamente con el decorador @ui.page
+            render(content)
 
 # Página principal
 @ui.page('/')
@@ -70,10 +66,9 @@ def main_page():
 
     render(content)
 
-# Configurar rutas
+# Configurar rutas y ejecutar
 setup_routes()
 
-# Configuración para Azure
 if __name__ in ["__main__", "__mp_main__"]:
     styles.setup_global_styles()
     ui.run(

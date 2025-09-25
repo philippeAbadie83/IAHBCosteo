@@ -6,8 +6,44 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 y este proyecto se adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 ---
 
-# CHANGELOG
+
 # Changelog
+
+
+## [1.0.131.0] - 2025-09-24
+
+### Added
+- **Sistema de navegación parametrizable con JSON** (`menu_config.json`)
+- **Nuevo módulo `core/layout.py`** con layout dinámico
+- **Clase `NavigationManager`** para gestión centralizada del menú
+- **Registro automático de rutas** basado en la configuración JSON
+- **Header rediseñado** con menú del sistema desplegable
+- **Sidebar dinámico** que se construye desde JSON
+- **Sistema de cards expansibles** con animaciones
+- **Configuración específica para Azure** (puerto 5858, host 0.0.0.0)
+
+### Fixed
+- **Problemas de importación** entre módulos
+- **Errores de scope en handlers** de navegación
+- **Manejo de eventos click** en menús desplegables
+- **Problemas de tipo** detectados por Pylance/TypeScript
+- **Registro correcto de rutas** dinámicas
+
+### Updated
+- **Arquitectura del layout** separada de la configuración
+- **Sistema de estilos** usando colores Quasar compatibles
+- **Código más mantenible** y fácil de extender
+- **Performance** con carga lazy de configuración
+- **Estructura de archivos** con nuevo paquete `core`
+
+### Breaking Changes
+- **Menú ahora se define en JSON**, no en código estático
+- **Nuevo sistema de importaciones** para el layout
+- **Rutas deben coincidir** con la configuración JSON
+
+---
+
+**Nota**: Implementación completa de navegación dinámica que permite modificar el menú sin cambiar código.
 
 ## [1.0.130.2] - 2025-09-24
 ### Fix
