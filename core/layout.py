@@ -2,8 +2,9 @@
 import json
 from pathlib import Path
 from nicegui import ui
-from core.__version__ import __version__, __build__, __app__
+from nicegui import app
 
+from core.__version__ import __version__, __build__, __app__
 class NavigationManager:
     def __init__(self, config_path: str = "menu_config.json"):
         self.config_path = Path(config_path)
@@ -29,7 +30,7 @@ class NavigationManager:
                 }
             }
 
-# Función helper para navegación (definida fuera de las funciones)
+# Función helper para navegación
 def make_navigate_handler(path):
     """Crea un handler de navegación para un path específico"""
     def handler():
@@ -53,7 +54,6 @@ def create_header(system_menu_config: dict) -> None:
         with ui.row().classes('items-center gap-2'):
             with ui.menu().classes('bg-white shadow-lg') as system_menu:
                 for item in system_menu_config.get('children', []):
-                    # Usar la función helper definida fuera
                     ui.menu_item(
                         item['label'],
                         on_click=make_navigate_handler(item['path'])
@@ -83,37 +83,53 @@ def create_sidebar(menu_sections: list) -> None:
                 for section in menu_sections:
                     create_section_item(section)
 
+
 def create_section_item(section: dict):
     """Crea un item de sección con sus subitems"""
+
+    # Ruta actual
+    current_path = app.storage.user.get('current_path')
+    # Sección activa si alguno de sus hijos coincide con la ruta actual
+    is_section_active = any(child['path'] == current_path for child in section.get('children', []))
 
     # Encabezado de la sección
     with ui.expansion(
         section['label'],
         icon=section.get('icon', 'folder'),
-        value=False
+        value=is_section_active
     ).classes('w-full bg-white rounded-lg shadow-sm'):
 
         # Subitems de la sección
         with ui.column().classes('w-full pl-4 gap-1'):
             for item in section.get('children', []):
+                # Determinar si este item está activo
+                is_active = current_path == item['path'] or item.get('active', False)
+
+                # Clases de color dinámicas (por defecto azul)
+                color_class = (
+                    f"bg-{item.get('color', 'blue')}-2 "
+                    f"text-{item.get('color', 'blue')}-9 "
+                    f"font-bold"
+                    if is_active else ""
+                )
+
                 ui.button(
                     item['label'],
                     icon=item.get('icon', 'chevron_right'),
-                    on_click=make_navigate_handler(item['path'])  # Usar la función helper
+                    on_click=make_navigate_handler(item['path'])
                 ).props('flat dense') \
-                 .classes('justify-start w-full text-sm hover:bg-blue-1')
+                 .classes(f'justify-start w-full text-sm hover:bg-blue-1 {color_class}')
 
 # ---------------- FOOTER ----------------
 def create_footer() -> None:
     with ui.footer().classes('bg-grey-9 text-white text-center p-3'):
         ui.label(f'© Hidrobart 2025 | {__app__} v.{__version__} (Build {__build__})').classes('text-xs')
 
-# SOLO CAMBIA la función render - el resto igual
 
+# ---------------- RENDER ----------------
 def render(content=None) -> None:
     """Renderiza el layout completo usando el JSON"""
 
-    # Cargar configuración
     nav_manager = NavigationManager()
     menu_config = nav_manager.menu_config
 
@@ -122,12 +138,11 @@ def render(content=None) -> None:
     create_sidebar(menu_config.get('menu_sections', []))
     create_footer()
 
-    # ✅ CONTENEDOR PRINCIPAL CORREGIDO - IGUAL QUE TU LAYOUT ORIGINAL
     with ui.column().classes('w-full min-h-screen pt-16 pl-80'):
         if content:
-            content()  # ✅ Esto renderizará tu tabla de proveedores
+            content()
 
-# ---------------- FUNCIÓN PARA OBTENER RUTAS ----------------
+# ---------------- OBTENER RUTAS ----------------
 def get_menu_routes():
     """Retorna todas las rutas definidas en el menú"""
     nav_manager = NavigationManager()

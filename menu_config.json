@@ -8,7 +8,9 @@
                     "label": "Proveedores Activos",
                     "path": "/v_tprov_data",
                     "icon": "table_chart",
-                    "module": "frontend.pages.v_tprov_data"
+                    "module": "frontend.pages.v_tprov_data",
+                    "active": true,
+                    "color": "red"
                 }
             ]
         },
@@ -20,7 +22,9 @@
                     "label": "Listado de Productos",
                     "path": "/v_tprod_data",
                     "icon": "list",
-                    "module": "frontend.pages.v_tprod_data"
+                    "module": "frontend.pages.v_tprod_data",
+                    "active": false,
+                    "color": "green"
                 }
             ]
         }
