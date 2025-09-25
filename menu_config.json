@@ -3,192 +3,24 @@
         {
             "label": "Proveedores",
             "icon": "inventory_2",
-            "color": "blue",
-            "description": "Gestión de proveedores y datos",
             "children": [
                 {
                     "label": "Proveedores Activos",
-                    "path": "/v_tblprov_data_final",
-                    "icon": "table_chart",
-                    "description": "Ver proveedores activos"
-                },
-                {
-                    "label": "ACtivos",
                     "path": "/v_tprov_data",
                     "icon": "table_chart",
-                    "description": "Proveedores activos"
-                },
-                {
-                    "label": "Importar Proveedores",
-                    "path": "/p_imp_provData",
-                    "icon": "upload_file",
-                    "description": "Importar datos de proveedores"
-                },
-                {
-                    "label": "Proveedores Activos Update",
-                    "path": "/v_tblprov_data_final",
-                    "icon": "update",
-                    "description": "Actualizar proveedores activos"
-                },
-                {
-                    "label": "Importar Datos",
-                    "path": "/importar_proveedores",
-                    "icon": "upload_file",
-                    "description": "Importar datos masivos"
+                    "module": "frontend.pages.v_tprov_data"
                 }
             ]
         },
         {
             "label": "Productos",
             "icon": "inventory",
-            "color": "green",
-            "description": "Gestión de productos y precios",
             "children": [
                 {
                     "label": "Listado de Productos",
                     "path": "/v_tprod_data",
                     "icon": "list",
-                    "description": "Ver todos los productos"
-                },
-                {
-                    "label": "Importar Productos",
-                    "path": "/importar_productos",
-                    "icon": "file_upload",
-                    "description": "Importar nuevos productos"
-                },
-                {
-                    "label": "Precios Productos",
-                    "path": "/v_tprice_data",
-                    "icon": "price_check",
-                    "description": "Consultar precios"
-                },
-                {
-                    "label": "Carga Precios Nuevos",
-                    "path": "/productos/carga-precios",
-                    "icon": "system_update_alt",
-                    "description": "Actualizar precios"
-                },
-                {
-                    "label": "Cálculo de Costeo",
-                    "path": "/productos/costo-destino",
-                    "icon": "calculate",
-                    "description": "Calcular costos"
-                },
-                {
-                    "label": "Lista de Precios",
-                    "path": "/productos/lista-precios",
-                    "icon": "request_quote",
-                    "description": "Generar lista de precios"
-                }
-            ]
-        },
-        {
-            "label": "Kit Productos",
-            "icon": "widgets",
-            "color": "purple",
-            "description": "Armado y costeo de kits",
-            "children": [
-                {
-                    "label": "Listado de Productos",
-                    "path": "/kit/listado",
-                    "icon": "view_list",
-                    "description": "Productos disponibles"
-                },
-                {
-                    "label": "Armado de Kit",
-                    "path": "/kit/armado",
-                    "icon": "extension",
-                    "description": "Crear nuevos kits"
-                },
-                {
-                    "label": "Costeo",
-                    "path": "/kit/costeo",
-                    "icon": "calculate",
-                    "description": "Calcular costos de kits"
-                }
-            ]
-        },
-        {
-            "label": "Simulación",
-            "icon": "science",
-            "color": "orange",
-            "description": "Simulaciones y análisis",
-            "children": [
-                {
-                    "label": "Clientes Especiales",
-                    "path": "/sim/clientes-especiales",
-                    "icon": "star",
-                    "description": "Gestión clientes especiales"
-                },
-                {
-                    "label": "Campaña",
-                    "path": "/sim/campana",
-                    "icon": "campaign",
-                    "description": "Simulación de campañas"
-                },
-                {
-                    "label": "Mejores Productos",
-                    "path": "/sim/mejores-productos",
-                    "icon": "trending_up",
-                    "description": "Análisis de productos"
-                },
-                {
-                    "label": "Mejores Márgenes",
-                    "path": "/sim/mejores-margenes",
-                    "icon": "savings",
-                    "description": "Análisis de márgenes"
-                }
-            ]
-        },
-        {
-            "label": "Análisis",
-            "icon": "analytics",
-            "color": "red",
-            "description": "Reportes y gráficos",
-            "children": [
-                {
-                    "label": "Reportes",
-                    "path": "/reportes",
-                    "icon": "analytics",
-                    "description": "Reportes detallados"
-                },
-                {
-                    "label": "Gráficos",
-                    "path": "/graficos",
-                    "icon": "bar_chart",
-                    "description": "Gráficos y dashboards"
-                }
-            ]
-        },
-        {
-            "label": "Ejemplos",
-            "icon": "table_chart",
-            "color": "indigo",
-            "description": "Ejemplos y pruebas",
-            "children": [
-                {
-                    "label": "Tabla TTBL",
-                    "path": "/ttbl",
-                    "icon": "table_chart",
-                    "description": "Ejemplo tabla TTBL"
-                },
-                {
-                    "label": "Tabla TTBL2",
-                    "path": "/ttbl2",
-                    "icon": "table_chart",
-                    "description": "Ejemplo tabla TTBL2"
-                },
-                {
-                    "label": "Tabla Pipeline",
-                    "path": "/pipeline",
-                    "icon": "table_chart",
-                    "description": "Ejemplo pipeline"
-                },
-                {
-                    "label": "Tabla Minimal",
-                    "path": "/test_minimal",
-                    "icon": "table_chart",
-                    "description": "Ejemplo tabla minimal"
+                    "module": "frontend.pages.v_tprod_data"
                 }
             ]
         }
@@ -201,16 +33,6 @@
                 "label": "Configuración",
                 "path": "/configuracion",
                 "icon": "settings"
-            },
-            {
-                "label": "Ayuda",
-                "path": "/ayuda",
-                "icon": "help"
-            },
-            {
-                "label": "Documentación",
-                "path": "/docs",
-                "icon": "menu_book"
             }
         ]
     }
